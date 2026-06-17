@@ -1,0 +1,9 @@
+{
+  "Conditions": {
+    "EnvironmentIds": [
+      "Env_WraithBusters_Mansion"
+    ]
+  },
+  "MusicContainer": "Track_WraithBusters_Aliens",
+  "Priority": 80
+}

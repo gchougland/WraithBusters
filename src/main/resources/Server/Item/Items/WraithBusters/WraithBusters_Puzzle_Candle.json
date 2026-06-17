@@ -1,0 +1,70 @@
+{
+  "TranslationProperties": {
+    "Name": "server.items.WraithBusters_Puzzle_Candle.name"
+  },
+  "PlayerAnimationsId": "Torch",
+  "Categories": [
+    "Furniture.Lighting",
+    "Blocks.WraithBusters"
+  ],
+  "Set": "WraithBusters",
+  "Interactions": {
+    "Primary": "Root_Unarmed_Attack_Swing_Left",
+    "Secondary": "Block_Secondary"
+  },
+  "Icon": "Icons/ItemsGenerated/WraithBusters_Spooky_Crude_Candle.png",
+  "BlockType": {
+    "CustomModel": "Blocks/Decorative_Sets/Crude/Candle.blockymodel",
+    "CustomModelScale": 0.7,
+    "DrawType": "Model",
+    "Material": "Solid",
+    "Opacity": "Transparent",
+    "HitboxType": "Torch_Small",
+    "RandomRotation": "YawStep1",
+    "Support": {
+      "Down": [
+        { "FaceType": "Full" },
+        { "FaceType": "Wood_Beam" }
+      ]
+    },
+    "Gathering": {
+      "Breaking": {
+        "GatherType": "Unbreakable"
+      }
+    },
+    "Interactions": {
+      "Use": {
+        "Interactions": [
+          {
+            "Type": "ChangeState",
+            "Changes": {
+              "default": "Off",
+              "Off": "default"
+            }
+          },
+          {
+            "Type": "WraithBusters_CandlePuzzle"
+          }
+        ]
+      }
+    },
+    "State": {
+      "Definitions": {
+        "On": {
+          "Light": {
+            "Radius": 8,
+            "Color": "#26b2ff"
+          }
+        },
+        "Off": {
+          "Light": null
+        }
+      }
+    },
+    "CustomModelTexture": [
+      {
+        "Texture": "Blocks/Decorative_Sets/Crude/Candle_Texture.png"
+      }
+    ]
+  }
+}

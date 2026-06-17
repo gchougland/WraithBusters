@@ -1,0 +1,15 @@
+﻿{
+  "TranslationProperties": {
+    "Name": "server.items.WraithBusters_Key_Hexagon.name"
+  },
+  "Categories": ["Items.WraithBusters"],
+  "Set": "WraithBusters",
+  "Icon": "Icons/ItemsGenerated/WraithBusters_Door_Symbol_Hexagon.png",
+  "Model": "Items/WraithBusters/DoorKey.blockymodel",
+  "Texture": "Items/WraithBusters/DoorKey_Hexagon.png",
+  "MaxStack": 1,
+  "PlayerAnimationsId": "Item",
+  "Interactions": {
+    "Secondary": "Block_Secondary"
+  }
+}

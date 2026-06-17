@@ -1,0 +1,21 @@
+{
+  "Parent": "Default",
+  "World": {
+    "AllowBlockBreaking": true,
+    "AllowBlockGathering": true,
+    "AllowBlockPlacement": true
+  },
+  "Death": {
+    "ItemsLossMode": "None",
+    "RespawnController": {
+      "Type": "WorldSpawnPoint"
+    }
+  },
+  "Combat": {
+    "DisableNPCIncomingDamage": true,
+    "DisablePlayerIncomingDamage": false
+  },
+  "Plugin": {
+    "WraithBusters": {}
+  }
+}

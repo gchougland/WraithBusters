@@ -1,0 +1,11 @@
+$C = "../Common.ui";
+
+Group #LobbyStatusHudRoot {
+  LayoutMode: Top;
+  Anchor: (Top: 80);
+
+  Label #LobbyStatus {
+    Style: (...$C.@DefaultLabelStyle, FontSize: 16, TextColor: #d8e8ff, HorizontalAlignment: Center);
+    Text: "";
+  }
+}

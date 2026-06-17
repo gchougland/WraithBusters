@@ -1,0 +1,61 @@
+{
+  "TranslationProperties": {
+    "Name": "server.items.WraithBusters_Exorcism_Table.name"
+  },
+  "Categories": [
+    "Blocks.WraithBusters"
+  ],
+  "Set": "WraithBusters",
+  "PlayerAnimationsId": "Block",
+  "Interactions": {
+    "Primary": "Block_Primary",
+    "Secondary": "Block_Secondary"
+  },
+  "Icon": "Icons/ItemsGenerated/WraithBusters_Exorcism_Table.png",
+  "BlockType": {
+    "DrawType": "Model",
+    "Material": "Solid",
+    "Opacity": "Transparent",
+    "HitboxType": "Table",
+    "VariantRotation": "NESW",
+    "Gathering": {
+      "Breaking": {
+        "GatherType": "Unbreakable"
+      }
+    },
+    "Interactions": {
+      "Use": {
+        "Interactions": [
+          {
+            "Type": "WraithBusters_Exorcism"
+          }
+        ]
+      }
+    },
+    "CustomModel": "Blocks/Decorative_Sets/Temple_Dark/Table.blockymodel",
+    "CustomModelTexture": [
+      {
+        "Texture": "Blocks/Decorative_Sets/Temple_Dark/Table_Texture.png"
+      }
+    ],
+    "Support": {
+      "Down": [
+        {
+          "FaceType": "Full"
+        }
+      ]
+    }
+  },
+  "IconProperties": {
+    "Scale": 0.3,
+    "Rotation": [
+      22.5,
+      45,
+      22.5
+    ],
+    "Translation": [
+      -22,
+      -13.5
+    ]
+  }
+}

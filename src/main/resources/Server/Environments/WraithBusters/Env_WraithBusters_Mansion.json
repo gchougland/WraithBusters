@@ -1,0 +1,153 @@
+{
+  "Tags": {
+    "WraithBusters": [
+      "Mansion"
+    ]
+  },
+  "WeatherForecasts": {
+    "0": [
+      {
+        "WeatherId": "WraithBusters_Mansion_Night",
+        "Weight": 100
+      }
+    ],
+    "1": [
+      {
+        "WeatherId": "WraithBusters_Mansion_Night",
+        "Weight": 100
+      }
+    ],
+    "2": [
+      {
+        "WeatherId": "WraithBusters_Mansion_Night",
+        "Weight": 100
+      }
+    ],
+    "3": [
+      {
+        "WeatherId": "WraithBusters_Mansion_Night",
+        "Weight": 100
+      }
+    ],
+    "4": [
+      {
+        "WeatherId": "WraithBusters_Mansion_Night",
+        "Weight": 100
+      }
+    ],
+    "5": [
+      {
+        "WeatherId": "WraithBusters_Mansion_Night",
+        "Weight": 100
+      }
+    ],
+    "6": [
+      {
+        "WeatherId": "WraithBusters_Mansion_Night",
+        "Weight": 100
+      }
+    ],
+    "7": [
+      {
+        "WeatherId": "WraithBusters_Mansion_Night",
+        "Weight": 100
+      }
+    ],
+    "8": [
+      {
+        "WeatherId": "WraithBusters_Mansion_Night",
+        "Weight": 100
+      }
+    ],
+    "9": [
+      {
+        "WeatherId": "WraithBusters_Mansion_Night",
+        "Weight": 100
+      }
+    ],
+    "10": [
+      {
+        "WeatherId": "WraithBusters_Mansion_Night",
+        "Weight": 100
+      }
+    ],
+    "11": [
+      {
+        "WeatherId": "WraithBusters_Mansion_Night",
+        "Weight": 100
+      }
+    ],
+    "12": [
+      {
+        "WeatherId": "WraithBusters_Mansion_Night",
+        "Weight": 100
+      }
+    ],
+    "13": [
+      {
+        "WeatherId": "WraithBusters_Mansion_Night",
+        "Weight": 100
+      }
+    ],
+    "14": [
+      {
+        "WeatherId": "WraithBusters_Mansion_Night",
+        "Weight": 100
+      }
+    ],
+    "15": [
+      {
+        "WeatherId": "WraithBusters_Mansion_Night",
+        "Weight": 100
+      }
+    ],
+    "16": [
+      {
+        "WeatherId": "WraithBusters_Mansion_Night",
+        "Weight": 100
+      }
+    ],
+    "17": [
+      {
+        "WeatherId": "WraithBusters_Mansion_Night",
+        "Weight": 100
+      }
+    ],
+    "18": [
+      {
+        "WeatherId": "WraithBusters_Mansion_Night",
+        "Weight": 100
+      }
+    ],
+    "19": [
+      {
+        "WeatherId": "WraithBusters_Mansion_Night",
+        "Weight": 100
+      }
+    ],
+    "20": [
+      {
+        "WeatherId": "WraithBusters_Mansion_Night",
+        "Weight": 100
+      }
+    ],
+    "21": [
+      {
+        "WeatherId": "WraithBusters_Mansion_Night",
+        "Weight": 100
+      }
+    ],
+    "22": [
+      {
+        "WeatherId": "WraithBusters_Mansion_Night",
+        "Weight": 100
+      }
+    ],
+    "23": [
+      {
+        "WeatherId": "WraithBusters_Mansion_Night",
+        "Weight": 100
+      }
+    ]
+  }
+}

@@ -1,0 +1,15 @@
+﻿{
+  "TranslationProperties": {
+    "Name": "server.items.WraithBusters_Key_Star.name"
+  },
+  "Categories": ["Items.WraithBusters"],
+  "Set": "WraithBusters",
+  "Icon": "Icons/ItemsGenerated/WraithBusters_Door_Symbol_Star.png",
+  "Model": "Items/WraithBusters/DoorKey.blockymodel",
+  "Texture": "Items/WraithBusters/DoorKey_Star.png",
+  "MaxStack": 1,
+  "PlayerAnimationsId": "Item",
+  "Interactions": {
+    "Secondary": "Block_Secondary"
+  }
+}

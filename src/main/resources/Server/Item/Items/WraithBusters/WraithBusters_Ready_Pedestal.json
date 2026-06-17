@@ -1,0 +1,69 @@
+{
+  "TranslationProperties": {
+    "Name": "server.items.WraithBusters_Ready_Pedestal.name"
+  },
+  "Categories": [
+    "Blocks.WraithBusters"
+  ],
+  "Set": "WraithBusters",
+  "PlayerAnimationsId": "Block",
+  "Interactions": {
+    "Primary": "Block_Primary",
+    "Secondary": "Block_Secondary"
+  },
+  "Icon": "Icons/ItemsGenerated/WraithBusters_Ready_Pedestal.png",
+  "BlockType": {
+    "DrawType": "Model",
+    "Material": "Solid",
+    "Opacity": "Transparent",
+    "HitboxType": "Beam",
+    "VariantRotation": "DoublePipe",
+    "Gathering": {
+      "Breaking": {
+        "GatherType": "Unbreakable"
+      }
+    },
+    "Interactions": {
+      "Use": {
+        "Interactions": [
+          {
+            "Type": "WraithBusters_ReadyUp"
+          }
+        ]
+      }
+    },
+    "CustomModel": "Blocks/Structures/Pillars/Pillar_Base.blockymodel",
+    "CustomModelTexture": [
+      {
+        "Texture": "Blocks/Structures/Pillars/Pillar_Base_Textures/Rock_Slate_Brick_Pillar.png"
+      }
+    ],
+    "Supporting": {
+      "Down": [
+        {}
+      ],
+      "Up": [
+        {}
+      ]
+    },
+    "Support": {
+      "Down": [
+        {
+          "FaceType": "Full"
+        }
+      ]
+    }
+  },
+  "IconProperties": {
+    "Scale": 0.58823,
+    "Rotation": [
+      22.5,
+      45,
+      22.5
+    ],
+    "Translation": [
+      0,
+      -13.5
+    ]
+  }
+}

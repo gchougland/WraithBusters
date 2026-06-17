@@ -1,0 +1,94 @@
+{
+  "TranslationProperties": {
+    "Name": "server.items.WraithBusters_Locked_Door_Temple_Dark_Large.name"
+  },
+  "PlayerAnimationsId": "Block",
+  "Categories": [
+    "Furniture.Doors",
+    "Blocks.WraithBusters"
+  ],
+  "Set": "WraithBusters",
+  "Icon": "Icons/ItemsGenerated/Furniture_Temple_Dark_Door_Large.png",
+  "IconProperties": {
+    "Rotation": [22.5, 45, 22.5],
+    "Scale": 0.445,
+    "Translation": [-10.8, -61.71]
+  },
+  "Interactions": {
+    "Primary": "Block_Primary",
+    "Secondary": "Block_Secondary"
+  },
+  "BlockType": {
+    "BlockParticleSetId": "Stone",
+    "CustomModel": "Blocks/Decorative_Sets/Temple_Dark/Door_Large.blockymodel",
+    "CustomModelTexture": [
+      {
+        "Texture": "Blocks/Decorative_Sets/Temple_Dark/Door_Large_Texture.png"
+      }
+    ],
+    "DrawType": "Model",
+    "Gathering": {
+      "Breaking": {
+        "GatherType": "Unbreakable"
+      }
+    },
+    "HitboxType": "Door_Large",
+    "Material": "Solid",
+    "State": {
+      "Definitions": {
+        "CloseDoorIn": {
+          "InteractionSoundEventId": "SFX_Door_Temple_Light_Close",
+          "CustomModelAnimation": "Blocks/Animations/Door/Door_Close_In.blockyanim"
+        },
+        "CloseDoorOut": {
+          "InteractionSoundEventId": "SFX_Door_Temple_Light_Close",
+          "CustomModelAnimation": "Blocks/Animations/Door/Door_Close_Out.blockyanim"
+        },
+        "DoorBlocked": {},
+        "OpenDoorIn": {
+          "SoundOcclusionOpacity": 0.0,
+          "HitboxType": "Door_Large_Open_In",
+          "InteractionHitboxType": "Door_Large_Open_In_Interaction",
+          "InteractionSoundEventId": "SFX_Door_Temple_Light_Open",
+          "CustomModelAnimation": "Blocks/Animations/Door/Door_Open_In.blockyanim",
+          "InteractionHint": "server.interactionHints.closeDoor"
+        },
+        "OpenDoorOut": {
+          "SoundOcclusionOpacity": 0.0,
+          "HitboxType": "Door_Large_Open_Out",
+          "InteractionHitboxType": "Door_Large_Open_Out_Interaction",
+          "InteractionSoundEventId": "SFX_Door_Temple_Light_Open",
+          "CustomModelAnimation": "Blocks/Animations/Door/Door_Open_Out.blockyanim",
+          "InteractionHint": "server.interactionHints.closeDoor"
+        }
+      }
+    },
+    "VariantRotation": "NESW",
+    "ParticleColor": "#474f4c",
+    "BlockSoundSetId": "Stone",
+    "PhysicalMaterialId": "Stone",
+    "SoundOcclusionOpacity": 2.0,
+    "InteractionHint": "server.interactionHints.openDoor",
+    "IsDoor": true,
+    "Interactions": {
+      "Use": {
+        "Interactions": [
+          {
+            "Type": "WraithBusters_LockedDoor",
+            "SymbolId": "circle"
+          }
+        ]
+      }
+    },
+    "ConnectedBlockRuleSet": {
+      "Type": "CustomTemplate",
+      "TemplateShapeAssetId": "DoorLargeConnectedBlockTemplate",
+      "TemplateShapeBlockPatterns": {
+        "Default": "WraithBusters_Locked_Door_Temple_Dark_Large"
+      }
+    },
+    "TextureComputedColor": "#303C3C"
+  },
+  "Scale": 0.5,
+  "ItemSoundSetId": "ISS_Blocks_Wood"
+}

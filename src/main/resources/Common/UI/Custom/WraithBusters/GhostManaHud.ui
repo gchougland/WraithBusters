@@ -1,0 +1,11 @@
+$C = "../Common.ui";
+
+Group #GhostManaHudRoot {
+  LayoutMode: Top;
+  Anchor: (Top: 72, Right: 24);
+
+  Label #GhostMana {
+    Style: (...$C.@DefaultLabelStyle, FontSize: 14, TextColor: #66ccff, HorizontalAlignment: End);
+    Text: "";
+  }
+}

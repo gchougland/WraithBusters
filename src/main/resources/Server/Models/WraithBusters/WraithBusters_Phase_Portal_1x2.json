@@ -1,0 +1,27 @@
+{
+  "Model": "Characters/Empty_Cube.blockymodel",
+  "Texture": "Characters/Empty_Cube_Texture.png",
+  "EyeHeight": 0.5,
+  "HitBox": {
+    "Max": {
+      "X": 0.2,
+      "Y": 0.2,
+      "Z": 0.2
+    },
+    "Min": {
+      "X": -0.2,
+      "Y": 0,
+      "Z": -0.2
+    }
+  },
+  "Particles": [
+    {
+      "SystemId": "WraithBusters_Portal_1x2_Blue_Fit",
+      "Scale": 0.45
+    }
+  ],
+  "Light": {
+    "Color": "#66aaff",
+    "Radius": 6
+  }
+}

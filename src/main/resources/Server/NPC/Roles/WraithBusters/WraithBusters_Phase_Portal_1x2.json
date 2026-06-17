@@ -1,0 +1,37 @@
+{
+  "Type": "Generic",
+  "Appearance": "WraithBusters_Phase_Portal_1x2",
+  "Invulnerable": true,
+  "KnockbackScale": 0,
+  "DropList": "Empty",
+  "DisableDamageGroups": ["Self"],
+  "DefaultNPCAttitude": "Ignore",
+  "DefaultPlayerAttitude": "Ignore",
+  "ApplySeparation": false,
+  "ApplyAvoidance": false,
+  "MotionControllerList": [
+    {
+      "Type": "Fly"
+    }
+  ],
+  "MaxHealth": 1,
+  "Instructions": [
+    {
+      "Continue": true,
+      "Instructions": [
+        {
+          "Sensor": {
+            "Type": "Any"
+          },
+          "BodyMotion": {
+            "Type": "Nothing"
+          },
+          "HeadMotion": {
+            "Type": "Nothing"
+          }
+        }
+      ]
+    }
+  ],
+  "NameTranslationKey": "server.npcRoles.WraithBusters_Phase_Portal.name"
+}

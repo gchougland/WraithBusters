@@ -1,0 +1,11 @@
+$C = "../Common.ui";
+
+Group #RoundTimerHudRoot {
+  LayoutMode: Top;
+  Anchor: (Top: 40);
+
+  Label #RoundTimer {
+    Style: (...$C.@DefaultLabelStyle, FontSize: 22, TextColor: #f4e8c8, RenderBold: true, HorizontalAlignment: Center);
+    Text: "";
+  }
+}

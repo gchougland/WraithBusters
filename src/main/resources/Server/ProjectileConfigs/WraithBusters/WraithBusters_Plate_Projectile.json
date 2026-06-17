@@ -1,0 +1,37 @@
+{
+  "Model": "WraithBusters_Plate",
+  "Physics": {
+    "Type": "Standard",
+    "Gravity": 6,
+    "TerminalVelocityAir": 18,
+    "TerminalVelocityWater": 10,
+    "RotationMode": "VelocityDamped",
+    "SticksVertically": false
+  },
+  "LaunchForce": 12,
+  "SpawnOffset": {
+    "X": 0.0,
+    "Y": 0.5,
+    "Z": 0.0
+  },
+  "Interactions": {
+    "ProjectileHit": {
+      "Cooldown": { "Cooldown": 0 },
+      "Interactions": [
+        {
+          "Type": "DamageEntity",
+          "DamageCalculator": {
+            "BaseDamage": { "Physical": 25 }
+          }
+        },
+        { "Type": "RemoveEntity", "Entity": "User" }
+      ]
+    },
+    "ProjectileMiss": {
+      "Cooldown": { "Cooldown": 0 },
+      "Interactions": [
+        { "Type": "RemoveEntity", "Entity": "User" }
+      ]
+    }
+  }
+}

@@ -1,0 +1,55 @@
+{
+  "TranslationProperties": {
+    "Name": "server.items.WraithBusters_Door_Symbol_Pentagon.name"
+  },
+  "Categories": [
+    "Blocks.WraithBusters"
+  ],
+  "Set": "WraithBusters",
+  "PlayerAnimationsId": "Block",
+  "Interactions": {
+    "Primary": "Block_Primary",
+    "Secondary": "Block_Secondary"
+  },
+  "Icon": "Icons/ItemsGenerated/WraithBusters_Door_Symbol_Pentagon.png",
+  "IconProperties": {
+    "Scale": 0.85,
+    "Rotation": [
+      22.5,
+      45,
+      22.5
+    ],
+    "Translation": [
+      0,
+      -8
+    ]
+  },
+  "BlockType": {
+    "Material": "Solid",
+    "DrawType": "Model",
+    "Opacity": "Transparent",
+    "CustomModel": "Blocks/DoorSymbols/DoorSymbol.blockymodel",
+    "CustomModelScale": 1,
+    "CustomModelTexture": [
+      {
+        "Texture": "Blocks/DoorSymbols/pentagon.png",
+        "Weight": 1
+      }
+    ],
+    "HitboxType": "WraithBusters_Door_Symbol",
+    "VariantRotation": "NESW",
+    "Gathering": {
+      "Soft": {}
+    },
+    "BlockParticleSetId": "Wood",
+    "BlockSoundSetId": "Wood",
+    "PhysicalMaterialId": "Wood",
+    "Support": {
+      "North": [
+        {
+          "FaceType": "Full"
+        }
+      ]
+    }
+  }
+}

@@ -1,6 +1,162 @@
-items.WraithBusters_Spooky_Human_Ruins_Lantern_Ceiling.name=Spooky Ruins Lantern
-items.WraithBusters_Spooky_Temple_Dark_Candle.name=Spooky Temple Candle
-items.WraithBusters_Spooky_Tavern_Candle.name=Spooky Tavern Candle
-items.WraithBusters_Spooky_Tavern_Chandelier.name=Spooky Tavern Chandelier
-items.WraithBusters_Spooky_Crude_Candle.name=Spooky Crude Candle
-npcRoles.WraithBusters_Spooky_Wraith_Lantern.name=Spooky Wraith Lantern
+# Items
+items.WraithBusters_Spooky_Crude_Candle.name = Spooky Crude Candle
+items.WraithBusters_Spooky_Tavern_Candle.name = Spooky Tavern Candle
+items.WraithBusters_Spooky_Temple_Dark_Candle.name = Spooky Temple Candle
+items.WraithBusters_Spooky_Tavern_Chandelier.name = Spooky Tavern Chandelier
+items.WraithBusters_Spooky_Human_Ruins_Lantern_Ceiling.name = Spooky Ruins Lantern
+items.WraithBusters_Spooky_Wraith_Lantern.name = Spooky Wraith Lantern
+items.WraithBusters_Ready_Pedestal.name = Ready Pedestal
+items.WraithBusters_Locked_Door.name = Locked Door (Temple Dark)
+items.WraithBusters_Locked_Door_Temple_Dark_Medium.name = Locked Door (Temple Dark Medium)
+items.WraithBusters_Locked_Door_Temple_Dark_Large.name = Locked Door (Temple Dark Large)
+items.WraithBusters_Locked_Door_Human_Ruins.name = Locked Door (Human Ruins)
+items.WraithBusters_Locked_Door_Human_Ruins_Medium.name = Locked Door (Human Ruins Medium)
+items.WraithBusters_Exorcism_Table.name = Exorcism Table
+items.WraithBusters_Possessable_Plate.name = Haunted Plate
+items.WraithBusters_Key_Circle.name = Circle Key
+items.WraithBusters_Key_Cross.name = Cross Key
+items.WraithBusters_Key_Diamond.name = Diamond Key
+items.WraithBusters_Key_Heart.name = Heart Key
+items.WraithBusters_Key_Hexagon.name = Hexagon Key
+items.WraithBusters_Key_Moon.name = Moon Key
+items.WraithBusters_Key_Pentagon.name = Pentagon Key
+items.WraithBusters_Key_Shield.name = Shield Key
+items.WraithBusters_Key_Square.name = Square Key
+items.WraithBusters_Key_Star.name = Star Key
+items.WraithBusters_Key_Triangle.name = Triangle Key
+items.WraithBusters_Key_Attic.name = Attic Key
+items.WraithBusters_Puzzle_Candle.name = Puzzle Candle
+items.WraithBusters_Phase_Door_Tool.name = Phase Door Tool
+items.WraithBusters_Phase_Door_Tool.description = Right-click to place ghost phase door entry, then exit. Left-click to remove.
+items.WraithBusters_Door_Symbol_Circle.name = Door Symbol (Circle)
+items.WraithBusters_Door_Symbol_Cross.name = Door Symbol (Cross)
+items.WraithBusters_Door_Symbol_Diamond.name = Door Symbol (Diamond)
+items.WraithBusters_Door_Symbol_Heart.name = Door Symbol (Heart)
+items.WraithBusters_Door_Symbol_Hexagon.name = Door Symbol (Hexagon)
+items.WraithBusters_Door_Symbol_Moon.name = Door Symbol (Moon)
+items.WraithBusters_Door_Symbol_Pentagon.name = Door Symbol (Pentagon)
+items.WraithBusters_Door_Symbol_Shield.name = Door Symbol (Shield)
+items.WraithBusters_Door_Symbol_Square.name = Door Symbol (Square)
+items.WraithBusters_Door_Symbol_Star.name = Door Symbol (Star)
+items.WraithBusters_Door_Symbol_Triangle.name = Door Symbol (Triangle)
+
+# NPC
+npcRoles.WraithBusters_Spooky_Wraith_Lantern.name = Spooky Wraith Lantern
+npcRoles.WraithBusters_Mana_Orb.name = Spirit Orb
+npcRoles.WraithBusters_Phase_Portal.name = Ghost Phase Portal
+
+# Instance
+wraithbusters.instances.mansion.title = Wraith Busters
+wraithbusters.instances.mansion.subtitle = The haunted mansion awaits
+
+# Lobby and ready
+wraithbusters.ready.on = You are ready
+wraithbusters.ready.off = You are not ready
+wraithbusters.lobby.status = Ready {ready} of {total}
+wraithbusters.countdown.title = Starting in {seconds}
+wraithbusters.round.start = The hunt begins
+wraithbusters.round.timer = Time left {time}
+
+# Teams and round
+wraithbusters.ghost.mana = Spirit power {current} of {max}
+wraithbusters.mana.collected = You absorbed spirit energy
+wraithbusters.mana.notEnough = Not enough spirit power
+wraithbusters.possess.plate = You hurled a haunted plate
+wraithbusters.possess.noTarget = No human nearby
+
+# Doors and keys
+wraithbusters.door.locked = This door is still locked
+wraithbusters.door.needKey = You need a key to open this door
+wraithbusters.door.wrongKey = That key does not fit
+wraithbusters.door.opened = The door unlocks
+wraithbusters.key.found = You found a {symbol} key
+wraithbusters.exorcism.needKey = You need the attic key first
+
+# Puzzle
+wraithbusters.puzzle.candle.wrong = The candles flicker out
+wraithbusters.puzzle.candle.complete = The puzzle is solved
+
+# Win and end
+wraithbusters.win.ghosts.timer = The ghosts win as time runs out
+wraithbusters.win.ghosts.eliminated = The ghosts win
+wraithbusters.win.humans = The humans banished the spirit
+wraithbusters.end.ghostsWin = The ghosts win
+wraithbusters.end.humansWin = The humans win
+wraithbusters.end.playAgain = Play again
+wraithbusters.end.leave = Return home
+
+# Commands
+wraithbusters.commands.root = Wraith Busters minigame commands
+wraithbusters.commands.start = Start a new game lobby
+wraithbusters.commands.start.arena = Arena layout id
+wraithbusters.commands.join = Join the open lobby
+wraithbusters.commands.leave = Leave the current game
+wraithbusters.commands.ready = Toggle ready in the lobby
+wraithbusters.commands.forcestart = Force the countdown to start
+wraithbusters.commands.stop = Stop the current game
+wraithbusters.commands.status = Show game status
+wraithbusters.commands.reload = Reload plugin config
+wraithbusters.commands.testghost = Toggle solo ghost test mode (flight, orbs, phase doors)
+wraithbusters.commands.testghost.mode = on or off (default toggles)
+wraithbusters.commands.setup = Arena setup tools
+wraithbusters.commands.setup.enter = Enter setup mode
+wraithbusters.commands.setup.exit = Exit setup mode
+wraithbusters.commands.setup.mark = Place a marker at your feet
+wraithbusters.commands.setup.markRoom = Mark a puzzle room door
+wraithbusters.commands.setup.help = Explain setup markers
+wraithbusters.commands.setup.type = Marker type
+wraithbusters.commands.setup.extra = Extra marker data (room id, puzzle id, plate type)
+wraithbusters.commands.setup.room = Unique room name
+wraithbusters.commands.setup.save = Save arena layout
+wraithbusters.commands.setup.arena = Arena layout id
+
+wraithbusters.start.created = Game lobby created. Others can join now
+wraithbusters.start.failed = Could not enter the game lobby
+wraithbusters.join.none = No open game lobby right now
+wraithbusters.join.success = You joined the lobby
+wraithbusters.join.failed = Could not join the game lobby
+wraithbusters.leave.none = You are not in a game
+wraithbusters.leave.success = You left the game
+wraithbusters.ready.noGame = You are not in a lobby
+wraithbusters.forcestart = Forcing countdown
+wraithbusters.stop.denied = Only the host can stop the game
+wraithbusters.stop.done = Game stopped
+wraithbusters.status.none = You are not in a game
+wraithbusters.status.line = Phase {phase}. Ready {ready} of {total}
+wraithbusters.reload.done = Config reloaded
+
+wraithbusters.testghost.enabled = Ghost test mode on. Flight enabled; spirit orbs and phase doors are active in this instance
+wraithbusters.testghost.enabledNoSession = Ghost test mode on (flight only). Run /wb start in this world for orbs and phase doors
+wraithbusters.testghost.disabled = Ghost test mode off
+wraithbusters.testghost.notActive = You are not in ghost test mode
+
+wraithbusters.setup.enter = Setup mode on. You received a Phase Door Tool. Use /wb setup help, then mark and save
+wraithbusters.setup.exit = Setup mode off
+wraithbusters.setup.notInMode = You are not in setup mode
+wraithbusters.setup.room.noTarget = Look at a WraithBusters locked door block (within 24 blocks)
+wraithbusters.setup.room.notLockedDoor = That block is not a WraithBusters locked door
+wraithbusters.setup.room.marked = Marked room {roomId} with {count} door block(s) at {x}, {y}, {z}
+wraithbusters.setup.marked = Marked {type} at block {x}, {y}, {z}
+wraithbusters.setup.unknownType = Unknown marker type
+wraithbusters.setup.saved = Arena saved
+wraithbusters.setup.saveFailed = Could not save arena
+wraithbusters.setup.phaseDoor.noTarget = No block in range. Look at a locked door and try again
+wraithbusters.setup.phaseDoor.completed = Bidirectional phase portal placed on locked door. Both sides visible in creative
+wraithbusters.setup.phaseDoor.removed = Phase portal removed
+wraithbusters.setup.phaseDoor.noneRemoved = No phase portal on that door or nearby
+wraithbusters.setup.phaseDoor.notLockedDoor = That block is not a WraithBusters locked door
+wraithbusters.setup.phaseDoor.legacyDeprecated = Use the Phase Door Tool instead: right-click a locked door to place a bidirectional portal
+
+wraithbusters.setup.help.intro = Setup markers: stand on the target block, then run mark
+wraithbusters.setup.help.position = Markers use the block under your feet, not what you are looking at
+wraithbusters.setup.help.lobbySpawn = lobbySpawn: courtyard where players wait before the round
+wraithbusters.setup.help.humanSpawn = humanSpawn: where humans appear at round start (add several)
+wraithbusters.setup.help.ghostSpawn = ghostSpawn: where ghosts appear at round start (add several)
+wraithbusters.setup.help.room = room: look at a WraithBusters locked door (both blocks for double-wide doors). Use /wb setup mark library or mark room --extra library. Edit symbolId and keySpawn in the saved JSON
+wraithbusters.setup.help.candle = candle: stand on each Puzzle Candle block. Order is the order you mark them. Group candles with --extra puzzleId
+wraithbusters.setup.help.possessable = possessable: stand on a Haunted Plate block. Optional --extra plate
+wraithbusters.setup.help.manaPickup = manaPickup: stand where a spirit orb should float. Only ghosts and creative players see orbs during a round
+wraithbusters.setup.help.exorcism = exorcism: stand on the Exorcism Table block in the attic
+wraithbusters.setup.help.phaseDoor = phaseDoor: deprecated. Use the Phase Door Tool (right-click a locked door)
+wraithbusters.setup.help.phaseDoorTool = Phase Door Tool: right-click a WraithBusters locked door to place a bidirectional ghost portal on both sides. Left-click a door or portal to remove. Portals scale to door size (1x2, 2x2, 3x3, 4x4). Visible to creative builders and ghosts only
+wraithbusters.setup.help.save = save mansion_v1 writes run/mods/.../wraithbusters/arenas/mansion_v1.json

@@ -1,0 +1,40 @@
+{
+  "TranslationProperties": {
+    "Name": "server.items.WraithBusters_Phase_Door_Tool.name",
+    "Description": "server.items.WraithBusters_Phase_Door_Tool.description"
+  },
+  "Icon": "Icons/Items/EditorTools/Prefab.png",
+  "Categories": [
+    "Blocks.WraithBusters"
+  ],
+  "Set": "WraithBusters",
+  "Model": "Items/Tools/Brush/Brush.blockymodel",
+  "Texture": "Items/Tools/Brush/Brush_Texture.png",
+  "MaxStack": 1,
+  "PlayerAnimationsId": "Item",
+  "Interactions": {
+    "Primary": {
+      "RequireNewClick": true,
+      "Interactions": [
+        {
+          "Type": "WraithBusters_SetupPhaseDoorTool"
+        }
+      ]
+    },
+    "Secondary": {
+      "RequireNewClick": true,
+      "Interactions": [
+        {
+          "Type": "WraithBusters_SetupPhaseDoorTool"
+        }
+      ]
+    }
+  },
+  "InteractionConfig": {
+    "UseDistance": {
+      "Adventure": 24,
+      "Creative": 48
+    }
+  },
+  "Quality": "Tool"
+}
