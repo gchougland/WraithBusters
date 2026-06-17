@@ -1,0 +1,123 @@
+{
+  "TranslationProperties": {
+    "Name": "server.items.WraithBusters_Spooky_Crude_Candle.name"
+  },
+  "PlayerAnimationsId": "Torch",
+  "Categories": [
+    "Furniture.Lighting"
+  ],
+  "Set": "WraithBusters",
+  "Icon": "Icons/ItemsGenerated/WraithBusters_Spooky_Crude_Candle.png",
+  "IconProperties": {
+    "Scale": 0.7,
+    "Rotation": [
+      22.5,
+      45,
+      22.5
+    ],
+    "Translation": [
+      1.8,
+      -13.5
+    ]
+  },
+  "InteractionConfig": {
+    "Priorities": {
+      "Secondary": {
+        "MainHand": 1,
+        "OffHand": -1
+      }
+    }
+  },
+  "Interactions": {
+    "Primary": "Root_Unarmed_Attack_Swing_Left",
+    "Secondary": "Block_Secondary"
+  },
+  "BlockType": {
+    "BlockParticleSetId": "Dust",
+    "BlockSoundSetId": "Metal",
+    "PhysicalMaterialId": "Metal",
+    "CustomModel": "Blocks/Decorative_Sets/Crude/Candle.blockymodel",
+    "CustomModelScale": 0.7,
+    "CustomModelTexture": [
+      {
+        "Texture": "Blocks/Decorative_Sets/Crude/Candle_Texture.png",
+        "Weight": 1
+      }
+    ],
+    "DrawType": "Model",
+    "Flags": {},
+    "Gathering": {
+      "Soft": {
+        "IsWeaponBreakable": false
+      }
+    },
+    "HitboxType": "Torch_Small",
+    "Light": {
+      "Color": "#9ba",
+      "Radius": 0
+    },
+    "Opacity": "Transparent",
+    "RandomRotation": "YawStep1",
+    "Support": {
+      "Down": [
+        {
+          "FaceType": "Full"
+        },
+        {
+          "FaceType": "Wood_Beam"
+        }
+      ]
+    },
+    "Looping": true,
+    "Material": "Solid",
+    "Particles": [
+      {
+        "SystemId": "Candle_Fire",
+        "TargetNodeName": "Flame-Emitter",
+        "Color": "#26b2ff",
+        "Scale": 1.1
+      }
+    ],
+    "Interactions": {
+      "Use": {
+        "Interactions": [
+          {
+            "Type": "ChangeState",
+            "Changes": {
+              "default": "Off",
+              "Off": "default"
+            }
+          }
+        ]
+      }
+    },
+    "State": {
+      "Definitions": {
+        "On": {
+          "AmbientSoundEventId": "SFX_Candle_Default_Loop"
+        },
+        "Off": {
+          "InteractionHint": "server.interactionHints.turnon",
+          "Light": null,
+          "Particles": null,
+          "InteractionSoundEventId": "SFX_Candle_Off",
+          "AmbientSoundEventId": null
+        }
+      }
+    },
+    "InteractionHint": "server.interactionHints.turnoff",
+    "AmbientSoundEventId": "SFX_Candle_Default_Loop",
+    "ParticleColor": "#333839",
+    "TextureComputedColor": "#6F562E"
+  },
+  "Tags": {
+    "Type": [
+      "Furniture"
+    ],
+    "Family": [
+      "WraithBusters"
+    ]
+  },
+  "Scale": 1.5,
+  "ItemSoundSetId": "ISS_Blocks_Wood"
+}

@@ -1,0 +1,36 @@
+{
+  "Spawners": [
+    {
+      "SpawnerId": "Fireplace_Smoke_Cartoon",
+      "PositionOffset": {
+        "X": 0,
+        "Y": 0.25,
+        "Z": 0
+      }
+    },
+    {
+      "SpawnerId": "WraithBusters_Fire_Up",
+      "PositionOffset": {
+        "X": 0,
+        "Y": 0.1,
+        "Z": 0
+      },
+      "Attractors": []
+    },
+    {
+      "SpawnerId": "WraithBusters_Fire_Center",
+      "PositionOffset": {
+        "X": 0,
+        "Y": 0.1,
+        "Z": 0
+      }
+    },
+    {
+      "SpawnerId": "WraithBusters_Fireplace_Sparks_Up"
+    },
+    {
+      "SpawnerId": "Fireplace_Distortion"
+    }
+  ],
+  "CullDistance": 60
+}

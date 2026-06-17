@@ -1,0 +1,55 @@
+{
+  "Type": "Generic",
+  "Appearance": "WraithBusters_Spooky_Wraith_Lantern",
+  "Invulnerable": true,
+  "KnockbackScale": 0,
+  "DropList": "Empty",
+  "DisableDamageGroups": [ "Self" ],
+  "DefaultNPCAttitude": "Ignore",
+  "DefaultPlayerAttitude": "Ignore",
+  "ApplySeparation": false,
+  "ApplyAvoidance": false,
+  "MotionControllerList": [
+    {
+      "Type": "Walk",
+      "MaxWalkSpeed": 3,
+      "Gravity": 10,
+      "MaxFallSpeed": 8,
+      "Acceleration": 10
+    }
+  ],
+  "MaxHealth": 100,
+  "Instructions": [
+    {
+      "Continue": true,
+      "Instructions": [
+        {
+          "Sensor": {
+            "Type": "Any"
+          },
+          "BodyMotion": {
+            "Type": "Nothing"
+          },
+          "HeadMotion": {
+            "Type": "Nothing"
+          }
+        }
+      ]
+    },
+    {
+      "Instructions": [
+        {
+          "Sensor": {
+            "Type": "Any"
+          },
+          "Actions": [
+            {
+              "Type": "Nothing"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "NameTranslationKey": "server.npcRoles.WraithBusters_Spooky_Wraith_Lantern.name"
+}

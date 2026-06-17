@@ -1,0 +1,172 @@
+{
+  "TranslationProperties": {
+    "Name": "server.items.WraithBusters_Spooky_Tavern_Chandelier.name"
+  },
+  "PlayerAnimationsId": "Block",
+  "Categories": [
+    "Furniture.Lighting"
+  ],
+  "Set": "WraithBusters",
+  "Icon": "Icons/ItemsGenerated/Furniture_Tavern_Chandelier.png",
+  "IconProperties": {
+    "Rotation": [
+      22.5,
+      45,
+      22.5
+    ],
+    "Scale": 0.385,
+    "Translation": [
+      0,
+      3.1
+    ]
+  },
+  "BlockType": {
+    "BlockParticleSetId": "Wood",
+    "BlockSoundSetId": "Wood",
+    "PhysicalMaterialId": "Wood",
+    "CustomModel": "Blocks/Decorative_Sets/Tavern/Chandelier.blockymodel",
+    "CustomModelTexture": [
+      {
+        "Texture": "Blocks/Decorative_Sets/Tavern/Chandelier_Texture.png",
+        "Weight": 1
+      }
+    ],
+    "DrawType": "Model",
+    "Flags": {},
+    "Gathering": {
+      "Breaking": {
+        "GatherType": "Woods"
+      }
+    },
+    "Light": {
+      "Color": "#9ba",
+      "Radius": 0
+    },
+    "Material": "Solid",
+    "Opacity": "Transparent",
+    "ParticleColor": "#543022",
+    "Support": {
+      "Up": [
+        {
+          "FaceType": "Full",
+          "Filler": [
+            {
+              "X": 0,
+              "Y": 0,
+              "Z": 0
+            }
+          ]
+        },
+        {
+          "FaceType": "Branch",
+          "Filler": [
+            {
+              "X": 0,
+              "Y": 0,
+              "Z": 0
+            }
+          ]
+        },
+        {
+          "FaceType": "Rock_Beam",
+          "Filler": [
+            {
+              "X": 0,
+              "Y": 0,
+              "Z": 0
+            }
+          ]
+        },
+        {
+          "FaceType": "Wood_Beam",
+          "Filler": [
+            {
+              "X": 0,
+              "Y": 0,
+              "Z": 0
+            }
+          ]
+        }
+      ]
+    },
+    "HitboxType": "Chandelier",
+    "Particles": [
+      {
+        "SystemId": "Candle_Fire",
+        "TargetNodeName": "Flame-Emitter",
+        "Color": "#26b2ff",
+        "Scale": 0.75
+      },
+      {
+        "SystemId": "Candle_Fire",
+        "TargetNodeName": "Flame-Emitter2",
+        "Color": "#26b2ff",
+        "Scale": 0.5
+      },
+      {
+        "SystemId": "Candle_Fire",
+        "TargetNodeName": "Flame-Emitter3",
+        "Color": "#26b2ff",
+        "Scale": 0.7
+      },
+      {
+        "SystemId": "Candle_Fire",
+        "TargetNodeName": "Flame-Emitter4",
+        "Color": "#26b2ff",
+        "Scale": 0.65
+      },
+      {
+        "SystemId": "Candle_Fire",
+        "TargetNodeName": "Flame-Emitter5",
+        "Color": "#26b2ff",
+        "Scale": 0.8
+      },
+      {
+        "SystemId": "Candle_Fire",
+        "TargetNodeName": "Flame-Emitter6",
+        "Color": "#26b2ff",
+        "Scale": 0.6
+      }
+    ],
+    "Interactions": {
+      "Use": {
+        "Interactions": [
+          {
+            "Type": "ChangeState",
+            "Changes": {
+              "default": "Off",
+              "Off": "default"
+            }
+          }
+        ]
+      }
+    },
+    "State": {
+      "Definitions": {
+        "On": {
+          "AmbientSoundEventId": "SFX_Campfire_Default_Loop"
+        },
+        "Off": {
+          "InteractionHint": "server.interactionHints.turnon",
+          "Light": null,
+          "Particles": null,
+          "InteractionSoundEventId": "SFX_Torch_Off",
+          "AmbientSoundEventId": null
+        }
+      }
+    },
+    "InteractionHint": "server.interactionHints.turnoff",
+    "AmbientSoundEventId": "SFX_Campfire_Default_Loop",
+    "Looping": true,
+    "TextureComputedColor": "#635245"
+  },
+  "Tags": {
+    "Type": [
+      "Furniture"
+    ],
+    "Family": [
+      "WraithBusters"
+    ]
+  },
+  "ItemSoundSetId": "ISS_Blocks_Wood"
+}
