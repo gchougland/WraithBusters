@@ -24,7 +24,6 @@ items.WraithBusters_Key_Shield.name = Shield Key
 items.WraithBusters_Key_Square.name = Square Key
 items.WraithBusters_Key_Star.name = Star Key
 items.WraithBusters_Key_Triangle.name = Triangle Key
-items.WraithBusters_Key_Attic.name = Attic Key
 items.WraithBusters_Puzzle_Candle.name = Puzzle Candle
 items.WraithBusters_Phase_Door_Tool.name = Phase Door Tool
 items.WraithBusters_Phase_Door_Tool.description = Right-click to place ghost phase door entry, then exit. Left-click to remove.
@@ -70,7 +69,6 @@ wraithbusters.door.needKey = You need a key to open this door
 wraithbusters.door.wrongKey = That key does not fit
 wraithbusters.door.opened = The door unlocks
 wraithbusters.key.found = You found a {symbol} key
-wraithbusters.exorcism.needKey = You need the attic key first
 
 # Puzzle
 wraithbusters.puzzle.candle.wrong = The candles flicker out

@@ -1,15 +1,29 @@
-﻿{
+{
   "TranslationProperties": {
     "Name": "server.items.WraithBusters_Key_Circle.name"
   },
-  "Categories": ["Items.WraithBusters"],
+  "Categories": [
+    "Items.WraithBusters"
+  ],
   "Set": "WraithBusters",
-  "Icon": "Icons/ItemsGenerated/WraithBusters_Door_Symbol_Circle.png",
+  "Icon": "Icons/ItemsGenerated/WraithBusters_Key_Circle.png",
   "Model": "Items/WraithBusters/DoorKey.blockymodel",
   "Texture": "Items/WraithBusters/DoorKey_Circle.png",
   "MaxStack": 1,
   "PlayerAnimationsId": "Item",
   "Interactions": {
     "Secondary": "Block_Secondary"
+  },
+  "IconProperties": {
+    "Scale": 1,
+    "Rotation": [
+      38,
+      72,
+      64
+    ],
+    "Translation": [
+      -2,
+      1
+    ]
   }
 }

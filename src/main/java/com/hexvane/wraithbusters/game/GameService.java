@@ -8,6 +8,7 @@ import com.hexvane.wraithbusters.debug.GhostTestService;
 import com.hexvane.wraithbusters.door.RoomDoorService;
 import com.hexvane.wraithbusters.door.RoomProgressionService;
 import com.hexvane.wraithbusters.instance.GameInstanceService;
+import com.hexvane.wraithbusters.util.WorldThreadTasks;
 import com.hexvane.wraithbusters.ghost.PhasePortalMarkerService;
 import com.hexvane.wraithbusters.pickup.ManaPickupService;
 import com.hexvane.wraithbusters.player.PlayerRole;
@@ -455,9 +456,12 @@ public final class GameService {
         }
         World instance = Universe.get().getWorld(session.getWorldUuid());
         if (instance != null) {
-            ManaPickupService.endRound(session, instance);
-            PhasePortalMarkerService.shutdownSession(session, instance);
-            KeySpawnService.endRound(session, instance);
+            WorldThreadTasks.runOnWorldThread(instance, () -> {
+                ManaPickupService.endRound(session, instance);
+                PhasePortalMarkerService.shutdownSession(session, instance);
+                KeySpawnService.endRound(session, instance);
+            });
+            WorldThreadTasks.drainQueue(instance);
         }
         PuzzleService.resetForSession(session);
         GhostTestService.onRoundStarting(session);

@@ -1,15 +1,29 @@
-﻿{
+{
   "TranslationProperties": {
     "Name": "server.items.WraithBusters_Key_Pentagon.name"
   },
-  "Categories": ["Items.WraithBusters"],
+  "Categories": [
+    "Items.WraithBusters"
+  ],
   "Set": "WraithBusters",
-  "Icon": "Icons/ItemsGenerated/WraithBusters_Door_Symbol_Pentagon.png",
+  "Icon": "Icons/ItemsGenerated/WraithBusters_Key_Pentagon.png",
   "Model": "Items/WraithBusters/DoorKey.blockymodel",
   "Texture": "Items/WraithBusters/DoorKey_Pentagon.png",
   "MaxStack": 1,
   "PlayerAnimationsId": "Item",
   "Interactions": {
     "Secondary": "Block_Secondary"
+  },
+  "IconProperties": {
+    "Scale": 1,
+    "Rotation": [
+      38,
+      72,
+      64
+    ],
+    "Translation": [
+      -2,
+      1
+    ]
   }
 }

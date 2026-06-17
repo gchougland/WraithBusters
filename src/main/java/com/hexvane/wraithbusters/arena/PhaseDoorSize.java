@@ -7,20 +7,32 @@ public enum PhaseDoorSize {
     LARGE_4x4;
 
     public double triggerRadius() {
+        return 0.75;
+    }
+
+    public int widthBlocks() {
         return switch (this) {
-            case STANDARD_1x2 -> 1.2;
-            case STANDARD_2x2 -> 1.5;
-            case MEDIUM_3x3 -> 2.0;
-            case LARGE_4x4 -> 2.5;
+            case STANDARD_1x2 -> 1;
+            case STANDARD_2x2 -> 2;
+            case MEDIUM_3x3 -> 3;
+            case LARGE_4x4 -> 4;
         };
     }
 
-    public double portalYOffset() {
+    public int heightBlocks() {
         return switch (this) {
-            case STANDARD_1x2 -> 0.55;
-            case STANDARD_2x2 -> 0.55;
-            case MEDIUM_3x3 -> 1.0;
-            case LARGE_4x4 -> 1.5;
+            case STANDARD_1x2, STANDARD_2x2 -> 2;
+            case MEDIUM_3x3 -> 3;
+            case LARGE_4x4 -> 4;
         };
+    }
+
+    /**
+     * Rendered height of this tier's portal particle effect in world blocks.
+     * Must stay in sync with {@code portal_entity_height_blocks()} in generate_portal_particles.py.
+     * Vertical lift is applied via particle PositionOffset.Y = this / 2, not Java spawn Y.
+     */
+    public double portalEntityHeightBlocks() {
+        return heightBlocks();
     }
 }

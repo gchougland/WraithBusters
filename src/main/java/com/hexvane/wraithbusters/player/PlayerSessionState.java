@@ -13,7 +13,6 @@ public final class PlayerSessionState {
     private Team team = Team.NONE;
     private boolean ready;
     private int ghostMana;
-    private boolean hasAtticKey;
     private boolean alive = true;
     @Nullable
     private Transform savedReturnTransform;
@@ -61,14 +60,6 @@ public final class PlayerSessionState {
         this.ghostMana = ghostMana;
     }
 
-    public boolean hasAtticKey() {
-        return hasAtticKey;
-    }
-
-    public void setHasAtticKey(boolean hasAtticKey) {
-        this.hasAtticKey = hasAtticKey;
-    }
-
     public boolean isAlive() {
         return alive;
     }
@@ -91,7 +82,6 @@ public final class PlayerSessionState {
         team = Team.NONE;
         ready = false;
         ghostMana = 0;
-        hasAtticKey = false;
         alive = true;
     }
 }

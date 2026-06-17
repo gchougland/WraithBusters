@@ -4,7 +4,7 @@
       "SpawnerId": "WraithBusters_Portal_4x4_Frame1",
       "PositionOffset": {
         "X": 0.0,
-        "Y": 2.0,
+        "Y": 2.2,
         "Z": 0.0
       }
     },
@@ -12,7 +12,7 @@
       "SpawnerId": "WraithBusters_Portal_4x4_Frame2",
       "PositionOffset": {
         "X": 0.0,
-        "Y": 2.0,
+        "Y": 2.2,
         "Z": 0.0
       },
       "FixedRotation": false
@@ -21,7 +21,7 @@
       "SpawnerId": "WraithBusters_Portal_4x4_FrameSparks",
       "PositionOffset": {
         "X": 0.0,
-        "Y": 2.0,
+        "Y": 2.2,
         "Z": 0.0
       },
       "StartDelay": 0.1
@@ -30,7 +30,7 @@
       "SpawnerId": "WraithBusters_Portal_4x4_Background",
       "PositionOffset": {
         "X": 0.0,
-        "Y": 2.0,
+        "Y": 2.2,
         "Z": 0.0
       }
     },
@@ -38,7 +38,7 @@
       "SpawnerId": "WraithBusters_Portal_4x4_Distortion",
       "PositionOffset": {
         "X": 0.0,
-        "Y": 2.0,
+        "Y": 2.2,
         "Z": 0.0
       },
       "StartDelay": 0.5
@@ -47,7 +47,7 @@
       "SpawnerId": "WraithBusters_Portal_4x4_BackgroundBurst",
       "PositionOffset": {
         "X": 0.0,
-        "Y": 2.0,
+        "Y": 2.2,
         "Z": 0.0
       }
     },
@@ -55,7 +55,7 @@
       "SpawnerId": "WraithBusters_Portal_4x4_Frame_Perm",
       "PositionOffset": {
         "X": 0.0,
-        "Y": 2.0,
+        "Y": 2.2,
         "Z": 0.0
       }
     },
@@ -63,7 +63,7 @@
       "SpawnerId": "WraithBusters_Portal_4x4_Frame_PermGlow",
       "PositionOffset": {
         "X": 0.0,
-        "Y": 2.0,
+        "Y": 2.2,
         "Z": 0.0
       },
       "StartDelay": 0.2

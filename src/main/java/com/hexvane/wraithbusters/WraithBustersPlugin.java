@@ -19,6 +19,7 @@ import com.hexvane.wraithbusters.interaction.ReadyUpInteraction;
 import com.hexvane.wraithbusters.interaction.SetupPhaseDoorToolInteraction;
 import com.hexvane.wraithbusters.player.HumanDeathHandlerSystem;
 import com.hexvane.wraithbusters.game.PlayerSessionListener;
+import com.hexvane.wraithbusters.instance.WorldRemovalListener;
 import com.hypixel.hytale.assetstore.AssetPack;
 import com.hypixel.hytale.common.plugin.PluginIdentifier;
 import com.hypixel.hytale.event.EventPriority;
@@ -94,6 +95,7 @@ public final class WraithBustersPlugin extends JavaPlugin {
         getEntityStoreRegistry().registerSystem(new HumanDeathHandlerSystem(this));
 
         PlayerSessionListener.register(this);
+        WorldRemovalListener.register(this);
 
         String hstatsModUuid = HstatsBuildMetadata.HSTATS_MOD_UUID;
         String modVersion = this.getManifest().getVersion().toString();

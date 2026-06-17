@@ -38,7 +38,7 @@ public final class GameSession {
     private int currentRoomIndex;
     @Nullable
     private String startingRoomId;
-    private boolean atticUnlocked;
+
     private boolean awaitingFirstJoin;
 
     public GameSession(
@@ -173,14 +173,6 @@ public final class GameSession {
         this.startingRoomId = startingRoomId;
     }
 
-    public boolean isAtticUnlocked() {
-        return atticUnlocked;
-    }
-
-    public void setAtticUnlocked(boolean atticUnlocked) {
-        this.atticUnlocked = atticUnlocked;
-    }
-
     public boolean isAwaitingFirstJoin() {
         return awaitingFirstJoin;
     }
@@ -229,7 +221,6 @@ public final class GameSession {
         winningTeam = null;
         currentRoomIndex = 0;
         startingRoomId = null;
-        atticUnlocked = false;
         activeRoomChain = new ArrayList<>();
         for (PlayerSessionState state : players.values()) {
             state.resetForLobby();

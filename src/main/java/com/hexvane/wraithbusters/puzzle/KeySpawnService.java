@@ -2,6 +2,7 @@ package com.hexvane.wraithbusters.puzzle;
 
 import com.hexvane.wraithbusters.arena.RoomDefinition;
 import com.hexvane.wraithbusters.door.DoorKeySymbols;
+import com.hexvane.wraithbusters.door.RoomProgressionService;
 import com.hexvane.wraithbusters.game.GameSession;
 import com.hexvane.wraithbusters.team.Team;
 import com.hexvane.wraithbusters.util.DeferredWorldTasks;
@@ -23,6 +24,7 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.joml.Vector3d;
 import org.joml.Vector3i;
 
@@ -44,27 +46,21 @@ public final class KeySpawnService {
     }
 
     public static void spawnKeyForRoom(@Nonnull GameSession session, @Nonnull World world, @Nonnull RoomDefinition room) {
-        String symbol = resolveSpawnSymbol(session, room);
+        String symbol = resolveSpawnSymbol(session);
+        if (symbol == null || !DoorKeySymbols.isKnownSymbol(symbol)) {
+            return;
+        }
         broadcastKeyFound(session, symbol);
         DeferredWorldTasks.run(world, () -> spawnKeyEntity(session, world, room, symbol));
     }
 
-    @Nonnull
-    private static String resolveSpawnSymbol(@Nonnull GameSession session, @Nonnull RoomDefinition room) {
-        int nextIndex = session.getCurrentRoomIndex();
-        if (session.isAtticUnlocked() || nextIndex >= session.getActiveRoomChain().size()) {
-            return DoorKeySymbols.ATTIC_SYMBOL;
+    @Nullable
+    private static String resolveSpawnSymbol(@Nonnull GameSession session) {
+        RoomDefinition nextRoom = RoomProgressionService.nextRoom(session);
+        if (nextRoom == null) {
+            return null;
         }
-        if (nextIndex < session.getActiveRoomChain().size()) {
-            String nextRoomId = session.getActiveRoomChain().get(nextIndex);
-            return session.getArenaLayout().getRooms().stream()
-                .filter(r -> r.getRoomId().equals(nextRoomId))
-                .map(RoomDefinition::getSymbolId)
-                .map(DoorKeySymbols::normalizeSymbolId)
-                .findFirst()
-                .orElse(DoorKeySymbols.normalizeSymbolId(room.getSymbolId()));
-        }
-        return DoorKeySymbols.normalizeSymbolId(room.getSymbolId());
+        return DoorKeySymbols.normalizeSymbolId(nextRoom.getSymbolId());
     }
 
     private static void broadcastKeyFound(@Nonnull GameSession session, @Nonnull String symbol) {
@@ -78,9 +74,6 @@ public final class KeySpawnService {
                 pr.sendMessage(
                     Message.translation("server.wraithbusters.key.found").param("symbol", displaySymbol)
                 );
-            }
-            if (DoorKeySymbols.ATTIC_SYMBOL.equals(symbol)) {
-                session.getOrCreatePlayer(playerUuid).setHasAtticKey(true);
             }
         }
     }

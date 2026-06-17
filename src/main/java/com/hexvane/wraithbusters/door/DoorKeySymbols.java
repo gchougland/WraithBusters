@@ -7,8 +7,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public final class DoorKeySymbols {
-    public static final String ATTIC_SYMBOL = "attic";
-    public static final String ATTIC_KEY_ITEM = "WraithBusters_Key_Attic";
     public static final String KEY_ITEM_PREFIX = "WraithBusters_Key_";
 
     private static final Map<String, String> SYMBOL_TO_ITEM = Map.ofEntries(
@@ -22,8 +20,7 @@ public final class DoorKeySymbols {
         Map.entry("shield", "WraithBusters_Key_Shield"),
         Map.entry("square", "WraithBusters_Key_Square"),
         Map.entry("star", "WraithBusters_Key_Star"),
-        Map.entry("triangle", "WraithBusters_Key_Triangle"),
-        Map.entry(ATTIC_SYMBOL, ATTIC_KEY_ITEM)
+        Map.entry("triangle", "WraithBusters_Key_Triangle")
     );
 
     private static final Set<String> KNOWN_SYMBOLS = SYMBOL_TO_ITEM.keySet();
@@ -58,9 +55,6 @@ public final class DoorKeySymbols {
         if (!isKeyItem(itemId)) {
             return "";
         }
-        if (ATTIC_KEY_ITEM.equals(itemId)) {
-            return ATTIC_SYMBOL;
-        }
         if ("WraithBusters_Key_Blue".equals(itemId)) {
             return "circle";
         }
@@ -70,11 +64,7 @@ public final class DoorKeySymbols {
 
     @Nonnull
     public static String displayName(@Nonnull String symbolId) {
-        String normalized = normalizeSymbolId(symbolId);
-        if (ATTIC_SYMBOL.equals(normalized)) {
-            return "Attic";
-        }
-        return titleCase(normalized);
+        return titleCase(normalizeSymbolId(symbolId));
     }
 
     @Nonnull

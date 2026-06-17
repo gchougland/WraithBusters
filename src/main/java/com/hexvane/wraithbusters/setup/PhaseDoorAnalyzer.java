@@ -27,13 +27,13 @@ public final class PhaseDoorAnalyzer {
      * ═══════════════════════════════════════════════════════════════════════════
      *
      *  Height (Y):
-     *    NPC spawn Y = door floor block (doorFloorY).
-     *    Particle systems use PositionOffset.Y = doorHeight/2 (see generate_portal_particles.py) so
-     *    the effect BOTTOM sits at the entity origin — the engine anchors the system center there.
+     *    NPC spawn Y = door floor block (doorFloorY) — entity feet at the opening floor.
+     *    Particle PositionOffset.Y = portalEntityHeight/2 (generate_portal_particles.py) so the
+     *    effect bottom sits on the entity origin. Do NOT also lift spawn Y in Java.
      *
-     *  1x2 North/South vs East/West:
-     *    E/W uses PLANE side offset + PLANE rotation (do not change).
-     *    N/S uses FACING side offset (front/back, ±Z) with PLANE rotation.
+     *  1x2 standalone (single block wide — NOT side-by-side 2x2):
+     *    Placement (both facings) → FACING offset (through the wall, not along it).
+     *    Effect rotation: N/S facing → FACING yaw; E/W facing → PLANE yaw.
      *
      *  Side position (X/Z):
      *    Portals sit at door center ± SIDE_OFFSET along the side-offset axis.
@@ -48,7 +48,7 @@ public final class PhaseDoorAnalyzer {
      *    Set in sideTransform() via PORTAL_YAW_AXIS.
      *
      *  Particle scale (visual size, not position):
-     *    scripts/generate_portal_particles.py — spawner mults only; model Scale is one constant (0.45).
+     *    scripts/generate_portal_particles.py — spawner mults per tier; model Scale = MODEL_WORLD_SCALE.
      *
      *  Re-place doors with the Phase Door Tool after changing values (saved arena JSON
      *  keeps old transforms until you re-place or edit ghostPhaseDoors in the layout file).
@@ -57,9 +57,6 @@ public final class PhaseDoorAnalyzer {
 
     /** Distance from door center to each portal on the ground plane. */
     private static final double SIDE_OFFSET = 0.6;
-
-    /** Small world-space nudge after floor placement; keep near zero. */
-    private static final double PORTAL_Y_FINE_TUNE = 0.0;
 
     /** Which yaw drives portal X/Z side offset. */
     private enum OffsetAxis {
@@ -91,11 +88,7 @@ public final class PhaseDoorAnalyzer {
         };
     }
 
-    private static double portalYOffset(@Nonnull DoorTier tier) {
-        return PORTAL_Y_FINE_TUNE;
-    }
-
-    /** Bottom block Y of the door opening (NPC feet). Particle origin = visual bottom. */
+    /** Bottom block Y of the door opening. */
     private static int doorFloorY(@Nonnull DoorTier tier, @Nonnull Bounds bounds) {
         int height = tierHeightBlocks(tier);
         int ySpan = bounds.maxY() - bounds.minY() + 1;
@@ -109,7 +102,7 @@ public final class PhaseDoorAnalyzer {
     }
 
     private static double portalCenterY(@Nonnull DoorTier tier, @Nonnull Bounds bounds) {
-        return doorFloorY(tier, bounds) + portalYOffset(tier);
+        return doorFloorY(tier, bounds);
     }
 
     private static float axisYaw(float facingYaw, float planeYaw, OffsetAxis axis) {
@@ -127,29 +120,32 @@ public final class PhaseDoorAnalyzer {
         return MathUtil.wrapAngle(base + (sideA ? 0.0F : (float) Math.PI));
     }
 
-    /** N/S doors (rotation index 0 or 2). E/W handling must stay on the PLANE path. */
+    /** True when the door opens toward north or south (rotation index 0 or 2). */
     private static boolean isNorthSouthFacing(float facingYaw) {
         return Math.abs(Math.cos(facingYaw)) >= Math.abs(Math.sin(facingYaw));
     }
 
     /**
      * Which yaw pushes portal A/B to opposite sides of the doorway.
-     * 1x2 N/S uses FACING (front/back). 1x2 E/W and all other sizes use PLANE — do not change E/W.
+     * Standalone 1x2 always offsets through the wall (FACING). Wider doors use PLANE.
      */
     private static float sideOffsetYaw(float facingYaw, float planeYaw, @Nonnull PhaseDoorSize size) {
-        if (size == PhaseDoorSize.STANDARD_1x2 && isNorthSouthFacing(facingYaw)) {
+        if (size == PhaseDoorSize.STANDARD_1x2) {
             return facingYaw;
         }
         return axisYaw(facingYaw, planeYaw, sideOffsetAxis(size));
     }
 
-    /** Particle effect rotation — PLANE for all tiers (parallel to door panel). */
+    /** Particle effect rotation — 1x2 N/S uses door facing; everything else uses PLANE. */
     private static float portalEffectYaw(
         float facingYaw,
         float planeYaw,
         @Nonnull PhaseDoorSize size,
         boolean sideA
     ) {
+        if (size == PhaseDoorSize.STANDARD_1x2 && isNorthSouthFacing(facingYaw)) {
+            return portalYaw(facingYaw, planeYaw, PortalYawAxis.FACING, size, sideA);
+        }
         return portalYaw(facingYaw, planeYaw, portalYawAxis(size), size, sideA);
     }
 

@@ -6,11 +6,12 @@ Scale accounting (read before tuning):
   Each tier only adjusts spawner Scale/EmitOffset XY by (doorWidth/2, doorHeight/2).
   NPC model Particles[].Scale is ONE constant (MODEL_WORLD_SCALE) for every tier — never multiply
   door size into the model scale or height gets applied twice.
-  PositionOffset.Y = door_height / 2 lifts the effect so its BOTTOM sits at the entity origin
-  (the engine anchors the particle system center on the entity, not the bottom).
+  NPC spawn Y = door floor (PhaseDoorAnalyzer.doorFloorY). Do NOT lift the entity in Java.
+  PositionOffset.Y = portal_entity_height / 2 — half the rendered portal effect height so the
+  effect bottom sits on the entity origin (engine anchors the particle system center on the NPC).
+  portal_entity_height = tier opening height in blocks (spawner mults size the art; MODEL_WORLD_SCALE
+  is the single global tune factor, never per-tier).
 """
-
-from __future__ import annotations
 
 import json
 import zipfile
@@ -45,7 +46,7 @@ SYSTEM_SPAWNERS = [
 ]
 
 # Door opening size in blocks (width x height). Do NOT add per-tier model_scale here.
-MODEL_WORLD_SCALE = 0.45
+MODEL_WORLD_SCALE = 0.9
 
 TIERS = {
     "1x2": {
@@ -76,6 +77,11 @@ TIERS = {
 
 BASE_WIDTH = 2
 BASE_HEIGHT = 2
+
+
+def portal_entity_height_blocks(opening_height: int) -> float:
+    """World-space rendered height of the portal NPC particle effect (blocks)."""
+    return float(opening_height)
 
 
 def load_vanilla_spawners() -> dict[str, dict]:
@@ -152,7 +158,8 @@ def build_tier(tier_id: str, cfg: dict, vanilla: dict[str, dict]) -> None:
     height = cfg["height"]
     width_mult = (width / BASE_WIDTH) * cfg.get("extra_width_mult", 1.0)
     height_mult = height / BASE_HEIGHT
-    bottom_anchor_y = height / 2.0
+    entity_height = portal_entity_height_blocks(height)
+    bottom_anchor_y = entity_height / 2.0 + 0.2
     prefix = f"WraithBusters_Portal_{tier_id}"
     spawner_dir = OUT_DIR / "Spawners"
     spawner_dir.mkdir(parents=True, exist_ok=True)
@@ -201,7 +208,8 @@ def main() -> None:
         h_mult = cfg["height"] / BASE_HEIGHT
         print(
             f"Generated {tier_id} -> {system_id} "
-            f"(spawner {w_mult:.2f}x{h_mult:.2f}, model {MODEL_WORLD_SCALE}, anchor Y={cfg['height'] / 2})"
+            f"(spawner {w_mult:.2f}x{h_mult:.2f}, model {MODEL_WORLD_SCALE}, "
+            f"entity H={portal_entity_height_blocks(cfg['height'])}, anchor Y={portal_entity_height_blocks(cfg['height']) / 2})"
         )
 
 
