@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import javax.annotation.Nonnull;
@@ -39,7 +40,15 @@ public final class GameSession {
     @Nullable
     private String startingRoomId;
 
+    private long postRoundEndEpochMs;
+    @Nonnull
+    private final Set<String> disabledPhaseDoorIds = ConcurrentHashMap.newKeySet();
+    private int lastPostRoundSecondAnnounced = -1;
+
     private boolean awaitingFirstJoin;
+    private boolean hadPlayers;
+    @Nonnull
+    private final Set<UUID> pendingLobbyArrivals = ConcurrentHashMap.newKeySet();
 
     public GameSession(
         @Nonnull UUID sessionId,
@@ -173,12 +182,64 @@ public final class GameSession {
         this.startingRoomId = startingRoomId;
     }
 
+    public long getPostRoundEndEpochMs() {
+        return postRoundEndEpochMs;
+    }
+
+    public void setPostRoundEndEpochMs(long postRoundEndEpochMs) {
+        this.postRoundEndEpochMs = postRoundEndEpochMs;
+    }
+
+    public void disablePhaseDoor(@Nonnull String doorId) {
+        disabledPhaseDoorIds.add(doorId);
+    }
+
+    public boolean isPhaseDoorDisabled(@Nonnull String doorId) {
+        return disabledPhaseDoorIds.contains(doorId);
+    }
+
+    public void clearDisabledPhaseDoors() {
+        disabledPhaseDoorIds.clear();
+    }
+
+    public int getLastPostRoundSecondAnnounced() {
+        return lastPostRoundSecondAnnounced;
+    }
+
+    public void setLastPostRoundSecondAnnounced(int lastPostRoundSecondAnnounced) {
+        this.lastPostRoundSecondAnnounced = lastPostRoundSecondAnnounced;
+    }
+
     public boolean isAwaitingFirstJoin() {
         return awaitingFirstJoin;
     }
 
     public void setAwaitingFirstJoin(boolean awaitingFirstJoin) {
         this.awaitingFirstJoin = awaitingFirstJoin;
+    }
+
+    public boolean hadPlayers() {
+        return hadPlayers;
+    }
+
+    public void markHadPlayers() {
+        this.hadPlayers = true;
+    }
+
+    public void markPendingLobbyArrival(@Nonnull UUID playerUuid) {
+        pendingLobbyArrivals.add(playerUuid);
+    }
+
+    public boolean isPendingLobbyArrival(@Nonnull UUID playerUuid) {
+        return pendingLobbyArrivals.contains(playerUuid);
+    }
+
+    public void clearPendingLobbyArrival(@Nonnull UUID playerUuid) {
+        pendingLobbyArrivals.remove(playerUuid);
+    }
+
+    public boolean hasPendingLobbyArrivals() {
+        return !pendingLobbyArrivals.isEmpty();
     }
 
     public int readyCount() {
@@ -224,7 +285,6 @@ public final class GameSession {
     }
 
     public void resetForLobby() {
-        phase = GamePhase.LOBBY;
         countdownTicksRemaining = 0;
         lastCountdownSecondAnnounced = -1;
         roundEndEpochMs = 0L;
@@ -232,6 +292,9 @@ public final class GameSession {
         currentRoomIndex = 0;
         startingRoomId = null;
         activeRoomChain = new ArrayList<>();
+        postRoundEndEpochMs = 0L;
+        disabledPhaseDoorIds.clear();
+        lastPostRoundSecondAnnounced = -1;
         for (PlayerSessionState state : players.values()) {
             state.resetForLobby();
         }

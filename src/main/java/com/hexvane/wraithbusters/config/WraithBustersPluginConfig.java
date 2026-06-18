@@ -37,6 +37,10 @@ public final class WraithBustersPluginConfig {
             .add()
             .append(new KeyedCodec<>("PlateManaCost", Codec.INTEGER), (o, v) -> o.plateManaCost = v, o -> o.plateManaCost)
             .add()
+            .append(new KeyedCodec<>("CandleManaCost", Codec.INTEGER), (o, v) -> o.candleManaCost = v, o -> o.candleManaCost)
+            .add()
+            .append(new KeyedCodec<>("CandleFireRadius", Codec.FLOAT), (o, v) -> o.candleFireRadius = v, o -> o.candleFireRadius)
+            .add()
             .append(
                 new KeyedCodec<>("ManaPickupAmount", Codec.INTEGER),
                 (o, v) -> o.manaPickupAmount = v,
@@ -87,6 +91,12 @@ public final class WraithBustersPluginConfig {
                 o -> o.debugForceRoomChain
             )
             .add()
+            .append(
+                new KeyedCodec<>("PostRoundSeconds", Codec.INTEGER),
+                (o, v) -> o.postRoundSeconds = v,
+                o -> o.postRoundSeconds
+            )
+            .add()
             .build();
 
     private int minPlayers = 2;
@@ -95,7 +105,9 @@ public final class WraithBustersPluginConfig {
     private int roomsPerHuman = 1;
     private int roundDurationSeconds = 480;
     private int ghostMaxMana = 100;
-    private int plateManaCost = 40;
+    private int plateManaCost = 25;
+    private int candleManaCost = 20;
+    private float candleFireRadius = 4.5f;
     private int manaPickupAmount = 25;
     private int manaPickupRespawnSeconds = 30;
     private float plateDamage = 25f;
@@ -108,6 +120,7 @@ public final class WraithBustersPluginConfig {
     /** Set to e.g. ["Dining_Room"] to force room order; use [] for normal shuffle. */
     @Nonnull
     private String[] debugForceRoomChain = new String[0];
+    private int postRoundSeconds = 15;
 
     public int getMinPlayers() {
         return minPlayers;
@@ -135,6 +148,14 @@ public final class WraithBustersPluginConfig {
 
     public int getPlateManaCost() {
         return plateManaCost;
+    }
+
+    public int getCandleManaCost() {
+        return candleManaCost;
+    }
+
+    public float getCandleFireRadius() {
+        return candleFireRadius;
     }
 
     public int getManaPickupAmount() {
@@ -176,5 +197,9 @@ public final class WraithBustersPluginConfig {
             return Collections.emptyList();
         }
         return Collections.unmodifiableList(Arrays.asList(debugForceRoomChain));
+    }
+
+    public int getPostRoundSeconds() {
+        return postRoundSeconds;
     }
 }

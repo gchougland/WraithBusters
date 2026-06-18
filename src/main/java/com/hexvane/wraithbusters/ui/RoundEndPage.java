@@ -64,6 +64,18 @@ public final class RoundEndPage extends InteractiveCustomUIPage<RoundEndPage.Pag
         } else {
             commandBuilder.set("#RoundEndTitle.TextSpans", Message.translation("server.wraithbusters.end.ghostsWin"));
         }
+        if (session != null && session.getPostRoundEndEpochMs() > 0L) {
+            int seconds = Math.max(
+                0,
+                (int) Math.ceil((session.getPostRoundEndEpochMs() - System.currentTimeMillis()) / 1000.0)
+            );
+            commandBuilder.set(
+                "#RoundEndTimer.TextSpans",
+                Message.translation("server.wraithbusters.end.autoStart").param("seconds", seconds)
+            );
+        } else {
+            commandBuilder.set("#RoundEndTimer.TextSpans", Message.empty());
+        }
         commandBuilder.set("#PlayAgainButton.TextSpans", Message.translation("server.wraithbusters.end.playAgain"));
         commandBuilder.set("#LeaveButton.TextSpans", Message.translation("server.wraithbusters.end.leave"));
     }
@@ -72,6 +84,10 @@ public final class RoundEndPage extends InteractiveCustomUIPage<RoundEndPage.Pag
     public void handleDataEvent(@Nonnull Ref<EntityStore> ref, @Nonnull Store<EntityStore> store, @Nonnull PageData data) {
         Player player = store.getComponent(ref, Player.getComponentType());
         if (player == null) {
+            return;
+        }
+        PlayerRef playerRef = store.getComponent(ref, PlayerRef.getComponentType());
+        if (playerRef == null) {
             return;
         }
         GameSession session = GameRegistry.get().getSession(sessionId);
@@ -83,9 +99,13 @@ public final class RoundEndPage extends InteractiveCustomUIPage<RoundEndPage.Pag
         }
         if ("PlayAgain".equals(data.action)) {
             player.getPageManager().setPage(ref, store, Page.None);
-            plugin.getGameService().playAgain(session, world);
+            plugin.getGameService().playAgain(session, world, playerRef.getUuid());
             return;
         }
+        if (!"Leave".equals(data.action)) {
+            return;
+        }
+        session.getOrCreatePlayer(playerRef.getUuid()).setRoundEndDismissed(true);
         player.getPageManager().setPage(ref, store, Page.None);
         plugin.getGameService().leavePlayer(session, ref, store);
     }

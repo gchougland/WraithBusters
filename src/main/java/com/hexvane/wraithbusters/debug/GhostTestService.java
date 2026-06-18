@@ -91,7 +91,7 @@ public final class GhostTestService {
         @Nonnull World world
     ) {
         UUID playerUuid = playerRefComponent.getUuid();
-        if (!ACTIVE.remove(playerUuid)) {
+        if (ACTIVE.remove(playerUuid) == null) {
             playerRefComponent.sendMessage(WraithBustersMessages.translation("testghost.notActive"));
             return;
         }

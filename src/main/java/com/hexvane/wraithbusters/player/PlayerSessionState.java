@@ -2,6 +2,9 @@ package com.hexvane.wraithbusters.player;
 
 import com.hexvane.wraithbusters.team.Team;
 import com.hypixel.hytale.math.vector.Transform;
+import com.hypixel.hytale.server.core.inventory.ItemStack;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -16,6 +19,12 @@ public final class PlayerSessionState {
     private boolean alive = true;
     @Nullable
     private Transform savedReturnTransform;
+    @Nullable
+    private UUID savedReturnWorldUuid;
+    private boolean inventoryStashed;
+    private boolean roundEndDismissed;
+    @Nonnull
+    private final List<ItemStack> stashedItems = new ArrayList<>();
 
     public PlayerSessionState(@Nonnull UUID playerUuid) {
         this.playerUuid = playerUuid;
@@ -77,11 +86,42 @@ public final class PlayerSessionState {
         this.savedReturnTransform = savedReturnTransform;
     }
 
+    @Nullable
+    public UUID getSavedReturnWorldUuid() {
+        return savedReturnWorldUuid;
+    }
+
+    public void setSavedReturnWorldUuid(@Nullable UUID savedReturnWorldUuid) {
+        this.savedReturnWorldUuid = savedReturnWorldUuid;
+    }
+
+    public boolean isInventoryStashed() {
+        return inventoryStashed;
+    }
+
+    public void setInventoryStashed(boolean inventoryStashed) {
+        this.inventoryStashed = inventoryStashed;
+    }
+
+    public boolean isRoundEndDismissed() {
+        return roundEndDismissed;
+    }
+
+    public void setRoundEndDismissed(boolean roundEndDismissed) {
+        this.roundEndDismissed = roundEndDismissed;
+    }
+
+    @Nonnull
+    public List<ItemStack> getStashedItems() {
+        return stashedItems;
+    }
+
     public void resetForLobby() {
         role = PlayerRole.LOBBY;
         team = Team.NONE;
         ready = false;
         ghostMana = 0;
         alive = true;
+        roundEndDismissed = false;
     }
 }

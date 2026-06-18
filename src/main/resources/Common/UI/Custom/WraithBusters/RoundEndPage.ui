@@ -18,6 +18,12 @@ $C.@PageOverlay {
       LayoutMode: Top;
       Padding: (Full: 18);
 
+      Label #RoundEndTimer {
+        Style: (...$C.@DefaultLabelStyle, HorizontalAlignment: Center);
+        Padding: (Bottom: 12);
+        Text: "";
+      }
+
       Group {
         LayoutMode: Left;
 
@@ -27,7 +33,7 @@ $C.@PageOverlay {
           Anchor: (Right: 8, Height: 40);
         }
 
-        $C.@CancelTextButton #LeaveButton {
+        $C.@TextButton #LeaveButton {
           Text: "";
           FlexWeight: 1;
           Anchor: (Height: 40);

@@ -188,11 +188,23 @@ def build_tier(tier_id: str, cfg: dict, vanilla: dict[str, dict]) -> None:
     system_path.write_text(json.dumps(system, indent=2) + "\n", encoding="utf-8")
 
 
-def update_model(model_name: str, system_id: str, light_radius: int) -> None:
+def portal_hitbox(width_blocks: int, height_blocks: int) -> dict:
+    scale = MODEL_WORLD_SCALE
+    half_width = round4(width_blocks * scale / 2.0)
+    height = round4(height_blocks * scale)
+    half_depth = 0.25
+    return {
+        "Max": {"X": half_width, "Y": height, "Z": half_depth},
+        "Min": {"X": -half_width, "Y": 0.0, "Z": -half_depth},
+    }
+
+
+def update_model(model_name: str, system_id: str, light_radius: int, width_blocks: int, height_blocks: int) -> None:
     model_path = MODEL_DIR / model_name
     model = json.loads(model_path.read_text(encoding="utf-8"))
     model["Particles"] = [{"SystemId": system_id, "Scale": MODEL_WORLD_SCALE}]
     model["Light"]["Radius"] = light_radius
+    model["HitBox"] = portal_hitbox(width_blocks, height_blocks)
     model_path.write_text(json.dumps(model, indent=2) + "\n", encoding="utf-8")
 
 
@@ -203,7 +215,7 @@ def main() -> None:
     for tier_id, cfg in TIERS.items():
         build_tier(tier_id, cfg, vanilla)
         system_id = f"WraithBusters_Portal_{tier_id}_Blue_Fit"
-        update_model(cfg["model"], system_id, cfg["light_radius"])
+        update_model(cfg["model"], system_id, cfg["light_radius"], cfg["width"], cfg["height"])
         w_mult = (cfg["width"] / BASE_WIDTH) * cfg.get("extra_width_mult", 1.0)
         h_mult = cfg["height"] / BASE_HEIGHT
         print(

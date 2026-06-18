@@ -1,6 +1,8 @@
 package com.hexvane.wraithbusters.ui;
 
 import com.hexvane.wraithbusters.WraithBustersConstants;
+import com.hexvane.wraithbusters.WraithBustersPlugin;
+import com.hexvane.wraithbusters.config.WraithBustersPluginConfig;
 import com.hexvane.wraithbusters.game.GamePhase;
 import com.hexvane.wraithbusters.game.GameSession;
 import com.hypixel.hytale.component.Ref;
@@ -27,14 +29,25 @@ public final class LobbyStatusHudSupport {
         return created;
     }
 
-    public static void refresh(@Nonnull Player player, @Nonnull PlayerRef playerRef, @Nonnull GameSession session) {
-        obtainHud(player, playerRef).refresh(session);
+    public static void refresh(
+        @Nonnull Player player,
+        @Nonnull PlayerRef playerRef,
+        @Nonnull GameSession session,
+        @Nonnull WraithBustersPluginConfig config
+    ) {
+        obtainHud(player, playerRef).refresh(session, config);
     }
 
     public static void refreshAll(@Nonnull GameSession session, @Nonnull World world) {
-        if (session.getPhase() != GamePhase.LOBBY) {
+        GamePhase phase = session.getPhase();
+        if (phase != GamePhase.LOBBY && phase != GamePhase.COUNTDOWN) {
             return;
         }
+        WraithBustersPlugin plugin = WraithBustersPlugin.get();
+        if (plugin == null) {
+            return;
+        }
+        WraithBustersPluginConfig config = plugin.getPluginConfig();
         Store<EntityStore> store = world.getEntityStore().getStore();
         if (store == null) {
             return;
@@ -50,7 +63,7 @@ public final class LobbyStatusHudSupport {
             }
             Player player = store.getComponent(ref, Player.getComponentType());
             if (player != null) {
-                refresh(player, playerRef, session);
+                refresh(player, playerRef, session, config);
             }
         }
     }

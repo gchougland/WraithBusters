@@ -1,10 +1,15 @@
 package com.hexvane.wraithbusters.game;
 
+import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.Universe;
+import com.hypixel.hytale.server.core.universe.world.World;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ThreadLocalRandom;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -48,8 +53,15 @@ public final class GameRegistry {
     }
 
     public void linkWorld(@Nonnull UUID worldUuid, @Nonnull GameSession session) {
+        if (session.getWorldUuid() != null) {
+            worldToSession.remove(session.getWorldUuid());
+        }
         session.setWorldUuid(worldUuid);
         worldToSession.put(worldUuid, session.getSessionId());
+    }
+
+    public void unlinkWorld(@Nonnull UUID worldUuid) {
+        worldToSession.remove(worldUuid);
     }
 
     @Nullable
@@ -69,6 +81,27 @@ public final class GameRegistry {
         return sessionId == null ? null : bySessionId.get(sessionId);
     }
 
+    @Nullable
+    public GameSession resolveSessionForWorld(@Nonnull World world) {
+        UUID worldUuid = world.getWorldConfig().getUuid();
+        GameSession session = getSessionForWorld(worldUuid);
+        if (session != null) {
+            return session;
+        }
+        for (GameSession candidate : allSessions()) {
+            if (worldUuid.equals(candidate.getWorldUuid())) {
+                return candidate;
+            }
+        }
+        for (PlayerRef player : world.getPlayerRefs()) {
+            GameSession byPlayer = getSessionForPlayer(player.getUuid());
+            if (byPlayer != null) {
+                return byPlayer;
+            }
+        }
+        return null;
+    }
+
     @Nonnull
     public Collection<GameSession> allSessions() {
         return bySessionId.values();
@@ -76,14 +109,28 @@ public final class GameRegistry {
 
     @Nullable
     public GameSession findOpenLobby() {
+        return findJoinableLobby(null);
+    }
+
+    /** Returns a random joinable lobby, optionally excluding one session (e.g. the round just ended). */
+    @Nullable
+    public GameSession findJoinableLobby(@Nullable UUID excludeSessionId) {
+        List<GameSession> candidates = new ArrayList<>();
         for (GameSession session : bySessionId.values()) {
-            if (session.getPhase() != GamePhase.LOBBY && session.getPhase() != GamePhase.COUNTDOWN) {
+            if (excludeSessionId != null && excludeSessionId.equals(session.getSessionId())) {
+                continue;
+            }
+            GamePhase phase = session.getPhase();
+            if (phase != GamePhase.LOBBY && phase != GamePhase.COUNTDOWN) {
                 continue;
             }
             if (GameService.isInstanceJoinable(Universe.get().getWorld(session.getWorldUuid()))) {
-                return session;
+                candidates.add(session);
             }
         }
-        return null;
+        if (candidates.isEmpty()) {
+            return null;
+        }
+        return candidates.get(ThreadLocalRandom.current().nextInt(candidates.size()));
     }
 }

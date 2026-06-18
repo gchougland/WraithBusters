@@ -6,7 +6,7 @@
     "Blocks.Deco"
   ],
   "Set": "WraithBusters",
-  "Icon": "Icons/ItemsGenerated/WraithBusters_Sloth_Portrait.png",
+  "Icon": "Icons/ItemsGenerated/WraithBusters_Klops_Portrait.png",
   "BlockType": {
     "Material": "Solid",
     "DrawType": "Empty",

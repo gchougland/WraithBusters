@@ -1,13 +1,16 @@
 package com.hexvane.wraithbusters.team;
 
 import com.hexvane.wraithbusters.config.WraithBustersPluginConfig;
+import com.hexvane.wraithbusters.game.GamePhase;
 import com.hexvane.wraithbusters.game.GameSession;
 import com.hexvane.wraithbusters.player.PlayerRole;
 import com.hexvane.wraithbusters.player.PlayerSessionState;
 import com.hypixel.hytale.component.ComponentAccessor;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.server.core.entity.entities.player.movement.MovementManager;
+import com.hypixel.hytale.server.core.modules.entity.component.HiddenFromAdventurePlayers;
 import com.hypixel.hytale.server.core.modules.entity.component.Intangible;
+import com.hypixel.hytale.server.core.modules.entity.component.Invulnerable;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.Universe;
 import com.hexvane.wraithbusters.util.DeferredWorldTasks;
@@ -31,6 +34,7 @@ public final class TeamSetupService {
             sendMovementUpdate(accessor, playerRef, movement);
         }
         accessor.tryRemoveComponent(playerRef, Intangible.getComponentType());
+        accessor.ensureAndGetComponent(playerRef, Invulnerable.getComponentType());
     }
 
     public static void applyGhost(
@@ -50,6 +54,7 @@ public final class TeamSetupService {
         @Nonnull GameSession session,
         @Nonnull UUID humanUuid
     ) {
+        revealPlayerGlobally(humanUuid);
         MovementManager movement = accessor.getComponent(playerRef, MovementManager.getComponentType());
         if (movement != null) {
             movement.getSettings().canFly = false;
@@ -57,6 +62,12 @@ public final class TeamSetupService {
             sendMovementUpdate(accessor, playerRef, movement);
         }
         accessor.tryRemoveComponent(playerRef, Intangible.getComponentType());
+        accessor.tryRemoveComponent(playerRef, Invulnerable.getComponentType());
+        accessor.tryRemoveComponent(playerRef, HiddenFromAdventurePlayers.getComponentType());
+        PlayerRef pr = accessor.getComponent(playerRef, PlayerRef.getComponentType());
+        if (pr != null) {
+            pr.getHiddenPlayersManager().showPlayer(humanUuid);
+        }
     }
 
     public static void applySpectator(
@@ -70,6 +81,8 @@ public final class TeamSetupService {
             sendMovementUpdate(accessor, playerRef, movement);
         }
         accessor.ensureAndGetComponent(playerRef, Intangible.getComponentType());
+        accessor.ensureAndGetComponent(playerRef, HiddenFromAdventurePlayers.getComponentType());
+        accessor.tryRemoveComponent(playerRef, Invulnerable.getComponentType());
     }
 
     public static void clearModes(
@@ -102,6 +115,17 @@ public final class TeamSetupService {
             movement.resetDefaultsAndUpdate(playerRef, accessor);
         }
         accessor.tryRemoveComponent(playerRef, Intangible.getComponentType());
+        accessor.tryRemoveComponent(playerRef, Invulnerable.getComponentType());
+        accessor.tryRemoveComponent(playerRef, HiddenFromAdventurePlayers.getComponentType());
+    }
+
+    public static void hidePlayerFromSession(@Nonnull GameSession session, @Nonnull UUID hiddenUuid) {
+        for (PlayerRef viewer : Universe.get().getPlayers()) {
+            if (!session.getPlayers().containsKey(viewer.getUuid()) || viewer.getUuid().equals(hiddenUuid)) {
+                continue;
+            }
+            viewer.getHiddenPlayersManager().hidePlayer(hiddenUuid);
+        }
     }
 
     public static void refreshVisibility(@Nonnull GameSession session, @Nonnull World world) {
@@ -109,6 +133,12 @@ public final class TeamSetupService {
     }
 
     private static void refreshVisibilityNow(@Nonnull GameSession session, @Nonnull World world) {
+        for (UUID playerUuid : session.playerUuidList()) {
+            revealPlayerGlobally(playerUuid);
+        }
+        if (session.getPhase() != GamePhase.ACTIVE) {
+            return;
+        }
         for (PlayerRef viewerRef : world.getPlayerRefs()) {
             UUID viewerUuid = viewerRef.getUuid();
             PlayerSessionState viewerState = session.getPlayers().get(viewerUuid);
@@ -118,7 +148,17 @@ public final class TeamSetupService {
             if (viewerState.getRole() == PlayerRole.HUMAN) {
                 refreshVisibilityForHuman(session, viewerRef);
             } else {
-                showAllSessionPlayers(session, viewerRef);
+                refreshVisibilityForNonHuman(session, viewerRef);
+            }
+        }
+    }
+
+    /** Ghosts see living players and other ghosts; spectators stay hidden from everyone. */
+    private static void refreshVisibilityForNonHuman(@Nonnull GameSession session, @Nonnull PlayerRef viewerRef) {
+        showAllSessionPlayers(session, viewerRef);
+        for (UUID otherUuid : session.playerUuidList()) {
+            if (session.getOrCreatePlayer(otherUuid).getRole() == PlayerRole.SPECTATOR) {
+                viewerRef.getHiddenPlayersManager().hidePlayer(otherUuid);
             }
         }
     }
@@ -129,7 +169,7 @@ public final class TeamSetupService {
         }
     }
 
-    /** Humans cannot see ghosts (or dead spectators) during a round; ghosts see everyone in the session. */
+    /** Humans cannot see ghosts or dead spectators during a round. */
     private static void refreshVisibilityForHuman(@Nonnull GameSession session, @Nonnull PlayerRef viewerRef) {
         showAllSessionPlayers(session, viewerRef);
         for (UUID otherUuid : session.playerUuidList()) {

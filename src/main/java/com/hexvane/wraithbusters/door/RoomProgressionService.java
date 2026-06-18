@@ -18,20 +18,20 @@ public final class RoomProgressionService {
         int humanCount,
         @Nonnull WraithBustersPluginConfig config
     ) {
+        List<RoomDefinition> allRooms = session.getArenaLayout().getRooms();
+        RoomDefinition atticRoom = findAtticRoom(allRooms);
         List<String> forcedChain = config.getDebugForceRoomChain();
         if (!forcedChain.isEmpty()) {
-            session.setActiveRoomChain(new ArrayList<>(forcedChain));
+            List<String> chain = new ArrayList<>(forcedChain);
+            appendAtticIfMissing(chain, atticRoom);
+            session.setActiveRoomChain(chain);
             session.setCurrentRoomIndex(0);
-            session.setStartingRoomId(forcedChain.getFirst());
+            session.setStartingRoomId(chain.getFirst());
             return;
         }
-        List<RoomDefinition> allRooms = session.getArenaLayout().getRooms();
-        RoomDefinition atticRoom = null;
         List<RoomDefinition> puzzlePool = new ArrayList<>();
         for (RoomDefinition room : allRooms) {
-            if (WraithBustersConstants.ATTIC_ROOM_ID.equals(room.getRoomId())) {
-                atticRoom = room;
-            } else {
+            if (!WraithBustersConstants.ATTIC_ROOM_ID.equals(room.getRoomId())) {
                 puzzlePool.add(room);
             }
         }
@@ -48,6 +48,28 @@ public final class RoomProgressionService {
         session.setActiveRoomChain(chain);
         session.setCurrentRoomIndex(0);
         session.setStartingRoomId(chain.isEmpty() ? null : chain.getFirst());
+    }
+
+    private static void appendAtticIfMissing(
+        @Nonnull List<String> chain,
+        @Nullable RoomDefinition atticRoom
+    ) {
+        if (atticRoom == null) {
+            return;
+        }
+        if (!chain.contains(atticRoom.getRoomId())) {
+            chain.add(atticRoom.getRoomId());
+        }
+    }
+
+    @Nullable
+    private static RoomDefinition findAtticRoom(@Nonnull List<RoomDefinition> allRooms) {
+        for (RoomDefinition room : allRooms) {
+            if (WraithBustersConstants.ATTIC_ROOM_ID.equals(room.getRoomId())) {
+                return room;
+            }
+        }
+        return null;
     }
 
     @Nonnull
@@ -102,10 +124,10 @@ public final class RoomProgressionService {
     @Nullable
     public static RoomDefinition nextRoom(@Nonnull GameSession session) {
         List<String> chain = session.getActiveRoomChain();
-        int nextIndex = session.getCurrentRoomIndex();
-        if (nextIndex < 0 || nextIndex >= chain.size()) {
+        int index = session.getCurrentRoomIndex();
+        if (index < 0 || index >= chain.size()) {
             return null;
         }
-        return findRoom(session, chain.get(nextIndex));
+        return findRoom(session, chain.get(index));
     }
 }

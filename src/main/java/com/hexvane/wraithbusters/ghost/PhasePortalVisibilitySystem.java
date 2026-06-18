@@ -1,5 +1,7 @@
 package com.hexvane.wraithbusters.ghost;
 
+import com.hexvane.wraithbusters.debug.GhostTestService;
+import com.hexvane.wraithbusters.game.GamePhase;
 import com.hexvane.wraithbusters.game.GameRegistry;
 import com.hexvane.wraithbusters.game.GameSession;
 import com.hypixel.hytale.component.ArchetypeChunk;
@@ -63,13 +65,18 @@ public final class PhasePortalVisibilitySystem extends EntityTickingSystem<Entit
         @Nonnull Store<EntityStore> store,
         @Nonnull CommandBuffer<EntityStore> commandBuffer
     ) {
-        Set<Ref<EntityStore>> portalRefs = PhasePortalMarkerService.activePortalRefs();
-        if (portalRefs.isEmpty()) {
-            return;
-        }
-
         World world = store.getExternalData().getWorld();
         GameSession session = GameRegistry.get().getSessionForWorld(world.getWorldConfig().getUuid());
+        if (session == null) {
+            return;
+        }
+        boolean testMarkers = GhostTestService.hasTestMarkers(session);
+        if (session.getPhase() != GamePhase.ACTIVE && !testMarkers) {
+            return;
+        }
+        if (!PhasePortalMarkerService.hasTrackedPortals(session)) {
+            return;
+        }
 
         PlayerRef playerRef = chunk.getComponent(index, PlayerRef.getComponentType());
         Player player = chunk.getComponent(index, Player.getComponentType());
@@ -88,7 +95,7 @@ public final class PhasePortalVisibilitySystem extends EntityTickingSystem<Entit
         Iterator<Ref<EntityStore>> iterator = viewer.visible.iterator();
         while (iterator.hasNext()) {
             Ref<EntityStore> visibleRef = iterator.next();
-            if (portalRefs.contains(visibleRef)) {
+            if (PhasePortalMarkerService.isTrackedPortal(visibleRef, store)) {
                 viewer.hiddenCount++;
                 iterator.remove();
             }

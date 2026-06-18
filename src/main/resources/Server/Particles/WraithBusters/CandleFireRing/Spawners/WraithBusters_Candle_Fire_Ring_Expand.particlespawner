@@ -1,0 +1,57 @@
+{
+  "RenderMode": "Erosion",
+  "ParticleRotationInfluence": "None",
+  "LinearFiltering": true,
+  "LightInfluence": 0,
+  "ParticleRotateWithSpawner": true,
+  "TrailSpawnerPositionMultiplier": 1,
+  "TrailSpawnerRotationMultiplier": 1,
+  "MaxConcurrentParticles": 1,
+  "ParticleLifeSpan": {
+    "Min": 0.85,
+    "Max": 0.85
+  },
+  "TotalParticles": {
+    "Min": 1,
+    "Max": 1
+  },
+  "Particle": {
+    "Texture": "Particles/Textures/Circles/Ice_Circle.png",
+    "ScaleRatioConstraint": "OneToOne",
+    "UVOption": "None",
+    "Animation": {
+      "0": {
+        "FrameIndex": { "Min": 0, "Max": 0 },
+        "Opacity": 0.9,
+        "Color": "#26b2ff",
+        "Scale": {
+          "X": { "Min": 1.0, "Max": 1.0 }
+        }
+      },
+      "100": {
+        "Opacity": 0,
+        "Color": "#1a6fa8",
+        "Scale": {
+          "X": { "Min": 4.5, "Max": 4.8 }
+        }
+      }
+    },
+    "InitialAnimationFrame": {
+      "Scale": {
+        "X": { "Min": 0.6, "Max": 0.6 },
+        "Y": { "Min": 0.2, "Max": 0.2 }
+      },
+      "Rotation": {
+        "Z": { "Min": -360.0, "Max": 360.0 },
+        "X": { "Min": 90.0, "Max": 90.0 }
+      },
+      "Color": "#26b2ff"
+    },
+    "SoftParticles": "Enable"
+  },
+  "SpawnBurst": true,
+  "SpawnRate": {
+    "Min": 1,
+    "Max": 1
+  }
+}

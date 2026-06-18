@@ -1,0 +1,9 @@
+{
+  "Spawners": [
+    {
+      "SpawnerId": "WraithBusters_Plate_Trail"
+    }
+  ],
+  "CullDistance": 64,
+  "IsImportant": false
+}

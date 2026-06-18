@@ -5,11 +5,17 @@ import com.hexvane.wraithbusters.WraithBustersMessages;
 import com.hexvane.wraithbusters.util.DeferredWorldTasks;
 import com.hexvane.wraithbusters.WraithBustersPlugin;
 import com.hexvane.wraithbusters.arena.ArenaLayout;
+import com.hexvane.wraithbusters.arena.RoomDefinition;
 import com.hexvane.wraithbusters.arena.ArenaLayoutStore;
+import com.hexvane.wraithbusters.arena.GhostPhaseDoorMarker;
 import com.hexvane.wraithbusters.debug.GhostTestService;
 import com.hexvane.wraithbusters.ghost.PhasePortalMarkerService;
+import com.hexvane.wraithbusters.door.RoomProgressionService;
+import com.hexvane.wraithbusters.puzzle.PuzzleService;
+import com.hexvane.wraithbusters.game.GamePhase;
 import com.hexvane.wraithbusters.game.GameRegistry;
 import com.hexvane.wraithbusters.game.GameSession;
+import com.hexvane.wraithbusters.game.GameStartHandle;
 import com.hexvane.wraithbusters.setup.SetupModeService;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
@@ -22,12 +28,14 @@ import com.hypixel.hytale.server.core.command.system.basecommands.AbstractComman
 import com.hypixel.hytale.server.core.command.system.basecommands.AbstractPlayerCommand;
 import com.hypixel.hytale.server.core.entity.UUIDComponent;
 import com.hypixel.hytale.server.core.entity.entities.Player;
+import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.inventory.ItemStack;
 import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import java.io.IOException;
+import java.util.List;
 import java.util.UUID;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -48,6 +56,8 @@ public final class WraithBustersCommand extends AbstractCommandCollection {
         root.addSubCommand(new StatusCommand());
         root.addSubCommand(new ReloadCommand());
         root.addSubCommand(new TestGhostCommand());
+        root.addSubCommand(new CompleteRoomCommand());
+        root.addSubCommand(new ResetPhaseDoorsCommand());
         root.addSubCommand(new SetupCommand());
     }
 
@@ -107,15 +117,14 @@ public final class WraithBustersCommand extends AbstractCommandCollection {
             return;
         }
         Transform returnPoint = new Transform(tc.getTransform());
-        plugin.getGameService()
-            .startGame(uuid.getUuid(), world, returnPoint, arenaId)
-            .thenAccept(session -> DeferredWorldTasks.run(world, () -> {
-                if (plugin.getGameService().joinSession(session, ref, store, returnPoint)) {
-                    playerRef.sendMessage(WraithBustersMessages.translation("start.created"));
-                } else {
-                    playerRef.sendMessage(WraithBustersMessages.translation("start.failed"));
-                }
-            }));
+        GameStartHandle handle = plugin.getGameService().beginStartGame(uuid.getUuid(), world, returnPoint, arenaId);
+        DeferredWorldTasks.run(world, () -> {
+            if (plugin.getGameService().beginHostJoin(handle, ref, store, returnPoint)) {
+                playerRef.sendMessage(WraithBustersMessages.translation("start.created"));
+            } else {
+                playerRef.sendMessage(WraithBustersMessages.translation("start.failed"));
+            }
+        });
     }
 
     private static final class JoinCommand extends AbstractPlayerCommand {
@@ -281,19 +290,31 @@ public final class WraithBustersCommand extends AbstractCommandCollection {
         ) {
             UUIDComponent uuid = store.getComponent(ref, UUIDComponent.getComponentType());
             if (uuid == null) {
+                playerRef.sendMessage(WraithBustersMessages.translation("status.none"));
                 return;
             }
             GameSession session = GameRegistry.get().getSessionForPlayer(uuid.getUuid());
             if (session == null) {
+                session = GameRegistry.get().resolveSessionForWorld(world);
+            }
+            if (session == null) {
                 playerRef.sendMessage(WraithBustersMessages.translation("status.none"));
                 return;
             }
-            playerRef.sendMessage(
-                WraithBustersMessages.translation("status.line")
-                    .param("phase", session.getPhase().name())
-                    .param("ready", session.readyCount())
-                    .param("total", session.getPlayers().size())
-            );
+            StringBuilder status = new StringBuilder()
+                .append("Phase ")
+                .append(session.getPhase().name())
+                .append(". Ready ")
+                .append(session.readyCount())
+                .append(" of ")
+                .append(session.getPlayers().size());
+            if (session.getPhase() == GamePhase.ACTIVE) {
+                status.append("\nCurrent room: ")
+                    .append(RoomProgressionService.currentRoom(session).getRoomId())
+                    .append(". Chain: ")
+                    .append(String.join(" -> ", session.getActiveRoomChain()));
+            }
+            playerRef.sendMessage(Message.raw(status.toString()));
         }
     }
 
@@ -362,6 +383,117 @@ public final class WraithBustersCommand extends AbstractCommandCollection {
         }
     }
 
+    private static final class CompleteRoomCommand extends AbstractPlayerCommand {
+        CompleteRoomCommand() {
+            super("completeroom", WraithBustersMessages.commandDescription("commands.completeroom"));
+        }
+
+        @Override
+        protected void execute(
+            @Nonnull CommandContext context,
+            @Nonnull Store<EntityStore> store,
+            @Nonnull Ref<EntityStore> ref,
+            @Nonnull PlayerRef playerRef,
+            @Nonnull World world
+        ) {
+            GameSession session = GameRegistry.get().resolveSessionForWorld(world);
+            if (session == null || session.getPhase() != GamePhase.ACTIVE) {
+                playerRef.sendMessage(WraithBustersMessages.translation("completeroom.notActive"));
+                return;
+            }
+            RoomDefinition room = RoomProgressionService.currentRoom(session);
+            PuzzleService.ForceCompleteResult result = PuzzleService.forceCompleteCurrentRoom(session, world);
+            switch (result) {
+                case NOT_ACTIVE -> playerRef.sendMessage(WraithBustersMessages.translation("completeroom.notActive"));
+                case ALREADY_DONE -> playerRef.sendMessage(WraithBustersMessages.translation("completeroom.alreadyDone"));
+                case COMPLETED_WITH_KEY -> playerRef.sendMessage(
+                    WraithBustersMessages.translation("completeroom.done").param("room", room.getRoomId())
+                );
+                case COMPLETED_WITHOUT_KEY -> playerRef.sendMessage(
+                    WraithBustersMessages.translation("completeroom.noKey").param("room", room.getRoomId())
+                );
+            }
+        }
+    }
+
+    private static final class ResetPhaseDoorsCommand extends AbstractPlayerCommand {
+        ResetPhaseDoorsCommand() {
+            super("resetphasedoors", WraithBustersMessages.commandDescription("commands.resetphasedoors"));
+            addUsageVariant(new ResetPhaseDoorsWithArenaCommand());
+        }
+
+        @Override
+        protected void execute(
+            @Nonnull CommandContext context,
+            @Nonnull Store<EntityStore> store,
+            @Nonnull Ref<EntityStore> ref,
+            @Nonnull PlayerRef playerRef,
+            @Nonnull World world
+        ) {
+            resetPhaseDoors(playerRef, world, null);
+        }
+    }
+
+    private static final class ResetPhaseDoorsWithArenaCommand extends AbstractPlayerCommand {
+        private final RequiredArg<String> arenaArg =
+            withRequiredArg(
+                "arena",
+                WraithBustersMessages.commandDescription("commands.resetphasedoors.arena"),
+                ArgTypes.STRING
+            );
+
+        ResetPhaseDoorsWithArenaCommand() {
+            super(WraithBustersMessages.commandDescription("commands.resetphasedoors"));
+        }
+
+        @Override
+        protected void execute(
+            @Nonnull CommandContext context,
+            @Nonnull Store<EntityStore> store,
+            @Nonnull Ref<EntityStore> ref,
+            @Nonnull PlayerRef playerRef,
+            @Nonnull World world
+        ) {
+            resetPhaseDoors(playerRef, world, arenaArg.get(context));
+        }
+    }
+
+    private static void resetPhaseDoors(
+        @Nonnull PlayerRef playerRef,
+        @Nonnull World world,
+        @Nullable String arenaIdArg
+    ) {
+        WraithBustersPlugin plugin = WraithBustersPlugin.get();
+        if (plugin == null) {
+            return;
+        }
+        GameSession session = GameRegistry.get().resolveSessionForWorld(world);
+        String arenaId = arenaIdArg != null && !arenaIdArg.isBlank()
+            ? arenaIdArg.trim()
+            : session != null
+                ? session.getArenaId()
+                : WraithBustersConstants.DEFAULT_ARENA_ID;
+
+        ArenaLayout loaded = ArenaLayoutStore.loadOrDefault(plugin, arenaId);
+        List<GhostPhaseDoorMarker> doors = GhostPhaseDoorMarker.copyAll(loaded.getGhostPhaseDoors());
+        SetupModeService.syncPhaseDoorsForArena(arenaId, doors);
+
+        ArenaLayout spawnLayout;
+        if (session != null) {
+            session.getArenaLayout().setGhostPhaseDoors(GhostPhaseDoorMarker.copyAll(doors));
+            spawnLayout = session.getArenaLayout();
+        } else {
+            spawnLayout = loaded;
+        }
+
+        PhasePortalMarkerService.resetFromArenaLayout(world, spawnLayout, session);
+        playerRef.sendMessage(
+            WraithBustersMessages.translation("resetphasedoors.done")
+                .param("count", doors.size())
+                .param("arena", arenaId)
+        );
+    }
+
     private static final class SetupCommand extends AbstractCommandCollection {
         SetupCommand() {
             super("setup", WraithBustersMessages.commandDescription("commands.setup"));
@@ -422,6 +554,11 @@ public final class WraithBustersCommand extends AbstractCommandCollection {
         if (plugin == null) {
             return;
         }
+        GameSession session = GameRegistry.get().getSessionForWorld(world.getWorldConfig().getUuid());
+        if (session != null && session.getPhase() == GamePhase.ACTIVE) {
+            playerRef.sendMessage(WraithBustersMessages.translation("setup.roundActive"));
+            return;
+        }
         ArenaLayout layout = ArenaLayoutStore.loadOrDefault(plugin, arenaId);
         SetupModeService.enter(playerRef.getUuid(), layout);
         PhasePortalMarkerService.refreshSetup(playerRef.getUuid(), world, layout);
@@ -459,6 +596,8 @@ public final class WraithBustersCommand extends AbstractCommandCollection {
             "setup.help.possessable",
             "setup.help.manaPickup",
             "setup.help.exorcism",
+            "setup.help.smallMouse",
+            "setup.help.largeMouse",
             "setup.help.phaseDoor",
             "setup.help.phaseDoorTool",
             "setup.help.save",
@@ -521,7 +660,9 @@ public final class WraithBustersCommand extends AbstractCommandCollection {
                  "room",
                  "candle",
                  "exorcism",
-                 "phasedoor" -> true;
+                 "phasedoor",
+                 "small_mouse",
+                 "large_mouse" -> true;
             default -> false;
         };
     }

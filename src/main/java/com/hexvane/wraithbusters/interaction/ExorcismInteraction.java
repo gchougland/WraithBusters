@@ -5,6 +5,7 @@ import com.hexvane.wraithbusters.game.GamePhase;
 import com.hexvane.wraithbusters.game.GameRegistry;
 import com.hexvane.wraithbusters.game.GameSession;
 import com.hexvane.wraithbusters.player.PlayerRole;
+import com.hexvane.wraithbusters.util.DeferredWorldTasks;
 import com.hypixel.hytale.component.CommandBuffer;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
@@ -65,7 +66,13 @@ public final class ExorcismInteraction extends WraithBustersBlockInteractionBase
             context.getState().state = InteractionState.Failed;
             return;
         }
-        plugin.getGameService().humansWin(session, world);
+        GameSession activeSession = session;
+        DeferredWorldTasks.run(world, () -> {
+            if (activeSession.getPhase() != GamePhase.ACTIVE) {
+                return;
+            }
+            plugin.getGameService().humansWin(activeSession, world);
+        });
         context.getState().state = InteractionState.Finished;
     }
 }

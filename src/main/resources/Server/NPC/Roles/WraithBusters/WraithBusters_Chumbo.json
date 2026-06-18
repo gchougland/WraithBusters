@@ -1,0 +1,69 @@
+{
+  "Type": "Generic",
+  "Appearance": "WraithBusters_Chumbo",
+  "Invulnerable": true,
+  "KnockbackScale": 0,
+  "DropList": "Empty",
+  "DisableDamageGroups": ["Self"],
+  "DefaultNPCAttitude": "Neutral",
+  "DefaultPlayerAttitude": "Neutral",
+  "ApplySeparation": false,
+  "ApplyAvoidance": false,
+  "MotionControllerList": [
+    {
+      "Type": "Walk",
+      "MaxWalkSpeed": 3,
+      "Gravity": 10,
+      "MaxFallSpeed": 8,
+      "Acceleration": 10,
+      "MaxRotationSpeed": 180
+    }
+  ],
+  "MaxHealth": 1,
+  "Instructions": [
+    {
+      "Continue": true,
+      "Instructions": [
+        {
+          "Sensor": {
+            "Type": "Any"
+          },
+          "BodyMotion": {
+            "Type": "Nothing"
+          },
+          "HeadMotion": {
+            "Type": "Nothing"
+          }
+        }
+      ]
+    }
+  ],
+  "InteractionInstruction": {
+    "Instructions": [
+      {
+        "Sensor": { "Type": "Not", "Sensor": { "Type": "CanInteract", "ViewSector": 360 } },
+        "Actions": [{ "Type": "SetInteractable", "Interactable": false }]
+      },
+      {
+        "Continue": true,
+        "Sensor": { "Type": "Any" },
+        "Actions": [
+          {
+            "Type": "SetInteractable",
+            "Interactable": true,
+            "Hint": "server.wraithbusters.puzzle.cheeseChase.feedChumbo"
+          }
+        ]
+      },
+      {
+        "Sensor": { "Type": "HasInteracted" },
+        "Instructions": [
+          {
+            "Actions": [{ "Type": "WraithBustersCheeseChaseChumbo" }]
+          }
+        ]
+      }
+    ]
+  },
+  "NameTranslationKey": "server.npcRoles.WraithBusters_Chumbo.name"
+}

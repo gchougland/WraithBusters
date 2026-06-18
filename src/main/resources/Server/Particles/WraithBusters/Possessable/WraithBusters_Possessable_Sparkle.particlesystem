@@ -1,0 +1,9 @@
+{
+  "Spawners": [
+    {
+      "SpawnerId": "WraithBusters_Possessable_Sparkle",
+      "FixedRotation": true
+    }
+  ],
+  "CullDistance": 40
+}

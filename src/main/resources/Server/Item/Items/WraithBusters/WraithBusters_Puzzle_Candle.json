@@ -32,16 +32,18 @@
         "GatherType": "Unbreakable"
       }
     },
+    "Looping": true,
+    "Particles": [
+      {
+        "SystemId": "Candle_Fire",
+        "TargetNodeName": "Flame-Emitter",
+        "Color": "#26b2ff",
+        "Scale": 1.1
+      }
+    ],
     "Interactions": {
       "Use": {
         "Interactions": [
-          {
-            "Type": "ChangeState",
-            "Changes": {
-              "default": "Off",
-              "Off": "default"
-            }
-          },
           {
             "Type": "WraithBusters_CandlePuzzle"
           }
@@ -54,13 +56,29 @@
           "Light": {
             "Radius": 8,
             "Color": "#26b2ff"
-          }
+          },
+          "InteractionSoundEventId": "SFX_Torch_Ignite",
+          "AmbientSoundEventId": "SFX_Candle_Default_Loop",
+          "Particles": [
+            {
+              "SystemId": "Candle_Fire",
+              "TargetNodeName": "Flame-Emitter",
+              "Color": "#26b2ff",
+              "Scale": 1.1
+            }
+          ]
         },
         "Off": {
-          "Light": null
+          "InteractionHint": "server.interactionHints.turnon",
+          "InteractionSoundEventId": "SFX_Candle_Off",
+          "Light": null,
+          "Particles": null,
+          "AmbientSoundEventId": null
         }
       }
     },
+    "InteractionHint": "server.interactionHints.turnoff",
+    "AmbientSoundEventId": "SFX_Candle_Default_Loop",
     "CustomModelTexture": [
       {
         "Texture": "Blocks/Decorative_Sets/Crude/Candle_Texture.png"

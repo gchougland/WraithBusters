@@ -82,11 +82,7 @@
       "Use": {
         "Interactions": [
           {
-            "Type": "ChangeState",
-            "Changes": {
-              "default": "Off",
-              "Off": "default"
-            }
+            "Type": "WraithBusters_CandlePuzzle"
           }
         ]
       }

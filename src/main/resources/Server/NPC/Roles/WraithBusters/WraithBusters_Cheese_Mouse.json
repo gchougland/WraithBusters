@@ -1,0 +1,128 @@
+{
+  "Type": "Generic",
+  "Appearance": "Mouse",
+  "Invulnerable": true,
+  "KnockbackScale": 0,
+  "DropList": "Empty",
+  "DisableDamageGroups": ["Self"],
+  "DefaultNPCAttitude": "Ignore",
+  "DefaultPlayerAttitude": "Neutral",
+  "AttitudeGroup": "Critters",
+  "ApplySeparation": false,
+  "ApplyAvoidance": false,
+  "StartState": "Idle",
+  "MaxHealth": 100,
+  "MotionControllerList": [
+    {
+      "Type": "Walk",
+      "MaxWalkSpeed": 9,
+      "Gravity": 10,
+      "MaxFallSpeed": 8,
+      "Acceleration": 10,
+      "MaxRotationSpeed": 180
+    }
+  ],
+  "Instructions": [
+    {
+      "Instructions": [
+        {
+          "Sensor": {
+            "Type": "State",
+            "State": "Idle"
+          },
+          "Instructions": [
+            {
+              "Reference": "Component_Instruction_Clear_Status_Animation"
+            },
+            {
+              "Sensor": {
+                "Type": "Player",
+                "Range": 6,
+                "LockOnTarget": true,
+                "Filters": [
+                  {
+                    "Type": "LineOfSight"
+                  }
+                ]
+              },
+              "Actions": [
+                {
+                  "Type": "State",
+                  "State": "Flee"
+                }
+              ]
+            },
+            {
+              "BodyMotion": {
+                "Type": "Wander",
+                "MaxHeadingChange": 45,
+                "RelativeSpeed": 0.45
+              }
+            }
+          ]
+        },
+        {
+          "Sensor": {
+            "Type": "State",
+            "State": "Flee"
+          },
+          "Instructions": [
+            {
+              "Reference": "Component_Instruction_Generic_Multitarget_Flee",
+              "Modify": {
+                "_ExportStates": ["Panic", "Idle", "Panic"],
+                "ViewRange": 12,
+                "ViewSector": 180,
+                "HearingRange": 12,
+                "AlertedRange": 20
+              }
+            }
+          ]
+        },
+        {
+          "Sensor": {
+            "Type": "State",
+            "State": "Panic"
+          },
+          "Instructions": [
+            {
+              "Reference": "Component_Instruction_Generic_Panic",
+              "Modify": {
+                "_ExportStates": ["Idle"],
+                "AlertedRange": 20
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "InteractionInstruction": {
+    "Instructions": [
+      {
+        "Sensor": { "Type": "Not", "Sensor": { "Type": "CanInteract", "ViewSector": 360 } },
+        "Actions": [{ "Type": "SetInteractable", "Interactable": false }]
+      },
+      {
+        "Continue": true,
+        "Sensor": { "Type": "Any" },
+        "Actions": [
+          {
+            "Type": "SetInteractable",
+            "Interactable": true,
+            "Hint": "server.wraithbusters.puzzle.cheeseChase.catchMouse"
+          }
+        ]
+      },
+      {
+        "Sensor": { "Type": "HasInteracted" },
+        "Instructions": [
+          {
+            "Actions": [{ "Type": "WraithBustersCheeseChaseMouse" }]
+          }
+        ]
+      }
+    ]
+  },
+  "NameTranslationKey": "server.npcRoles.WraithBusters_Cheese_Mouse.name"
+}

@@ -86,11 +86,7 @@
       "Use": {
         "Interactions": [
           {
-            "Type": "ChangeState",
-            "Changes": {
-              "default": "Off",
-              "Off": "default"
-            }
+            "Type": "WraithBusters_TempleCandle"
           }
         ]
       }
@@ -101,7 +97,7 @@
           "AmbientSoundEventId": "SFX_Candle_Default_Loop"
         },
         "Off": {
-          "InteractionHint": "server.interactionHints.turnon",
+          "InteractionHint": "server.wraithbusters.possess.hint",
           "Light": null,
           "Particles": null,
           "InteractionSoundEventId": "SFX_Candle_Off",
@@ -109,7 +105,7 @@
         }
       }
     },
-    "InteractionHint": "server.interactionHints.turnoff",
+    "InteractionHint": "server.wraithbusters.possess.hint",
     "AmbientSoundEventId": "SFX_Candle_Default_Loop",
     "ParticleColor": "#333839",
     "TextureComputedColor": "#555D55"

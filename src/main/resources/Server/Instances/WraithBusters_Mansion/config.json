@@ -70,8 +70,8 @@
       ],
       "PreventReconnection": false,
       "Discovery": {
-        "TitleKey": "wraithbusters.instances.mansion.title",
-        "SubtitleKey": "wraithbusters.instances.mansion.subtitle",
+        "TitleKey": "server.wraithbusters.instances.mansion.title",
+        "SubtitleKey": "server.wraithbusters.instances.mansion.subtitle",
         "Display": true,
         "AlwaysDisplay": false,
         "Icon": "Forgotten_Temple.png",

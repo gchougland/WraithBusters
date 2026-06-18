@@ -83,7 +83,7 @@ public final class PossessInteraction extends WraithBustersBlockInteractionBase 
                 send(player, "server.wraithbusters.possess.notGhost");
                 context.getState().state = InteractionState.Failed;
             }
-            case NOT_ENOUGH_MANA, NO_TARGET -> context.getState().state = InteractionState.Failed;
+            case NOT_ENOUGH_MANA, NO_TARGET, UNKNOWN_TYPE -> context.getState().state = InteractionState.Failed;
         }
     }
 

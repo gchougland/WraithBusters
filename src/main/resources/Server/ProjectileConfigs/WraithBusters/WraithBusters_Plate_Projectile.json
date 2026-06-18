@@ -19,7 +19,7 @@
       "Cooldown": { "Cooldown": 0 },
       "Interactions": [
         {
-          "Type": "DamageEntity",
+          "Parent": "DamageEntityParent",
           "DamageCalculator": {
             "BaseDamage": { "Physical": 25 }
           }

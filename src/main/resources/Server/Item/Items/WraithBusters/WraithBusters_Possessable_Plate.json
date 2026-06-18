@@ -47,7 +47,8 @@
           "FaceType": "Full"
         }
       ]
-    }
+    },
+    "InteractionHint": "server.wraithbusters.possess.hint"
   },
   "IconProperties": {
     "Scale": 0.58823,

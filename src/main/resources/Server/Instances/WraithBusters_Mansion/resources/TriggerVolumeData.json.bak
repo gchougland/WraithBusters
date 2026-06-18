@@ -1,0 +1,108 @@
+{
+  "Volumes": {
+    "Kitchen_Volume": {
+      "Position": {
+        "X": -11.0,
+        "Y": 132.0,
+        "Z": -9.375
+      },
+      "Shape": {
+        "Type": "Box",
+        "Min": {
+          "X": -1.0,
+          "Y": -1.0,
+          "Z": -0.625
+        },
+        "Max": {
+          "X": 1.0,
+          "Y": 1.0,
+          "Z": 0.625
+        }
+      },
+      "Effects": [
+        {
+          "Type": "WraithBusters_Offering",
+          "Event": "ENTER",
+          "Interval": 0.0,
+          "Delay": 0.0,
+          "RoomId": "Kitchen",
+          "Mode": "UNORDERED",
+          "RequiredItems": [
+            "Plant_Fruit_Apple",
+            "Ingredient_Dough",
+            "Ingredient_Spices"
+          ],
+          "SlotCapacity": 3,
+          "EjectVelocity": {
+            "X": 0.0,
+            "Y": 0.0,
+            "Z": -4.0
+          },
+          "RejectParticleSystem": "WraithBusters_Smoke_Black",
+          "RejectParticleDuration": 2.0,
+          "RejectSoundEvent": "SFX_Arrow_Fire_Miss",
+          "SuccessParticleSystem": "Campfire_New2",
+          "SuccessParticleDuration": 2.0,
+          "SuccessSoundEvent": "SFX_Campfire_Build"
+        }
+      ],
+      "TargetTypes": [
+        "ItemDrop"
+      ],
+      "Enabled": true,
+      "KeepLoaded": true
+    },
+    "Lab_Cauldron": {
+      "Position": {
+        "X": -7.5,
+        "Y": 125.0,
+        "Z": -21.5
+      },
+      "Shape": {
+        "Type": "Box",
+        "Min": {
+          "X": -0.5,
+          "Y": -1.0,
+          "Z": -0.5
+        },
+        "Max": {
+          "X": 0.5,
+          "Y": 1.0,
+          "Z": 0.5
+        }
+      },
+      "Effects": [
+        {
+          "Type": "WraithBusters_Offering",
+          "Event": "ENTER",
+          "Interval": 0.0,
+          "Delay": 0.0,
+          "RoomId": "Laboratory",
+          "Mode": "ORDERED",
+          "RequiredItems": [
+            "Plant_Crop_Mana2",
+            "Plant_Crop_Health2",
+            "Plant_Crop_Stamina1"
+          ],
+          "SlotCapacity": 3,
+          "EjectVelocity": {
+            "X": 1.0,
+            "Y": 4.0,
+            "Z": 0.0
+          },
+          "RejectParticleSystem": "WraithBusters_Smoke_Tall_Round",
+          "RejectParticleDuration": 2.0,
+          "RejectSoundEvent": "SFX_Drop_Blocks_Splatty",
+          "SuccessParticleSystem": "WraithBusters_Smoke_Tall_Round",
+          "SuccessParticleDuration": 2.0,
+          "SuccessSoundEvent": "SFX_Alchemy_Bench_Craft"
+        }
+      ],
+      "TargetTypes": [
+        "ItemDrop"
+      ],
+      "Enabled": true,
+      "KeepLoaded": true
+    }
+  }
+}

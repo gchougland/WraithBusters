@@ -6,10 +6,12 @@
     "Items.WraithBusters"
   ],
   "Set": "WraithBusters",
+  "Quality": "Legendary",
   "Icon": "Icons/ItemsGenerated/WraithBusters_Key_Star.png",
   "Model": "Items/WraithBusters/DoorKey.blockymodel",
   "Texture": "Items/WraithBusters/DoorKey_Star.png",
   "MaxStack": 1,
+  "Tool": {},
   "PlayerAnimationsId": "Item",
   "Interactions": {
     "Secondary": "Block_Secondary"

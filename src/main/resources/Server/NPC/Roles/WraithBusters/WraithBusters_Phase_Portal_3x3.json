@@ -5,8 +5,8 @@
   "KnockbackScale": 0,
   "DropList": "Empty",
   "DisableDamageGroups": ["Self"],
-  "DefaultNPCAttitude": "Ignore",
-  "DefaultPlayerAttitude": "Ignore",
+  "DefaultNPCAttitude": "Neutral",
+  "DefaultPlayerAttitude": "Neutral",
   "ApplySeparation": false,
   "ApplyAvoidance": false,
   "MotionControllerList": [
@@ -33,5 +33,32 @@
       ]
     }
   ],
+  "InteractionInstruction": {
+    "Instructions": [
+      {
+        "Sensor": { "Type": "Not", "Sensor": { "Type": "CanInteract", "ViewSector": 360 } },
+        "Actions": [{ "Type": "SetInteractable", "Interactable": false }]
+      },
+      {
+        "Continue": true,
+        "Sensor": { "Type": "Any" },
+        "Actions": [
+          {
+            "Type": "SetInteractable",
+            "Interactable": true,
+            "Hint": "server.wraithbusters.phasePortal.use"
+          }
+        ]
+      },
+      {
+        "Sensor": { "Type": "HasInteracted" },
+        "Instructions": [
+          {
+            "Actions": [{ "Type": "WraithBustersPhasePortal" }]
+          }
+        ]
+      }
+    ]
+  },
   "NameTranslationKey": "server.npcRoles.WraithBusters_Phase_Portal.name"
 }

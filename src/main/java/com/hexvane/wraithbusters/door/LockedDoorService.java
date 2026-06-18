@@ -2,15 +2,16 @@ package com.hexvane.wraithbusters.door;
 
 import com.hexvane.wraithbusters.arena.RoomDefinition;
 import com.hexvane.wraithbusters.game.GameSession;
+import com.hexvane.wraithbusters.player.PlayerRole;
+import com.hexvane.wraithbusters.player.PlayerSessionState;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.server.core.Message;
+import com.hypixel.hytale.server.core.inventory.InventoryComponent;
 import com.hypixel.hytale.server.core.inventory.ItemStack;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
-import com.hexvane.wraithbusters.player.PlayerRole;
-import com.hexvane.wraithbusters.player.PlayerSessionState;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import org.joml.Vector3i;
@@ -57,10 +58,24 @@ public final class LockedDoorService {
                 send(store, playerRef, "server.wraithbusters.door.wrongKey");
                 return false;
             }
+            if (!consumeOneKey(playerRef, store, keyInHand)) {
+                send(store, playerRef, "server.wraithbusters.door.needKey");
+                return false;
+            }
         }
-        RoomDoorService.openDoor(world, room);
+        RoomDoorService.openDoor(session, world, room);
         send(store, playerRef, "server.wraithbusters.door.opened");
         return true;
+    }
+
+    private static boolean consumeOneKey(
+        @Nonnull Ref<EntityStore> playerRef,
+        @Nonnull Store<EntityStore> store,
+        @Nonnull ItemStack keyInHand
+    ) {
+        return InventoryComponent.getCombined(store, playerRef, InventoryComponent.EVERYTHING)
+            .removeItemStack(keyInHand.withQuantity(1), true, true)
+            .succeeded();
     }
 
     @Nullable

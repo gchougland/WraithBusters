@@ -61,6 +61,7 @@ public final class HumanDeathHandlerSystem extends DeathSystems.OnDeathSystem {
                 return;
             }
             TeamSetupService.applySpectator(victimRef, world.getEntityStore().getStore());
+            TeamSetupService.hidePlayerFromSession(session, pr.getUuid());
             TeamSetupService.refreshVisibility(session, world);
         });
         commandBuffer.removeComponent(victimRef, DeathComponent.getComponentType());

@@ -63,4 +63,28 @@ public final class GhostPhaseDoorMarker {
     public void setDoorBlocks(@Nonnull List<Vector3i> doorBlocks) {
         this.doorBlocks = doorBlocks;
     }
+
+    @Nonnull
+    public static GhostPhaseDoorMarker copyOf(@Nonnull GhostPhaseDoorMarker source) {
+        GhostPhaseDoorMarker copy = new GhostPhaseDoorMarker();
+        copy.setId(source.getId());
+        copy.setDoorSize(source.getDoorSize());
+        copy.setEntry(new Transform(source.getEntry()));
+        copy.setExit(new Transform(source.getExit()));
+        List<Vector3i> blocks = new ArrayList<>(source.getDoorBlocks().size());
+        for (Vector3i block : source.getDoorBlocks()) {
+            blocks.add(new Vector3i(block));
+        }
+        copy.setDoorBlocks(blocks);
+        return copy;
+    }
+
+    @Nonnull
+    public static List<GhostPhaseDoorMarker> copyAll(@Nonnull List<GhostPhaseDoorMarker> source) {
+        List<GhostPhaseDoorMarker> copy = new ArrayList<>(source.size());
+        for (GhostPhaseDoorMarker door : source) {
+            copy.add(copyOf(door));
+        }
+        return copy;
+    }
 }

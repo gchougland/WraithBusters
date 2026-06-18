@@ -2,6 +2,7 @@ package com.hexvane.wraithbusters.door;
 
 import com.hexvane.wraithbusters.arena.RoomDefinition;
 import com.hexvane.wraithbusters.game.GameSession;
+import com.hexvane.wraithbusters.ghost.PhasePortalMarkerService;
 import com.hexvane.wraithbusters.util.DeferredWorldTasks;
 import com.hypixel.hytale.server.core.universe.world.World;
 import java.util.LinkedHashSet;
@@ -18,8 +19,8 @@ public final class RoomDoorService {
         DeferredWorldTasks.run(world, () -> applyRoundStartNow(session, world));
     }
 
-    public static void openDoor(@Nonnull World world, @Nonnull RoomDefinition room) {
-        DeferredWorldTasks.run(world, () -> openDoorNow(world, room));
+    public static void openDoor(@Nonnull GameSession session, @Nonnull World world, @Nonnull RoomDefinition room) {
+        DeferredWorldTasks.run(world, () -> openDoorNow(session, world, room));
     }
 
     private static void applyRoundStartNow(@Nonnull GameSession session, @Nonnull World world) {
@@ -32,12 +33,13 @@ public final class RoomDoorService {
         }
         RoomDefinition starting = findRoom(session, startingRoomId);
         if (starting != null) {
-            openDoorNow(world, starting);
+            openDoorNow(session, world, starting);
         }
     }
 
-    private static void openDoorNow(@Nonnull World world, @Nonnull RoomDefinition room) {
+    private static void openDoorNow(@Nonnull GameSession session, @Nonnull World world, @Nonnull RoomDefinition room) {
         DoorStateHelper.tryOpenAll(world, uniqueDoorBlocks(room));
+        PhasePortalMarkerService.onRoomDoorOpened(session, world, room);
     }
 
     private static void blockDoor(@Nonnull World world, @Nonnull RoomDefinition room) {

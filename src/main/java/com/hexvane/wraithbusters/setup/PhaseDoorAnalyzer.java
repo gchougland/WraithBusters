@@ -6,6 +6,7 @@ import com.hexvane.wraithbusters.door.DoorStateHelper;
 import com.hypixel.hytale.math.util.MathUtil;
 import com.hypixel.hytale.math.vector.Transform;
 import com.hypixel.hytale.server.core.asset.type.blocktype.config.BlockType;
+import com.hypixel.hytale.server.core.asset.type.blocktype.config.RotationTuple;
 import com.hypixel.hytale.server.core.universe.world.World;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
@@ -31,21 +32,12 @@ public final class PhaseDoorAnalyzer {
      *    Particle PositionOffset.Y = portalEntityHeight/2 (generate_portal_particles.py) so the
      *    effect bottom sits on the entity origin. Do NOT also lift spawn Y in Java.
      *
-     *  1x2 standalone (single block wide — NOT side-by-side 2x2):
-     *    Placement (both facings) → FACING offset (through the wall, not along it).
-     *    Effect rotation: N/S facing → FACING yaw; E/W facing → PLANE yaw.
-     *
      *  Side position (X/Z):
-     *    Portals sit at door center ± SIDE_OFFSET along the side-offset axis.
-     *    Increase SIDE_OFFSET → further from door center.
-     *
-     *  Side-offset axis (which way portals sit on each side of the door):
-     *    SIDE_OFFSET_AXIS controls whether X/Z offset uses door facing or door plane.
-     *    If 1x2 portals appear side-by-side through the door center for one rotation,
-     *    try toggling SIDE_OFFSET_AXIS or adjust rotationIndexToFacingYaw() cases 0–3.
+     *    Portals sit at door center ± SIDE_OFFSET along the thin footprint axis (through-axis).
+     *    Wide-in-X doors use ±Z; wide-in-Z doors use ±X. 1x2 uses block facing (square footprint).
      *
      *  Portal effect rotation (particle/NPC yaw):
-     *    Set in sideTransform() via PORTAL_YAW_AXIS.
+     *    Same through-axis yaw as side offset (never block facing on non-square footprints).
      *
      *  Particle scale (visual size, not position):
      *    scripts/generate_portal_particles.py — spawner mults per tier; model Scale = MODEL_WORLD_SCALE.
@@ -57,36 +49,6 @@ public final class PhaseDoorAnalyzer {
 
     /** Distance from door center to each portal on the ground plane. */
     private static final double SIDE_OFFSET = 0.6;
-
-    /** Which yaw drives portal X/Z side offset. */
-    private enum OffsetAxis {
-        /** Offset along door facing (open/close direction). Try this if 1x2 portals sit side-by-side. */
-        FACING,
-        /** Offset perpendicular to facing (door panel normal). Default for 2x2 / medium / large. */
-        PLANE
-    }
-
-    /** Which yaw is written to the spawned portal NPC (particle effect rotation). */
-    private enum PortalYawAxis {
-        FACING,
-        PLANE
-    }
-
-    /** Side offset axis per door size — edit if one size tier needs a different axis. */
-    private static OffsetAxis sideOffsetAxis(@Nonnull PhaseDoorSize size) {
-        return switch (size) {
-            case STANDARD_1x2 -> OffsetAxis.PLANE;
-            case STANDARD_2x2, MEDIUM_3x3, LARGE_4x4 -> OffsetAxis.PLANE;
-        };
-    }
-
-    /** Portal effect rotation per door size — edit if effect appears 90° off. */
-    private static PortalYawAxis portalYawAxis(@Nonnull PhaseDoorSize size) {
-        return switch (size) {
-            case STANDARD_1x2 -> PortalYawAxis.PLANE;
-            case STANDARD_2x2, MEDIUM_3x3, LARGE_4x4 -> PortalYawAxis.PLANE;
-        };
-    }
 
     /** Bottom block Y of the door opening. */
     private static int doorFloorY(@Nonnull DoorTier tier, @Nonnull Bounds bounds) {
@@ -103,50 +65,6 @@ public final class PhaseDoorAnalyzer {
 
     private static double portalCenterY(@Nonnull DoorTier tier, @Nonnull Bounds bounds) {
         return doorFloorY(tier, bounds);
-    }
-
-    private static float axisYaw(float facingYaw, float planeYaw, OffsetAxis axis) {
-        return axis == OffsetAxis.FACING ? facingYaw : planeYaw;
-    }
-
-    private static float portalYaw(
-        float facingYaw,
-        float planeYaw,
-        PortalYawAxis axis,
-        @Nonnull PhaseDoorSize size,
-        boolean sideA
-    ) {
-        float base = axis == PortalYawAxis.FACING ? facingYaw : planeYaw;
-        return MathUtil.wrapAngle(base + (sideA ? 0.0F : (float) Math.PI));
-    }
-
-    /** True when the door opens toward north or south (rotation index 0 or 2). */
-    private static boolean isNorthSouthFacing(float facingYaw) {
-        return Math.abs(Math.cos(facingYaw)) >= Math.abs(Math.sin(facingYaw));
-    }
-
-    /**
-     * Which yaw pushes portal A/B to opposite sides of the doorway.
-     * Standalone 1x2 always offsets through the wall (FACING). Wider doors use PLANE.
-     */
-    private static float sideOffsetYaw(float facingYaw, float planeYaw, @Nonnull PhaseDoorSize size) {
-        if (size == PhaseDoorSize.STANDARD_1x2) {
-            return facingYaw;
-        }
-        return axisYaw(facingYaw, planeYaw, sideOffsetAxis(size));
-    }
-
-    /** Particle effect rotation — 1x2 N/S uses door facing; everything else uses PLANE. */
-    private static float portalEffectYaw(
-        float facingYaw,
-        float planeYaw,
-        @Nonnull PhaseDoorSize size,
-        boolean sideA
-    ) {
-        if (size == PhaseDoorSize.STANDARD_1x2 && isNorthSouthFacing(facingYaw)) {
-            return portalYaw(facingYaw, planeYaw, PortalYawAxis.FACING, size, sideA);
-        }
-        return portalYaw(facingYaw, planeYaw, portalYawAxis(size), size, sideA);
     }
 
     private PhaseDoorAnalyzer() {}
@@ -276,10 +194,9 @@ public final class PhaseDoorAnalyzer {
         Bounds bounds = Bounds.boundsOf(sorted);
         PhaseDoorSize size = classifySize(tier, bounds);
         Vector3i rotationBlock = DoorStateHelper.resolveDoorAnchor(world, sorted.getFirst());
-        float facingYaw = resolveDoorFacingYaw(world, rotationBlock, bounds);
-        float planeYaw = toPlaneYaw(facingYaw);
-        Transform sideA = sideTransform(bounds, tier, size, facingYaw, planeYaw, true);
-        Transform sideB = sideTransform(bounds, tier, size, facingYaw, planeYaw, false);
+        float throughYaw = resolveThroughYaw(world, rotationBlock, bounds);
+        Transform sideA = sideTransform(bounds, tier, throughYaw, true);
+        Transform sideB = sideTransform(bounds, tier, throughYaw, false);
         return new AnalysisResult(size, sorted, sideA, sideB);
     }
 
@@ -493,43 +410,51 @@ public final class PhaseDoorAnalyzer {
         };
     }
 
-    private static float resolveDoorFacingYaw(
+    private static float blockFacingYaw(@Nonnull World world, @Nonnull Vector3i rotationBlock) {
+        int rotationIndex = world.getBlockRotationIndex(
+            rotationBlock.x,
+            rotationBlock.y,
+            rotationBlock.z
+        );
+        return (float) RotationTuple.get(rotationIndex).yaw().getRadians();
+    }
+
+    /**
+     * Yaw of the axis ghosts walk through when phasing. Single-column (1x2) doors use block facing
+     * directly. Wider assemblies always pass through the thin footprint axis (±Z when wide in X,
+     * ±X when wide in Z); block rotation only picks the sign on that axis.
+     */
+    private static float resolveThroughYaw(
         @Nonnull World world,
         @Nonnull Vector3i rotationBlock,
         @Nonnull Bounds bounds
     ) {
-        float facingYaw = rotationIndexToFacingYaw(world.getBlockRotationIndex(
-            rotationBlock.x,
-            rotationBlock.y,
-            rotationBlock.z
-        ));
-        if (!Float.isNaN(facingYaw)) {
-            return facingYaw;
+        float blockYaw = blockFacingYaw(world, rotationBlock);
+        if (bounds.xSpan() == bounds.zSpan()) {
+            return blockYaw;
         }
-        return inferFacingYawFromBounds(bounds);
-    }
-
-    /** NESW block rotation index → world-facing yaw. Adjust cases 0–3 if one facing is wrong. */
-    private static float rotationIndexToFacingYaw(int rotationIndex) {
-        return switch (rotationIndex & 3) {
-            case 0 -> 0.0F;                              // N
-            case 1 -> (float) (Math.PI / 2.0);             // E
-            case 2 -> (float) Math.PI;                     // S
-            case 3 -> (float) (-Math.PI / 2.0);            // W
-            default -> Float.NaN;
-        };
-    }
-
-    /** Door panel is perpendicular to placement facing. */
-    private static float toPlaneYaw(float facingYaw) {
-        return MathUtil.wrapAngle(facingYaw + (float) (Math.PI / 2.0));
-    }
-
-    private static float inferFacingYawFromBounds(@Nonnull Bounds bounds) {
         if (bounds.xSpan() > bounds.zSpan()) {
-            return (float) (Math.PI / 2.0);
+            return throughYawOnZAxis(blockYaw);
         }
-        return 0.0F;
+        return throughYawOnXAxis(blockYaw);
+    }
+
+    /** Through-axis ±Z (portal normals face along Z). */
+    private static float throughYawOnZAxis(float blockYaw) {
+        float cos = (float) Math.cos(blockYaw);
+        if (Math.abs(cos) >= Math.abs((float) Math.sin(blockYaw))) {
+            return cos >= 0.0f ? 0.0f : (float) Math.PI;
+        }
+        return 0.0f;
+    }
+
+    /** Through-axis ±X (portal normals face along X). */
+    private static float throughYawOnXAxis(float blockYaw) {
+        float sin = (float) Math.sin(blockYaw);
+        if (Math.abs(sin) >= Math.abs((float) Math.cos(blockYaw))) {
+            return sin >= 0.0f ? (float) (Math.PI / 2.0) : (float) (-Math.PI / 2.0);
+        }
+        return (float) (Math.PI / 2.0);
     }
 
     private static int tierHeightBlocks(@Nonnull DoorTier tier) {
@@ -544,21 +469,18 @@ public final class PhaseDoorAnalyzer {
     private static Transform sideTransform(
         @Nonnull Bounds bounds,
         @Nonnull DoorTier tier,
-        @Nonnull PhaseDoorSize size,
-        float facingYaw,
-        float planeYaw,
+        float throughYaw,
         boolean sideA
     ) {
         double centerX = bounds.centerX();
         double centerZ = bounds.centerZ();
         double portalY = portalCenterY(tier, bounds);
-        float offsetYaw = sideOffsetYaw(facingYaw, planeYaw, size);
-        double normalX = Math.sin(offsetYaw);
-        double normalZ = Math.cos(offsetYaw);
+        double normalX = Math.sin(throughYaw);
+        double normalZ = Math.cos(throughYaw);
         double sign = sideA ? 1.0 : -1.0;
         double x = centerX + normalX * SIDE_OFFSET * sign;
         double z = centerZ + normalZ * SIDE_OFFSET * sign;
-        float yaw = portalEffectYaw(facingYaw, planeYaw, size, sideA);
+        float yaw = MathUtil.wrapAngle(throughYaw + (sideA ? 0.0F : (float) Math.PI));
         return new Transform(x, portalY, z, 0.0F, yaw, 0.0F);
     }
 

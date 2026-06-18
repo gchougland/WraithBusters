@@ -15,6 +15,13 @@
   },
   "MinScale": 1,
   "MaxScale": 1,
+  "Particles": [
+    {
+      "SystemId": "WraithBusters_Plate_Trail",
+      "TargetNodeName": "Plate",
+      "Scale": 1.0
+    }
+  ],
   "AnimationSets": {
     "Idle": {
       "Animations": [

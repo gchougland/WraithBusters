@@ -1,16 +1,20 @@
 package com.hexvane.wraithbusters.door;
 
+import com.hexvane.wraithbusters.util.WraithBustersSoundUtil;
 import com.hypixel.hytale.math.util.ChunkUtil;
 import com.hypixel.hytale.server.core.asset.type.blocktype.config.BlockType;
 import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.chunk.WorldChunk;
 import com.hypixel.hytale.server.core.util.FillerBlockUtil;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 import javax.annotation.Nonnull;
 import org.joml.Vector3i;
+
 public final class DoorStateHelper {
     private static final String DOOR_BLOCKED = "DoorBlocked";
     private static final String OPEN_DOOR_IN = "OpenDoorIn";
@@ -50,39 +54,55 @@ public final class DoorStateHelper {
         tryOpenAll(world, List.of(blockPos));
     }
 
-    /** Opens every door in a set using the same swing direction when possible. */
+    /**
+     * Opens every door leaf in a room. Side-by-side panels use opposite swing states
+     * (OpenDoorIn / OpenDoorOut) so double doors open the same way, matching vanilla doors.
+     */
     public static void tryOpenAll(@Nonnull World world, @Nonnull Collection<Vector3i> blockPositions) {
+        List<Vector3i> anchors = uniqueSortedAnchors(world, blockPositions);
+        if (anchors.isEmpty()) {
+            return;
+        }
+        String primaryState = canOpenDoor(world, anchors.getFirst(), OPEN_DOOR_IN)
+            ? OPEN_DOOR_IN
+            : canOpenDoor(world, anchors.getFirst(), OPEN_DOOR_OUT) ? OPEN_DOOR_OUT : null;
+        if (primaryState == null) {
+            return;
+        }
+        String secondaryState = OPEN_DOOR_IN.equals(primaryState) ? OPEN_DOOR_OUT : OPEN_DOOR_IN;
+        for (int i = 0; i < anchors.size(); i++) {
+            String preferred = i % 2 == 0 ? primaryState : secondaryState;
+            tryOpenAnchor(world, anchors.get(i), preferred);
+        }
+    }
+
+    @Nonnull
+    private static List<Vector3i> uniqueSortedAnchors(@Nonnull World world, @Nonnull Collection<Vector3i> blockPositions) {
         LinkedHashSet<Vector3i> anchors = new LinkedHashSet<>();
         for (Vector3i pos : blockPositions) {
             anchors.add(resolveDoorAnchor(world, pos));
         }
-        if (anchors.isEmpty()) {
-            return;
-        }
-        if (tryOpenAllWithState(world, anchors, OPEN_DOOR_IN)) {
-            return;
-        }
-        tryOpenAllWithState(world, anchors, OPEN_DOOR_OUT);
+        List<Vector3i> sorted = new ArrayList<>(anchors);
+        sorted.sort(Comparator.comparingInt((Vector3i block) -> block.y)
+            .thenComparingInt(block -> block.x)
+            .thenComparingInt(block -> block.z));
+        return sorted;
     }
 
-    private static boolean tryOpenAllWithState(
-        @Nonnull World world,
-        @Nonnull Set<Vector3i> anchors,
-        @Nonnull String state
-    ) {
-        for (Vector3i anchor : anchors) {
-            BlockType blockType = world.getBlockType(anchor.x, anchor.y, anchor.z);
-            if (blockType == null || !canOpenDoor(world, anchor, state)) {
-                return false;
+    private static void tryOpenAnchor(@Nonnull World world, @Nonnull Vector3i anchor, @Nonnull String preferredState) {
+        String state = preferredState;
+        if (!canOpenDoor(world, anchor, state)) {
+            String alternate = OPEN_DOOR_IN.equals(state) ? OPEN_DOOR_OUT : OPEN_DOOR_IN;
+            if (!canOpenDoor(world, anchor, alternate)) {
+                return;
             }
+            state = alternate;
         }
-        for (Vector3i anchor : anchors) {
-            BlockType blockType = world.getBlockType(anchor.x, anchor.y, anchor.z);
-            if (blockType != null) {
-                world.setBlockInteractionState(anchor, blockType, state);
-            }
+        BlockType blockType = world.getBlockType(anchor.x, anchor.y, anchor.z);
+        if (blockType != null) {
+            world.setBlockInteractionState(anchor, blockType, state);
+            WraithBustersSoundUtil.playBlockStateSound(world, anchor, blockType, state);
         }
-        return true;
     }
 
     private static boolean canOpenDoor(@Nonnull World world, @Nonnull Vector3i blockPosition, @Nonnull String state) {

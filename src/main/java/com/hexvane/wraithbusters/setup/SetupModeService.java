@@ -49,12 +49,35 @@ public final class SetupModeService {
         PhasePortalMarkerService.clearSetup(playerUuid, world);
     }
 
+    /** Ends setup for every player and clears all setup preview portals. */
+    public static void exitAll(@Nonnull World world) {
+        ACTIVE.clear();
+        PhasePortalMarkerService.clearSetupForAll(world);
+    }
+
     public static void exit(@Nonnull UUID playerUuid) {
         ACTIVE.remove(playerUuid);
     }
 
     public static boolean isActive(@Nonnull UUID playerUuid) {
         return ACTIVE.containsKey(playerUuid);
+    }
+
+    @Nonnull
+    public static Iterable<UUID> activePlayerUuids() {
+        return ACTIVE.keySet();
+    }
+
+    /** Replaces ghost phase door markers on every in-memory setup layout for the arena. */
+    public static void syncPhaseDoorsForArena(
+        @Nonnull String arenaId,
+        @Nonnull List<GhostPhaseDoorMarker> doors
+    ) {
+        for (SetupSession session : ACTIVE.values()) {
+            if (arenaId.equals(session.getLayout().getArenaId())) {
+                session.getLayout().setGhostPhaseDoors(GhostPhaseDoorMarker.copyAll(doors));
+            }
+        }
     }
 
     @Nullable
@@ -182,6 +205,8 @@ public final class SetupModeService {
                 layout.getCandles().add(candle);
             }
             case "exorcism" -> layout.setExorcismTable(block);
+            case "small_mouse" -> layout.getCheeseChaseSmallMice().add(feet);
+            case "large_mouse" -> layout.setCheeseChaseChumbo(feet);
             default -> {
                 playerRef.sendMessage(WraithBustersMessages.translation("setup.unknownType"));
                 return;

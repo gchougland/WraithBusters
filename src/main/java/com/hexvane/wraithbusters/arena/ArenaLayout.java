@@ -4,6 +4,7 @@ import com.hypixel.hytale.math.vector.Transform;
 import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import org.joml.Vector3i;
 
 public final class ArenaLayout {
@@ -27,6 +28,10 @@ public final class ArenaLayout {
     private List<GhostPhaseDoorMarker> ghostPhaseDoors = new ArrayList<>();
     @Nonnull
     private Vector3i exorcismTable = new Vector3i(0, 100, 0);
+    @Nonnull
+    private List<Transform> cheeseChaseSmallMice = new ArrayList<>();
+    @Nullable
+    private Transform cheeseChaseChumbo;
 
     @Nonnull
     public String getArenaId() {
@@ -116,6 +121,24 @@ public final class ArenaLayout {
 
     public void setExorcismTable(@Nonnull Vector3i exorcismTable) {
         this.exorcismTable = exorcismTable;
+    }
+
+    @Nonnull
+    public List<Transform> getCheeseChaseSmallMice() {
+        return cheeseChaseSmallMice;
+    }
+
+    public void setCheeseChaseSmallMice(@Nonnull List<Transform> cheeseChaseSmallMice) {
+        this.cheeseChaseSmallMice = cheeseChaseSmallMice;
+    }
+
+    @Nullable
+    public Transform getCheeseChaseChumbo() {
+        return cheeseChaseChumbo;
+    }
+
+    public void setCheeseChaseChumbo(@Nullable Transform cheeseChaseChumbo) {
+        this.cheeseChaseChumbo = cheeseChaseChumbo;
     }
 
     public void ensureDefaultSpawns() {
