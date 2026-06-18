@@ -21,14 +21,20 @@ import com.hypixel.hytale.server.core.universe.world.chunk.BlockChunk;
 import com.hypixel.hytale.server.core.universe.world.chunk.section.BlockSection;
 import com.hypixel.hytale.server.core.universe.world.storage.ChunkStore;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
+import com.hypixel.hytale.server.core.util.FillerBlockUtil;
 import com.hypixel.hytale.server.npc.NPCPlugin;
 import com.hypixel.hytale.server.npc.entities.NPCEntity;
 import it.unimi.dsi.fastutil.longs.LongSet;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ThreadLocalRandom;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import org.joml.Vector3d;
@@ -37,6 +43,9 @@ import org.joml.Vector3i;
 public final class SlothPortraitService {
     private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
     private static final double DEFAULT_EYE_HEIGHT = 1.62;
+    private static final int PORTRAIT_ASSEMBLY_MAX_BLOCKS = 4;
+    private static final long BLINK_MIN_MS = 5000L;
+    private static final long BLINK_MAX_EXTRA_MS = 2000L;
     private static final ConcurrentHashMap<UUID, ConcurrentHashMap<Long, PortraitEntry>> BY_WORLD = new ConcurrentHashMap<>();
 
     private SlothPortraitService() {}
@@ -55,8 +64,16 @@ public final class SlothPortraitService {
         defer(world, () -> registerBlock(world, blockPos, rotationTuple, variant, false));
     }
 
+    public static void onBlockBroken(
+        @Nonnull World world,
+        @Nonnull Vector3i blockPos,
+        @Nonnull PortraitVariant variant
+    ) {
+        defer(world, () -> unregisterBlock(world, canonicalPortraitAnchor(world, blockPos, variant)));
+    }
+
     public static void onBlockBroken(@Nonnull World world, @Nonnull Vector3i blockPos) {
-        defer(world, () -> unregisterBlock(world, blockPos));
+        defer(world, () -> unregisterBlock(world, resolvePortraitAnchor(world, blockPos)));
     }
 
     public static void scanWorld(@Nonnull World world) {
@@ -94,6 +111,7 @@ public final class SlothPortraitService {
         int poseCount = config.getSlothPortraitPoseCount();
         int centerPose = SlothPortraitGazeUtil.centerPoseIndex(poseCount);
         double halfFov = config.getSlothPortraitHalfFovWidth();
+        long now = System.currentTimeMillis();
 
         for (PortraitEntry entry : portraits.values()) {
             if (entry.npcRef == null || !entry.npcRef.isValid()) {
@@ -127,6 +145,13 @@ public final class SlothPortraitService {
                 );
                 entry.lastPoseIndex = poseIndex;
             }
+
+            if (entry.nextBlinkAtMs <= 0L) {
+                entry.nextBlinkAtMs = now + BLINK_MIN_MS + ThreadLocalRandom.current().nextLong(BLINK_MAX_EXTRA_MS);
+            } else if (now >= entry.nextBlinkAtMs) {
+                npc.playAnimation(entry.npcRef, AnimationSlot.Face, "IdlePassive", store);
+                entry.nextBlinkAtMs = now + BLINK_MIN_MS + ThreadLocalRandom.current().nextLong(BLINK_MAX_EXTRA_MS);
+            }
         }
     }
 
@@ -144,7 +169,13 @@ public final class SlothPortraitService {
         if (!DeferredWorldTasks.isStoreOpen(world)) {
             return;
         }
-        long key = packBlockPos(blockPos);
+        Vector3i anchor = canonicalPortraitAnchor(world, blockPos, variant);
+        com.hypixel.hytale.server.core.universe.world.chunk.WorldChunk chunk = world.getChunk(
+            ChunkUtil.indexChunkFromBlock(anchor.x, anchor.z)
+        );
+        int rotationIndex = chunk == null ? 0 : chunk.getRotationIndex(anchor.x, anchor.y, anchor.z);
+        RotationTuple anchorRotation = RotationTuple.get(rotationIndex);
+        long key = packBlockPos(anchor);
         ConcurrentHashMap<Long, PortraitEntry> portraits = BY_WORLD.computeIfAbsent(
             world.getWorldConfig().getUuid(),
             ignored -> new ConcurrentHashMap<>()
@@ -158,7 +189,7 @@ public final class SlothPortraitService {
             despawnNpc(store, existing);
             portraits.remove(key);
         }
-        PortraitEntry entry = spawnPortrait(world, store, blockPos, rotationTuple, variant);
+        PortraitEntry entry = spawnPortrait(world, store, anchor, anchorRotation, variant);
         if (entry != null) {
             portraits.put(key, entry);
         }
@@ -206,6 +237,7 @@ public final class SlothPortraitService {
         if (portraitIndex <= 0) {
             return;
         }
+        Set<Long> registeredAnchors = new HashSet<>();
         LongSet chunkIndexes = chunkStore.getChunkIndexes();
         for (long chunkIndex : chunkIndexes) {
             Ref<ChunkStore> chunkRef = chunkStore.getChunkReference(chunkIndex);
@@ -227,9 +259,21 @@ public final class SlothPortraitService {
                             continue;
                         }
                         BlockSection section = blockChunk.getSectionAtBlockY(y);
+                        if (section.getFiller(worldX, y, worldZ) != 0) {
+                            continue;
+                        }
+                        Vector3i pos = new Vector3i(worldX, y, worldZ);
+                        Vector3i canonical = canonicalPortraitAnchor(world, pos, variant);
+                        if (!pos.equals(canonical)) {
+                            continue;
+                        }
+                        long anchorKey = packBlockPos(canonical);
+                        if (!registeredAnchors.add(anchorKey)) {
+                            continue;
+                        }
                         int rotationIndex = section.getRotationIndex(worldX, y, worldZ);
                         RotationTuple rotationTuple = RotationTuple.get(rotationIndex);
-                        registerBlock(world, new Vector3i(worldX, y, worldZ), rotationTuple, variant, true);
+                        registerBlock(world, canonical, rotationTuple, variant, true);
                     }
                 }
             }
@@ -279,6 +323,7 @@ public final class SlothPortraitService {
             WraithBustersPlugin.get().getPluginConfig().getSlothPortraitPoseCount()
         );
         entry.lastPoseIndex = -1;
+        entry.nextBlinkAtMs = 0L;
         NPCEntity npc = store.getComponent(entry.npcRef, NPCEntity.getComponentType());
         if (npc != null) {
             npc.playAnimation(entry.npcRef, AnimationSlot.Status, SlothPortraitGazeUtil.poseName(centerPose), store);
@@ -336,6 +381,88 @@ public final class SlothPortraitService {
         return nearest;
     }
 
+    @Nonnull
+    private static Vector3i canonicalPortraitAnchor(
+        @Nonnull World world,
+        @Nonnull Vector3i blockPos,
+        @Nonnull PortraitVariant variant
+    ) {
+        Vector3i seed = resolvePortraitAnchor(world, blockPos);
+        List<Vector3i> assembly = collectPortraitAssembly(world, seed, variant);
+        assembly.sort(
+            Comparator.comparingInt((Vector3i block) -> block.y)
+                .thenComparingInt(block -> block.x)
+                .thenComparingInt(block -> block.z)
+        );
+        return assembly.isEmpty() ? seed : assembly.getFirst();
+    }
+
+    @Nonnull
+    private static List<Vector3i> collectPortraitAssembly(
+        @Nonnull World world,
+        @Nonnull Vector3i start,
+        @Nonnull PortraitVariant variant
+    ) {
+        Set<Vector3i> visited = new HashSet<>();
+        ArrayDeque<Vector3i> queue = new ArrayDeque<>();
+        queue.add(new Vector3i(start));
+        visited.add(new Vector3i(start));
+        while (!queue.isEmpty() && visited.size() < PORTRAIT_ASSEMBLY_MAX_BLOCKS) {
+            Vector3i current = queue.removeFirst();
+            for (Vector3i neighbor : portraitNeighbors(current)) {
+                if (visited.size() >= PORTRAIT_ASSEMBLY_MAX_BLOCKS || visited.contains(neighbor)) {
+                    continue;
+                }
+                if (!isPortraitBlock(world, neighbor, variant)) {
+                    continue;
+                }
+                visited.add(neighbor);
+                queue.add(neighbor);
+            }
+        }
+        return new ArrayList<>(visited);
+    }
+
+    private static boolean isPortraitBlock(
+        @Nonnull World world,
+        @Nonnull Vector3i pos,
+        @Nonnull PortraitVariant variant
+    ) {
+        BlockType blockType = world.getBlockType(pos.x, pos.y, pos.z);
+        return blockType != null && variant.blockId().equals(blockType.getId());
+    }
+
+    @Nonnull
+    private static List<Vector3i> portraitNeighbors(@Nonnull Vector3i pos) {
+        return List.of(
+            new Vector3i(pos.x + 1, pos.y, pos.z),
+            new Vector3i(pos.x - 1, pos.y, pos.z),
+            new Vector3i(pos.x, pos.y + 1, pos.z),
+            new Vector3i(pos.x, pos.y - 1, pos.z),
+            new Vector3i(pos.x, pos.y, pos.z + 1),
+            new Vector3i(pos.x, pos.y, pos.z - 1)
+        );
+    }
+
+    @Nonnull
+    private static Vector3i resolvePortraitAnchor(@Nonnull World world, @Nonnull Vector3i blockPos) {
+        com.hypixel.hytale.server.core.universe.world.chunk.WorldChunk chunk = world.getChunk(
+            ChunkUtil.indexChunkFromBlock(blockPos.x, blockPos.z)
+        );
+        if (chunk == null) {
+            return new Vector3i(blockPos);
+        }
+        int filler = chunk.getFiller(blockPos.x, blockPos.y, blockPos.z);
+        if (filler == 0) {
+            return new Vector3i(blockPos);
+        }
+        return new Vector3i(
+            blockPos.x - FillerBlockUtil.unpackX(filler),
+            blockPos.y - FillerBlockUtil.unpackY(filler),
+            blockPos.z - FillerBlockUtil.unpackZ(filler)
+        );
+    }
+
     private static long packBlockPos(@Nonnull Vector3i pos) {
         return (long) pos.x << 40 | (long) (pos.y & 0xFFFFF) << 20 | pos.z & 0xFFFFF;
     }
@@ -347,6 +474,7 @@ public final class SlothPortraitService {
         @Nullable
         private Ref<EntityStore> npcRef;
         private int lastPoseIndex = -1;
+        private long nextBlinkAtMs;
     }
 
     private record PlayerSample(@Nonnull Vector3d position, double eyeHeight) {}

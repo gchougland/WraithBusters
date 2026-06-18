@@ -14,6 +14,9 @@ import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.logger.HytaleLogger;
 import com.hypixel.hytale.math.vector.Rotation3f;
 import com.hypixel.hytale.protocol.GameMode;
+import com.hypixel.hytale.protocol.SoundCategory;
+import com.hypixel.hytale.server.core.asset.type.soundevent.config.SoundEvent;
+import com.hypixel.hytale.server.core.universe.world.SoundUtil;
 import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
@@ -36,7 +39,8 @@ import org.joml.Vector3i;
 
 public final class ManaPickupService {
     private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
-    private static final double PICKUP_RADIUS_SQ = 0.85 * 0.85;
+    private static final double PICKUP_RADIUS_SQ = 1.5 * 1.5;
+    private static final double PICKUP_Y_TOLERANCE = 1.25;
     private static final ConcurrentHashMap<UUID, SessionOrbs> SESSIONS = new ConcurrentHashMap<>();
 
     private ManaPickupService() {}
@@ -107,7 +111,9 @@ public final class ManaPickupService {
         }
         long now = System.currentTimeMillis();
         for (OrbSpawn spawn : orbs.spawns) {
-            if (spawn.entityRef == null && spawn.respawnAtMs > 0L && now >= spawn.respawnAtMs) {
+            if (spawn.entityRef == null && spawn.respawnAtMs == 0L) {
+                spawnEntity(store, orbs, spawn);
+            } else if (spawn.entityRef == null && spawn.respawnAtMs > 0L && now >= spawn.respawnAtMs) {
                 spawn.respawnAtMs = 0L;
                 spawnEntity(store, orbs, spawn);
             }
@@ -130,11 +136,12 @@ public final class ManaPickupService {
                 if (spawn.entityRef == null) {
                     continue;
                 }
-                Vector3d center = spawn.worldCenter();
+                Vector3d center = spawn.pickupCenter(store);
                 double dx = playerPos.x - center.x;
                 double dy = playerPos.y - center.y;
                 double dz = playerPos.z - center.z;
-                if (dx * dx + dy * dy + dz * dz <= PICKUP_RADIUS_SQ) {
+                double horizontalSq = dx * dx + dz * dz;
+                if (horizontalSq <= PICKUP_RADIUS_SQ && Math.abs(dy) <= PICKUP_Y_TOLERANCE) {
                     collect(session, orbs, spawn, playerRef, store, config);
                     break;
                 }
@@ -161,12 +168,18 @@ public final class ManaPickupService {
         despawnEntity(store, orbs, spawn);
         int max = config.getGhostMaxMana();
         state.setGhostMana(Math.min(max, state.getGhostMana() + config.getManaPickupAmount()));
+        playPickupSound(playerRef, store);
         player.sendMessage(Message.translation("server.wraithbusters.mana.collected"));
         Player playerComponent = store.getComponent(playerRef, Player.getComponentType());
         if (playerComponent != null) {
             GhostManaHudSupport.refresh(playerComponent, player, state, config);
         }
         spawn.respawnAtMs = System.currentTimeMillis() + config.getManaPickupRespawnSeconds() * 1000L;
+    }
+
+    private static void playPickupSound(@Nonnull Ref<EntityStore> playerRef, @Nonnull Store<EntityStore> store) {
+        int soundIndex = SoundEvent.getAssetMap().getIndex(WraithBustersConstants.MANA_PICKUP_SOUND_EVENT);
+        SoundUtil.playSoundEvent2d(playerRef, soundIndex, SoundCategory.SFX, store);
     }
 
     private static void spawnEntity(
@@ -245,6 +258,17 @@ public final class ManaPickupService {
 
         private OrbSpawn(@Nonnull Vector3i blockPos) {
             this.blockPos = new Vector3i(blockPos);
+        }
+
+        @Nonnull
+        private Vector3d pickupCenter(@Nonnull Store<EntityStore> store) {
+            if (entityRef != null && entityRef.isValid()) {
+                TransformComponent transform = store.getComponent(entityRef, TransformComponent.getComponentType());
+                if (transform != null) {
+                    return new Vector3d(transform.getPosition());
+                }
+            }
+            return worldCenter();
         }
 
         @Nonnull

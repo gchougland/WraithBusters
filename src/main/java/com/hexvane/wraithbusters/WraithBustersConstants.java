@@ -4,6 +4,7 @@ public final class WraithBustersConstants {
     public static final String INSTANCE_NAME = "WraithBusters_Mansion";
     public static final String DEFAULT_ARENA_ID = "mansion_v1";
     public static final String MANA_ORB_NPC_ROLE = "WraithBusters_Mana_Orb";
+    public static final String MANA_PICKUP_SOUND_EVENT = "Ping_01";
     public static final String PHASE_PORTAL_NPC_ROLE = "WraithBusters_Phase_Portal_1x2";
     public static final String PHASE_PORTAL_NPC_ROLE_1x2 = "WraithBusters_Phase_Portal_1x2";
     public static final String PHASE_PORTAL_NPC_ROLE_2x2 = "WraithBusters_Phase_Portal_2x2";
@@ -11,7 +12,9 @@ public final class WraithBustersConstants {
     public static final String PHASE_PORTAL_NPC_ROLE_4x4 = "WraithBusters_Phase_Portal_4x4";
     public static final String PHASE_DOOR_TOOL_ITEM = "WraithBusters_Phase_Door_Tool";
     /** Room id for the attic door; always chained last when present in arena layout. */
-    public static final String ATTIC_ROOM_ID = "attic";
+    public static final String ATTIC_ROOM_ID = "Attic";
+    public static final String DINING_ROOM_ID = "Dining_Room";
+    public static final String POSSESSABLE_PLATE_BLOCK_ID = "WraithBusters_Possessable_Plate";
 
     public static final String SLOTH_PORTRAIT_BLOCK_ID = "WraithBusters_Sloth_Portrait";
     public static final String SLOTH_PORTRAIT_NPC_ROLE = "WraithBusters_Sloth_Portrait";

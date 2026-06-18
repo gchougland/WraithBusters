@@ -2,20 +2,16 @@ package com.hexvane.wraithbusters.door;
 
 import com.hexvane.wraithbusters.arena.RoomDefinition;
 import com.hexvane.wraithbusters.game.GameSession;
-import com.hypixel.hytale.server.core.asset.type.blocktype.config.BlockType;
 import com.hexvane.wraithbusters.util.DeferredWorldTasks;
 import com.hypixel.hytale.server.core.universe.world.World;
-import java.util.List;
+import java.util.LinkedHashSet;
+import java.util.Set;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import org.joml.Vector3i;
 
 /** Applies locked-door block states for room progression (open starting room, block the rest). */
 public final class RoomDoorService {
-    private static final String DOOR_BLOCKED = "DoorBlocked";
-    private static final String OPEN_DOOR_IN = "OpenDoorIn";
-    private static final String OPEN_DOOR_OUT = "OpenDoorOut";
-
     private RoomDoorService() {}
 
     public static void applyRoundStart(@Nonnull GameSession session, @Nonnull World world) {
@@ -41,57 +37,22 @@ public final class RoomDoorService {
     }
 
     private static void openDoorNow(@Nonnull World world, @Nonnull RoomDefinition room) {
-        setDoorState(world, room, true);
+        DoorStateHelper.tryOpenAll(world, uniqueDoorBlocks(room));
     }
 
     private static void blockDoor(@Nonnull World world, @Nonnull RoomDefinition room) {
+        for (Vector3i pos : uniqueDoorBlocks(room)) {
+            DoorStateHelper.blockDoor(world, pos);
+        }
+    }
+
+    @Nonnull
+    private static Set<Vector3i> uniqueDoorBlocks(@Nonnull RoomDefinition room) {
+        Set<Vector3i> unique = new LinkedHashSet<>();
         for (Vector3i pos : room.getDoorBlocks()) {
-            blockDoorAt(world, pos);
+            unique.add(new Vector3i(pos));
         }
-    }
-
-    private static void blockDoorAt(@Nonnull World world, @Nonnull Vector3i pos) {
-        BlockType blockType = world.getBlockType(pos.x, pos.y, pos.z);
-        if (blockType == null) {
-            return;
-        }
-        if (blockType.getBlockForState(DOOR_BLOCKED) != null) {
-            world.setBlockInteractionState(pos, blockType, DOOR_BLOCKED);
-        }
-    }
-
-    private static void setDoorState(@Nonnull World world, @Nonnull RoomDefinition room, boolean open) {
-        for (Vector3i pos : room.getDoorBlocks()) {
-            setDoorStateAt(world, pos, open);
-        }
-    }
-
-    private static void setDoorStateAt(@Nonnull World world, @Nonnull Vector3i pos, boolean open) {
-        BlockType blockType = world.getBlockType(pos.x, pos.y, pos.z);
-        if (blockType == null) {
-            return;
-        }
-        if (!open) {
-            world.setBlockInteractionState(pos, blockType, DOOR_BLOCKED);
-            return;
-        }
-        if (tryDoorState(world, pos, blockType, OPEN_DOOR_IN)) {
-            return;
-        }
-        tryDoorState(world, pos, blockType, OPEN_DOOR_OUT);
-    }
-
-    private static boolean tryDoorState(
-        @Nonnull World world,
-        @Nonnull Vector3i pos,
-        @Nonnull BlockType blockType,
-        @Nonnull String state
-    ) {
-        if (blockType.getBlockForState(state) == null) {
-            return false;
-        }
-        world.setBlockInteractionState(pos, blockType, state);
-        return true;
+        return unique;
     }
 
     @Nullable

@@ -213,6 +213,16 @@ public final class GameSession {
         return count;
     }
 
+    public int connectedGhostCount() {
+        int count = 0;
+        for (PlayerSessionState state : players.values()) {
+            if (state.getTeam() == Team.GHOST) {
+                count++;
+            }
+        }
+        return count;
+    }
+
     public void resetForLobby() {
         phase = GamePhase.LOBBY;
         countdownTicksRemaining = 0;

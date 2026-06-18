@@ -3,6 +3,9 @@ package com.hexvane.wraithbusters.config;
 import com.hypixel.hytale.codec.Codec;
 import com.hypixel.hytale.codec.KeyedCodec;
 import com.hypixel.hytale.codec.builder.BuilderCodec;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import javax.annotation.Nonnull;
 
 public final class WraithBustersPluginConfig {
@@ -78,6 +81,12 @@ public final class WraithBustersPluginConfig {
                 o -> o.slothPortraitPoseCount
             )
             .add()
+            .append(
+                new KeyedCodec<>("DebugForceRoomChain", Codec.STRING_ARRAY),
+                (o, v) -> o.debugForceRoomChain = v == null ? new String[0] : v,
+                o -> o.debugForceRoomChain
+            )
+            .add()
             .build();
 
     private int minPlayers = 2;
@@ -96,6 +105,9 @@ public final class WraithBustersPluginConfig {
     private double slothPortraitTrackRange = 14.0;
     private double slothPortraitHalfFovWidth = 4.0;
     private int slothPortraitPoseCount = 11;
+    /** Set to e.g. ["Dining_Room"] to force room order; use [] for normal shuffle. */
+    @Nonnull
+    private String[] debugForceRoomChain = new String[0];
 
     public int getMinPlayers() {
         return minPlayers;
@@ -156,5 +168,13 @@ public final class WraithBustersPluginConfig {
 
     public int getSlothPortraitPoseCount() {
         return slothPortraitPoseCount;
+    }
+
+    @Nonnull
+    public List<String> getDebugForceRoomChain() {
+        if (debugForceRoomChain.length == 0) {
+            return Collections.emptyList();
+        }
+        return Collections.unmodifiableList(Arrays.asList(debugForceRoomChain));
     }
 }

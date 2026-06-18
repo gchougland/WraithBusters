@@ -2,6 +2,7 @@ package com.hexvane.wraithbusters.setup;
 
 import com.hexvane.wraithbusters.arena.GhostPhaseDoorMarker;
 import com.hexvane.wraithbusters.arena.PhaseDoorSize;
+import com.hexvane.wraithbusters.door.DoorStateHelper;
 import com.hypixel.hytale.math.util.MathUtil;
 import com.hypixel.hytale.math.vector.Transform;
 import com.hypixel.hytale.server.core.asset.type.blocktype.config.BlockType;
@@ -228,15 +229,58 @@ public final class PhaseDoorAnalyzer {
         if (doorBlocks.isEmpty()) {
             return null;
         }
-        doorBlocks.sort(Comparator.comparingInt((Vector3i block) -> block.y).thenComparingInt(block -> block.x).thenComparingInt(block -> block.z));
-        Bounds bounds = Bounds.boundsOf(doorBlocks);
+        return buildAnalysis(world, doorBlocks, tier);
+    }
+
+    /**
+     * Computes portal transforms from a fixed door-block list (no BFS re-expansion).
+     * Use this when door interaction state may differ from setup (e.g. open vs blocked).
+     */
+    @Nullable
+    public static AnalysisResult analyzeFromDoorBlocks(
+        @Nonnull World world,
+        @Nonnull List<Vector3i> doorBlocks
+    ) {
+        if (doorBlocks.isEmpty()) {
+            return null;
+        }
+        return buildAnalysis(world, doorBlocks, null);
+    }
+
+    @Nullable
+    private static AnalysisResult buildAnalysis(
+        @Nonnull World world,
+        @Nonnull List<Vector3i> doorBlocks,
+        @Nullable DoorTier knownTier
+    ) {
+        List<Vector3i> sorted = copyBlocks(doorBlocks);
+        sorted.sort(Comparator.comparingInt((Vector3i block) -> block.y)
+            .thenComparingInt(block -> block.x)
+            .thenComparingInt(block -> block.z));
+
+        DoorTier tier = knownTier;
+        if (tier == null) {
+            for (Vector3i block : sorted) {
+                Vector3i anchor = DoorStateHelper.resolveDoorAnchor(world, block);
+                BlockType type = world.getBlockType(anchor.x, anchor.y, anchor.z);
+                if (isLockedDoor(type)) {
+                    tier = tierFor(type);
+                    break;
+                }
+            }
+        }
+        if (tier == null) {
+            return null;
+        }
+
+        Bounds bounds = Bounds.boundsOf(sorted);
         PhaseDoorSize size = classifySize(tier, bounds);
-        Vector3i rotationBlock = doorBlocks.getFirst();
+        Vector3i rotationBlock = DoorStateHelper.resolveDoorAnchor(world, sorted.getFirst());
         float facingYaw = resolveDoorFacingYaw(world, rotationBlock, bounds);
         float planeYaw = toPlaneYaw(facingYaw);
         Transform sideA = sideTransform(bounds, tier, size, facingYaw, planeYaw, true);
         Transform sideB = sideTransform(bounds, tier, size, facingYaw, planeYaw, false);
-        return new AnalysisResult(size, doorBlocks, sideA, sideB);
+        return new AnalysisResult(size, sorted, sideA, sideB);
     }
 
     public static void applyToMarker(
@@ -264,6 +308,39 @@ public final class PhaseDoorAnalyzer {
         }
         String id = blockType.getId();
         return id != null && id.startsWith(LOCKED_DOOR_PREFIX);
+    }
+
+    public static boolean isLockedDoorAt(@Nonnull World world, @Nonnull Vector3i blockPos) {
+        return isLockedDoor(world.getBlockType(blockPos.x, blockPos.y, blockPos.z));
+    }
+
+    /**
+     * Recomputes entry/exit transforms from live door blocks (in-memory only).
+     *
+     * @return false when door blocks are missing or no locked door remains at the saved positions
+     */
+    public static boolean refreshMarkerFromWorld(@Nonnull World world, @Nonnull GhostPhaseDoorMarker marker) {
+        List<Vector3i> blocks = marker.getDoorBlocks();
+        if (blocks.isEmpty()) {
+            return false;
+        }
+        boolean anyDoor = false;
+        for (Vector3i block : blocks) {
+            Vector3i anchor = DoorStateHelper.resolveDoorAnchor(world, block);
+            if (isLockedDoorAt(world, anchor)) {
+                anyDoor = true;
+                break;
+            }
+        }
+        if (!anyDoor) {
+            return false;
+        }
+        AnalysisResult analysis = analyzeFromDoorBlocks(world, blocks);
+        if (analysis == null) {
+            return false;
+        }
+        applyToMarker(marker, analysis);
+        return true;
     }
 
     @Nonnull

@@ -33,7 +33,7 @@ public final class SlothPortraitBreakSystem extends EntityEventSystem<EntityStor
             return;
         }
         World world = store.getExternalData().getWorld();
-        SlothPortraitService.onBlockBroken(world, event.getTargetBlock());
+        SlothPortraitService.onBlockBroken(world, event.getTargetBlock(), variant);
     }
 
     @Nullable

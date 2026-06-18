@@ -104,7 +104,6 @@ public final class GameService {
         CompletableFuture<World> loaded = CompletableFuture.completedFuture(instanceWorld);
         GameInstanceService.teleportToLoadingInstance(playerRef, store, loaded, returnPoint);
         DeferredWorldTasks.run(instanceWorld, () -> {
-            SlothPortraitService.scanWorld(instanceWorld);
             Ref<EntityStore> liveRef = findPlayerRef(instanceWorld, playerUuid);
             if (liveRef != null) {
                 teleportToLobby(session, liveRef, instanceWorld.getEntityStore().getStore());
@@ -302,6 +301,7 @@ public final class GameService {
         }
         TeamSetupService.refreshVisibility(session, world);
         broadcastTitle(world, session, Message.translation("server.wraithbusters.round.start"));
+        PhasePortalMarkerService.clearSetupForAll(world);
         ManaPickupService.startRound(session, world);
         PhasePortalMarkerService.startRound(session, world);
         KeySpawnService.startRound(session, world);
@@ -316,6 +316,10 @@ public final class GameService {
         }
         if (session.livingHumanCount() <= 0) {
             endRound(session, world, Team.GHOST, "server.wraithbusters.win.ghosts.eliminated");
+            return;
+        }
+        if (session.connectedGhostCount() <= 0 && session.livingHumanCount() > 0) {
+            endRound(session, world, Team.HUMAN, "server.wraithbusters.win.humans");
             return;
         }
         Store<EntityStore> store = world.getEntityStore().getStore();
@@ -416,6 +420,15 @@ public final class GameService {
         TeamSetupService.revealPlayerGlobally(playerUuid);
         GameRegistry.get().unlinkPlayer(playerUuid);
         session.getPlayers().remove(playerUuid);
+
+        if (session.getPhase() == GamePhase.ACTIVE) {
+            World instance = Universe.get().getWorld(session.getWorldUuid());
+            if (instance != null
+                && session.connectedGhostCount() <= 0
+                && session.livingHumanCount() > 0) {
+                endRound(session, instance, Team.HUMAN, "server.wraithbusters.win.humans");
+            }
+        }
 
         if (playerRef != null && store != null && playerRef.isValid()) {
             TeamSetupService.clearModes(playerRef, store, session);

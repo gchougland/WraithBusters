@@ -9,6 +9,7 @@ import com.hexvane.wraithbusters.game.GameSession;
 import com.hexvane.wraithbusters.player.PlayerRole;
 import com.hexvane.wraithbusters.player.PlayerSessionState;
 import com.hexvane.wraithbusters.debug.GhostTestService;
+import com.hexvane.wraithbusters.setup.PhaseDoorAnalyzer;
 import com.hexvane.wraithbusters.setup.SetupModeService;
 import com.hexvane.wraithbusters.util.DeferredWorldTasks;
 import com.hypixel.hytale.component.Ref;
@@ -90,6 +91,15 @@ public final class PhasePortalMarkerService {
         defer(world, () -> clearNow(playerUuid, SETUP_MARKERS, world));
     }
 
+    /** Removes all setup preview portals (e.g. before a round starts). */
+    public static void clearSetupForAll(@Nonnull World world) {
+        defer(world, () -> {
+            for (UUID key : SETUP_MARKERS.keySet().toArray(UUID[]::new)) {
+                clearNow(key, SETUP_MARKERS, world);
+            }
+        });
+    }
+
     public static void startRound(@Nonnull GameSession session, @Nonnull World world) {
         ArenaLayout layout = session.getArenaLayout();
         UUID sessionId = session.getSessionId();
@@ -139,8 +149,9 @@ public final class PhasePortalMarkerService {
         MarkerSet markers = new MarkerSet();
         registry.put(key, markers);
         for (GhostPhaseDoorMarker door : layout.getGhostPhaseDoors()) {
-            spawnAt(markers, store, door.getEntry(), door.getDoorSize());
-            spawnAt(markers, store, door.getExit(), door.getDoorSize());
+            PhaseDoorAnalyzer.refreshMarkerFromWorld(world, door);
+            spawnAt(markers, store, door.getEntry(), door.getDoorSize(), door.getId());
+            spawnAt(markers, store, door.getExit(), door.getDoorSize(), door.getId());
         }
     }
 
@@ -177,7 +188,8 @@ public final class PhasePortalMarkerService {
         @Nonnull MarkerSet markers,
         @Nonnull Store<EntityStore> store,
         @Nonnull Transform transform,
-        @Nonnull PhaseDoorSize doorSize
+        @Nonnull PhaseDoorSize doorSize,
+        @Nonnull String doorId
     ) {
         NPCPlugin npc = NPCPlugin.get();
         if (npc == null) {
@@ -186,6 +198,7 @@ public final class PhasePortalMarkerService {
         }
         Vector3d pos = transform.getPosition();
         Vector3d spawnPos = new Vector3d(pos.x, pos.y, pos.z);
+        LOGGER.atInfo().log("Spawning phase portal marker for %s at %s", doorId, spawnPos);
         Rotation3f rotation = new Rotation3f(transform.getRotation());
         var pair = npc.spawnNPC(
             store,

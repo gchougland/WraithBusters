@@ -17,6 +17,8 @@ import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -156,6 +158,10 @@ public final class SetupModeService {
             markRoomAtLook(playerRef, session, world, ref, store, extra);
             return;
         }
+        if ("possessable".equalsIgnoreCase(markerType)) {
+            markPossessableAtLook(playerRef, session, ref, store, extra);
+            return;
+        }
         ArenaLayout layout = session.getLayout();
         Vector3i block = new Vector3i(
             (int) Math.floor(transform.getPosition().x),
@@ -168,12 +174,6 @@ public final class SetupModeService {
             case "humanspawn" -> layout.getHumanSpawns().add(feet);
             case "ghostspawn" -> layout.getGhostSpawns().add(feet);
             case "manapickup" -> layout.getManaPickups().add(block);
-            case "possessable" -> {
-                PossessableMarker m = new PossessableMarker();
-                m.setBlockPos(block);
-                m.setTypeId(extra == null || extra.isBlank() ? "plate" : extra);
-                layout.getPossessables().add(m);
-            }
             case "candle" -> {
                 CandleMarker candle = new CandleMarker();
                 candle.setPuzzleId(extra == null || extra.isBlank() ? "candles" : extra);
@@ -190,6 +190,32 @@ public final class SetupModeService {
         playerRef.sendMessage(
             WraithBustersMessages.translation("setup.marked")
                 .param("type", markerType)
+                .param("x", String.valueOf(block.x))
+                .param("y", String.valueOf(block.y))
+                .param("z", String.valueOf(block.z))
+        );
+    }
+
+    private static void markPossessableAtLook(
+        @Nonnull PlayerRef playerRef,
+        @Nonnull SetupSession session,
+        @Nonnull Ref<EntityStore> ref,
+        @Nonnull Store<EntityStore> store,
+        @Nullable String extra
+    ) {
+        Vector3i block = SetupTargetUtil.resolveLookedAtBlock(ref, store);
+        if (block == null) {
+            playerRef.sendMessage(WraithBustersMessages.translation("setup.room.noTarget"));
+            return;
+        }
+        ArenaLayout layout = session.getLayout();
+        PossessableMarker marker = new PossessableMarker();
+        marker.setBlockPos(block);
+        marker.setTypeId(extra == null || extra.isBlank() ? "plate" : extra);
+        layout.getPossessables().add(marker);
+        playerRef.sendMessage(
+            WraithBustersMessages.translation("setup.marked")
+                .param("type", "possessable")
                 .param("x", String.valueOf(block.x))
                 .param("y", String.valueOf(block.y))
                 .param("z", String.valueOf(block.z))
@@ -214,16 +240,23 @@ public final class SetupModeService {
             playerRef.sendMessage(WraithBustersMessages.translation("setup.room.notLockedDoor"));
             return;
         }
+        doorBlocks = new ArrayList<>(doorBlocks);
+        doorBlocks.removeIf(block -> !PhaseDoorAnalyzer.isLockedDoorAt(world, block));
+        if (doorBlocks.isEmpty()) {
+            playerRef.sendMessage(WraithBustersMessages.translation("setup.room.notLockedDoor"));
+            return;
+        }
+        sortDoorBlocks(doorBlocks);
+        Vector3i keyBlock = doorBlocks.getFirst();
         ArenaLayout layout = session.getLayout();
         String roomId = extra == null || extra.isBlank() ? "room" + layout.getRooms().size() : extra;
         RoomDefinition existing = findRoom(layout, roomId);
-        Vector3i keyBlock = doorBlocks.getFirst();
         if (existing != null) {
-            existing.addDoorBlocks(doorBlocks);
+            existing.setDoorBlocks(doorBlocks);
         } else {
             RoomDefinition room = new RoomDefinition();
             room.setRoomId(roomId);
-            room.addDoorBlocks(doorBlocks);
+            room.setDoorBlocks(doorBlocks);
             room.setKeySpawn(new Vector3i(keyBlock));
             room.setSymbolId("circle");
             room.setPuzzleId("candles");
@@ -236,6 +269,14 @@ public final class SetupModeService {
                 .param("x", String.valueOf(keyBlock.x))
                 .param("y", String.valueOf(keyBlock.y))
                 .param("z", String.valueOf(keyBlock.z))
+        );
+    }
+
+    private static void sortDoorBlocks(@Nonnull List<Vector3i> doorBlocks) {
+        doorBlocks.sort(
+            Comparator.comparingInt((Vector3i block) -> block.y)
+                .thenComparingInt(block -> block.x)
+                .thenComparingInt(block -> block.z)
         );
     }
 

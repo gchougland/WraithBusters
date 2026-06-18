@@ -68,6 +68,10 @@ wraithbusters.mana.collected = You absorbed spirit energy
 wraithbusters.mana.notEnough = Not enough spirit power
 wraithbusters.possess.plate = You hurled a haunted plate
 wraithbusters.possess.noTarget = No human nearby
+wraithbusters.possess.notActive = Possessable plates only work during an active round.
+wraithbusters.possess.notGhost = Only the ghost can use haunted plates.
+wraithbusters.possess.noMarker = No haunted plate is registered at this spot.
+wraithbusters.possess.noSession = This plate is not part of an active Wraith Busters game.
 
 # Doors and keys
 wraithbusters.door.locked = This door is still locked

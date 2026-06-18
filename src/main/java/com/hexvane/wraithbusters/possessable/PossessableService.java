@@ -1,5 +1,6 @@
 package com.hexvane.wraithbusters.possessable;
 
+import com.hexvane.wraithbusters.WraithBustersConstants;
 import com.hexvane.wraithbusters.arena.PossessableMarker;
 import com.hexvane.wraithbusters.config.WraithBustersPluginConfig;
 import com.hexvane.wraithbusters.game.GamePhase;
@@ -11,6 +12,7 @@ import com.hypixel.hytale.component.CommandBuffer;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.server.core.Message;
+import com.hypixel.hytale.server.core.asset.type.blocktype.config.BlockType;
 import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.modules.projectile.config.ProjectileConfig;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
@@ -22,20 +24,51 @@ import org.joml.Vector3d;
 import org.joml.Vector3i;
 
 public final class PossessableService {
+    private static final int MARKER_XZ_TOLERANCE = 1;
+
     private PossessableService() {}
 
     @Nullable
     public static PossessableMarker findAt(@Nonnull GameSession session, @Nonnull Vector3i blockPos) {
+        return findAt(session, null, blockPos);
+    }
+
+    @Nullable
+    public static PossessableMarker findAt(
+        @Nonnull GameSession session,
+        @Nullable World world,
+        @Nonnull Vector3i blockPos
+    ) {
         for (PossessableMarker marker : session.getArenaLayout().getPossessables()) {
             Vector3i pos = marker.getBlockPos();
             if (pos.x == blockPos.x && pos.y == blockPos.y && pos.z == blockPos.z) {
                 return marker;
             }
         }
+        for (PossessableMarker marker : session.getArenaLayout().getPossessables()) {
+            Vector3i pos = marker.getBlockPos();
+            if (pos.y == blockPos.y
+                && Math.abs(pos.x - blockPos.x) <= MARKER_XZ_TOLERANCE
+                && Math.abs(pos.z - blockPos.z) <= MARKER_XZ_TOLERANCE) {
+                return marker;
+            }
+        }
+        if (world != null && isPossessablePlateBlock(world, blockPos)) {
+            return findNearestMarker(session, blockPos);
+        }
         return null;
     }
 
-    public static boolean tryActivate(
+    public enum ActivateResult {
+        SUCCESS,
+        NOT_ACTIVE,
+        NOT_GHOST,
+        NOT_ENOUGH_MANA,
+        NO_TARGET
+    }
+
+    @Nonnull
+    public static ActivateResult tryActivate(
         @Nonnull GameSession session,
         @Nonnull World world,
         @Nonnull Ref<EntityStore> ghostRef,
@@ -45,23 +78,24 @@ public final class PossessableService {
         @Nonnull WraithBustersPluginConfig config
     ) {
         if (session.getPhase() != GamePhase.ACTIVE) {
-            return false;
+            return ActivateResult.NOT_ACTIVE;
         }
         PlayerRef pr = store.getComponent(ghostRef, PlayerRef.getComponentType());
         if (pr == null) {
-            return false;
+            return ActivateResult.NOT_GHOST;
         }
-        PlayerSessionState state = session.getOrCreatePlayer(pr.getUuid());
-        if (state.getRole() != PlayerRole.GHOST) {
-            return false;
+        PlayerSessionState state = session.getPlayers().get(pr.getUuid());
+        if (state == null || state.getRole() != PlayerRole.GHOST) {
+            return ActivateResult.NOT_GHOST;
         }
-        if ("plate".equals(marker.getTypeId())) {
-            return activatePlate(session, world, ghostRef, store, commandBuffer, state, marker, config, pr);
+        if (!"plate".equals(marker.getTypeId())) {
+            return ActivateResult.NOT_GHOST;
         }
-        return false;
+        return activatePlate(session, world, ghostRef, store, commandBuffer, state, marker, config, pr);
     }
 
-    private static boolean activatePlate(
+    @Nonnull
+    private static ActivateResult activatePlate(
         @Nonnull GameSession session,
         @Nonnull World world,
         @Nonnull Ref<EntityStore> ghostRef,
@@ -74,12 +108,12 @@ public final class PossessableService {
     ) {
         if (state.getGhostMana() < config.getPlateManaCost()) {
             ghostPlayer.sendMessage(Message.translation("server.wraithbusters.mana.notEnough"));
-            return false;
+            return ActivateResult.NOT_ENOUGH_MANA;
         }
         Ref<EntityStore> target = findNearestHuman(session, world, marker);
         if (target == null) {
             ghostPlayer.sendMessage(Message.translation("server.wraithbusters.possess.noTarget"));
-            return false;
+            return ActivateResult.NO_TARGET;
         }
         state.setGhostMana(state.getGhostMana() - config.getPlateManaCost());
         Player player = store.getComponent(ghostRef, Player.getComponentType());
@@ -87,7 +121,7 @@ public final class PossessableService {
             GhostManaHudSupport.refresh(player, ghostPlayer, state, config);
         }
         Vector3i pos = marker.getBlockPos();
-        Vector3d origin = new Vector3d(pos.x + 0.5, pos.y + 2.5, pos.z + 0.5);
+        Vector3d origin = new Vector3d(pos.x + 0.5, pos.y + 0.65, pos.z + 0.5);
         Vector3d targetPos = store.getComponent(target, com.hypixel.hytale.server.core.modules.entity.component.TransformComponent.getComponentType())
             .getPosition();
         Vector3d dir = new Vector3d(targetPos).sub(origin);
@@ -102,7 +136,31 @@ public final class PossessableService {
                 .spawnProjectile(ghostRef, commandBuffer, projectileConfig, origin, dir);
         }
         ghostPlayer.sendMessage(Message.translation("server.wraithbusters.possess.plate"));
-        return true;
+        return ActivateResult.SUCCESS;
+    }
+
+    private static boolean isPossessablePlateBlock(@Nonnull World world, @Nonnull Vector3i blockPos) {
+        BlockType blockType = world.getBlockType(blockPos.x, blockPos.y, blockPos.z);
+        if (blockType == null) {
+            return false;
+        }
+        String id = blockType.getId();
+        return WraithBustersConstants.POSSESSABLE_PLATE_BLOCK_ID.equals(id);
+    }
+
+    @Nullable
+    private static PossessableMarker findNearestMarker(@Nonnull GameSession session, @Nonnull Vector3i blockPos) {
+        PossessableMarker best = null;
+        int bestDist = Integer.MAX_VALUE;
+        for (PossessableMarker marker : session.getArenaLayout().getPossessables()) {
+            Vector3i pos = marker.getBlockPos();
+            int dist = Math.abs(pos.x - blockPos.x) + Math.abs(pos.y - blockPos.y) + Math.abs(pos.z - blockPos.z);
+            if (dist < bestDist) {
+                bestDist = dist;
+                best = marker;
+            }
+        }
+        return bestDist <= 3 ? best : null;
     }
 
     @Nullable

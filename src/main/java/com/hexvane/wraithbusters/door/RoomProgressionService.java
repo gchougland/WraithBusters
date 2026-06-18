@@ -18,6 +18,13 @@ public final class RoomProgressionService {
         int humanCount,
         @Nonnull WraithBustersPluginConfig config
     ) {
+        List<String> forcedChain = config.getDebugForceRoomChain();
+        if (!forcedChain.isEmpty()) {
+            session.setActiveRoomChain(new ArrayList<>(forcedChain));
+            session.setCurrentRoomIndex(0);
+            session.setStartingRoomId(forcedChain.getFirst());
+            return;
+        }
         List<RoomDefinition> allRooms = session.getArenaLayout().getRooms();
         RoomDefinition atticRoom = null;
         List<RoomDefinition> puzzlePool = new ArrayList<>();
