@@ -1,0 +1,58 @@
+{
+  "Type": "Generic",
+  "Appearance": "WraithBusters_Sloth_Portrait",
+  "Invulnerable": true,
+  "KnockbackScale": 0,
+  "DropList": "Empty",
+  "DisableDamageGroups": ["Self"],
+  "DefaultNPCAttitude": "Ignore",
+  "DefaultPlayerAttitude": "Ignore",
+  "ApplySeparation": false,
+  "ApplyAvoidance": false,
+  "MotionControllerList": [
+    {
+      "Type": "Fly"
+    }
+  ],
+  "MaxHealth": 1,
+  "Instructions": [
+    {
+      "Continue": true,
+      "Instructions": [
+        {
+          "Sensor": {
+            "Type": "Any"
+          },
+          "BodyMotion": {
+            "Type": "Nothing"
+          },
+          "HeadMotion": {
+            "Type": "Nothing"
+          }
+        },
+        {
+          "ActionsBlocking": true,
+          "Actions": [
+            {
+              "Type": "PlayAnimation",
+              "Slot": "Face",
+              "Animation": "IdlePassive"
+            },
+            {
+              "Type": "Timeout",
+              "Delay": [5, 7]
+            },
+            {
+              "Type": "PlayAnimation",
+              "Slot": "Face"
+            },
+            {
+              "Type": "ResetInstructions"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "NameTranslationKey": "server.npcRoles.WraithBusters_Sloth_Portrait.name"
+}

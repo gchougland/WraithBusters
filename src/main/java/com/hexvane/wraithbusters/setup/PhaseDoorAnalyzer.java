@@ -6,7 +6,6 @@ import com.hypixel.hytale.math.util.MathUtil;
 import com.hypixel.hytale.math.vector.Transform;
 import com.hypixel.hytale.server.core.asset.type.blocktype.config.BlockType;
 import com.hypixel.hytale.server.core.universe.world.World;
-import com.hypixel.hytale.server.core.universe.world.accessor.BlockAccessor;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -422,15 +421,13 @@ public final class PhaseDoorAnalyzer {
         @Nonnull Vector3i rotationBlock,
         @Nonnull Bounds bounds
     ) {
-        if (world instanceof BlockAccessor accessor) {
-            float facingYaw = rotationIndexToFacingYaw(accessor.getRotationIndex(
-                rotationBlock.x,
-                rotationBlock.y,
-                rotationBlock.z
-            ));
-            if (!Float.isNaN(facingYaw)) {
-                return facingYaw;
-            }
+        float facingYaw = rotationIndexToFacingYaw(world.getBlockRotationIndex(
+            rotationBlock.x,
+            rotationBlock.y,
+            rotationBlock.z
+        ));
+        if (!Float.isNaN(facingYaw)) {
+            return facingYaw;
         }
         return inferFacingYawFromBounds(bounds);
     }

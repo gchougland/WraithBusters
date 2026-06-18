@@ -10,6 +10,7 @@ import com.hexvane.wraithbusters.door.RoomProgressionService;
 import com.hexvane.wraithbusters.instance.GameInstanceService;
 import com.hexvane.wraithbusters.util.WorldThreadTasks;
 import com.hexvane.wraithbusters.ghost.PhasePortalMarkerService;
+import com.hexvane.wraithbusters.portrait.SlothPortraitService;
 import com.hexvane.wraithbusters.pickup.ManaPickupService;
 import com.hexvane.wraithbusters.player.PlayerRole;
 import com.hexvane.wraithbusters.player.PlayerSessionState;
@@ -103,6 +104,7 @@ public final class GameService {
         CompletableFuture<World> loaded = CompletableFuture.completedFuture(instanceWorld);
         GameInstanceService.teleportToLoadingInstance(playerRef, store, loaded, returnPoint);
         DeferredWorldTasks.run(instanceWorld, () -> {
+            SlothPortraitService.scanWorld(instanceWorld);
             Ref<EntityStore> liveRef = findPlayerRef(instanceWorld, playerUuid);
             if (liveRef != null) {
                 teleportToLobby(session, liveRef, instanceWorld.getEntityStore().getStore());
@@ -303,6 +305,7 @@ public final class GameService {
         ManaPickupService.startRound(session, world);
         PhasePortalMarkerService.startRound(session, world);
         KeySpawnService.startRound(session, world);
+        SlothPortraitService.scanWorld(world);
     }
 
     private void tickActive(@Nonnull GameSession session, @Nonnull World world) {
@@ -460,6 +463,7 @@ public final class GameService {
                 ManaPickupService.endRound(session, instance);
                 PhasePortalMarkerService.shutdownSession(session, instance);
                 KeySpawnService.endRound(session, instance);
+                SlothPortraitService.shutdownWorld(instance);
             });
             WorldThreadTasks.drainQueue(instance);
         }

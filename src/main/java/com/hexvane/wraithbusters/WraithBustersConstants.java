@@ -13,6 +13,13 @@ public final class WraithBustersConstants {
     /** Room id for the attic door; always chained last when present in arena layout. */
     public static final String ATTIC_ROOM_ID = "attic";
 
+    public static final String SLOTH_PORTRAIT_BLOCK_ID = "WraithBusters_Sloth_Portrait";
+    public static final String SLOTH_PORTRAIT_NPC_ROLE = "WraithBusters_Sloth_Portrait";
+    public static final String KLOPS_PORTRAIT_BLOCK_ID = "WraithBusters_Klops_Portrait";
+    public static final String KLOPS_PORTRAIT_NPC_ROLE = "WraithBusters_Klops_Portrait";
+    public static final String OUTLANDER_PORTRAIT_BLOCK_ID = "WraithBusters_Outlander_Portrait";
+    public static final String OUTLANDER_PORTRAIT_NPC_ROLE = "WraithBusters_Outlander_Portrait";
+
     public static final String LOBBY_HUD_KEY = "WraithBusters_LobbyStatus";
     public static final String ROUND_TIMER_HUD_KEY = "WraithBusters_RoundTimer";
     public static final String GHOST_MANA_HUD_KEY = "WraithBusters_GhostMana";

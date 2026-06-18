@@ -13,6 +13,9 @@ items.WraithBusters_Locked_Door_Human_Ruins.name = Locked Door (Human Ruins)
 items.WraithBusters_Locked_Door_Human_Ruins_Medium.name = Locked Door (Human Ruins Medium)
 items.WraithBusters_Exorcism_Table.name = Exorcism Table
 items.WraithBusters_Possessable_Plate.name = Haunted Plate
+items.WraithBusters_Sloth_Portrait.name = Sloth Portrait
+items.WraithBusters_Klops_Portrait.name = Klops Portrait
+items.WraithBusters_Outlander_Portrait.name = Outlander Portrait
 items.WraithBusters_Key_Circle.name = Circle Key
 items.WraithBusters_Key_Cross.name = Cross Key
 items.WraithBusters_Key_Diamond.name = Diamond Key
@@ -43,6 +46,9 @@ items.WraithBusters_Door_Symbol_Triangle.name = Door Symbol (Triangle)
 npcRoles.WraithBusters_Spooky_Wraith_Lantern.name = Spooky Wraith Lantern
 npcRoles.WraithBusters_Mana_Orb.name = Spirit Orb
 npcRoles.WraithBusters_Phase_Portal.name = Ghost Phase Portal
+npcRoles.WraithBusters_Sloth_Portrait.name = Sloth Portrait
+npcRoles.WraithBusters_Klops_Portrait.name = Klops Portrait
+npcRoles.WraithBusters_Outlander_Portrait.name = Outlander Portrait
 
 # Instance
 wraithbusters.instances.mansion.title = Wraith Busters

@@ -1,0 +1,57 @@
+{
+  "TranslationProperties": {
+    "Name": "server.items.WraithBusters_Klops_Portrait.name"
+  },
+  "Categories": [
+    "Blocks.Deco"
+  ],
+  "Set": "WraithBusters",
+  "Icon": "Icons/ItemsGenerated/WraithBusters_Sloth_Portrait.png",
+  "BlockType": {
+    "Material": "Solid",
+    "DrawType": "Empty",
+    "Opacity": "Transparent",
+    "HitboxType": "Painting_2x2",
+    "VariantRotation": "NESW",
+    "Gathering": {
+      "Soft": {
+        "IsWeaponBreakable": false,
+        "ItemId": "WraithBusters_Klops_Portrait"
+      }
+    },
+    "BlockParticleSetId": "Wood",
+    "BlockSoundSetId": "Wood",
+    "PhysicalMaterialId": "Wood",
+    "Support": {
+      "North": [
+        {
+          "FaceType": "Full"
+        }
+      ]
+    },
+    "ParticleColor": "#684127",
+    "TextureComputedColor": "#B5A56B"
+  },
+  "PlayerAnimationsId": "Block",
+  "IconProperties": {
+    "Scale": 0.37,
+    "Translation": [
+      22.3,
+      -28.7
+    ],
+    "Rotation": [
+      22.5,
+      45,
+      22.5
+    ]
+  },
+  "Tags": {
+    "Type": [
+      "Furniture"
+    ],
+    "Family": [
+      "WraithBusters"
+    ]
+  },
+  "ItemSoundSetId": "ISS_Blocks_Wood"
+}

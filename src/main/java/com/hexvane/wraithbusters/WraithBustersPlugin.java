@@ -11,6 +11,9 @@ import com.hexvane.wraithbusters.generated.HstatsBuildMetadata;
 import com.hexvane.wraithbusters.ghost.GhostPhaseDoorSystem;
 import com.hexvane.wraithbusters.ghost.PhasePortalVisibilitySystem;
 import com.hexvane.wraithbusters.pickup.ManaOrbVisibilitySystem;
+import com.hexvane.wraithbusters.portrait.SlothPortraitBreakSystem;
+import com.hexvane.wraithbusters.portrait.SlothPortraitEyeTickSystem;
+import com.hexvane.wraithbusters.portrait.SlothPortraitPlaceSystem;
 import com.hexvane.wraithbusters.interaction.CandlePuzzleInteraction;
 import com.hexvane.wraithbusters.interaction.ExorcismInteraction;
 import com.hexvane.wraithbusters.interaction.LockedDoorInteraction;
@@ -93,6 +96,9 @@ public final class WraithBustersPlugin extends JavaPlugin {
         getEntityStoreRegistry().registerSystem(new ManaOrbVisibilitySystem());
         getEntityStoreRegistry().registerSystem(new PhasePortalVisibilitySystem());
         getEntityStoreRegistry().registerSystem(new HumanDeathHandlerSystem(this));
+        getEntityStoreRegistry().registerSystem(new SlothPortraitPlaceSystem());
+        getEntityStoreRegistry().registerSystem(new SlothPortraitBreakSystem());
+        getEntityStoreRegistry().registerSystem(new SlothPortraitEyeTickSystem(this));
 
         PlayerSessionListener.register(this);
         WorldRemovalListener.register(this);

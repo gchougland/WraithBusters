@@ -1,0 +1,153 @@
+{
+  "Model": "NPC/WraithBusters/SlothPortrait.blockymodel",
+  "Texture": "NPC/WraithBusters/SlothPortrait_Texture.png",
+  "EyeHeight": 1.0,
+  "MinScale": 2.0,
+  "MaxScale": 2.0,
+  "HitBox": {
+    "Min": {
+      "X": -0.5,
+      "Y": -0.5,
+      "Z": -0.0375
+    },
+    "Max": {
+      "X": 0.5,
+      "Y": 0.5,
+      "Z": 0.0375
+    }
+  },
+  "AnimationSets": {
+    "Idle": {
+      "Animations": [
+        {
+          "Animation": "NPC/WraithBusters/Animations/SlothEyeFollow_Pose_05.blockyanim",
+          "Looping": true
+        }
+      ]
+    },
+    "IdlePassive": {
+      "Animations": [
+        {
+          "Animation": "NPC/WraithBusters/Animations/SlothBlinkAnim.blockyanim",
+          "Looping": false
+        }
+      ],
+      "NextAnimationDelay": {
+        "Min": 5,
+        "Max": 7
+      }
+    },
+    "EyePose_00": {
+      "Animations": [
+        {
+          "Animation": "NPC/WraithBusters/Animations/SlothEyeFollow_Pose_00.blockyanim",
+          "Looping": true,
+          "BlendingDuration": 0.15
+        }
+      ]
+    },
+    "EyePose_01": {
+      "Animations": [
+        {
+          "Animation": "NPC/WraithBusters/Animations/SlothEyeFollow_Pose_01.blockyanim",
+          "Looping": true,
+          "BlendingDuration": 0.15
+        }
+      ]
+    },
+    "EyePose_02": {
+      "Animations": [
+        {
+          "Animation": "NPC/WraithBusters/Animations/SlothEyeFollow_Pose_02.blockyanim",
+          "Looping": true,
+          "BlendingDuration": 0.15
+        }
+      ]
+    },
+    "EyePose_03": {
+      "Animations": [
+        {
+          "Animation": "NPC/WraithBusters/Animations/SlothEyeFollow_Pose_03.blockyanim",
+          "Looping": true,
+          "BlendingDuration": 0.15
+        }
+      ]
+    },
+    "EyePose_04": {
+      "Animations": [
+        {
+          "Animation": "NPC/WraithBusters/Animations/SlothEyeFollow_Pose_04.blockyanim",
+          "Looping": true,
+          "BlendingDuration": 0.15
+        }
+      ]
+    },
+    "EyePose_05": {
+      "Animations": [
+        {
+          "Animation": "NPC/WraithBusters/Animations/SlothEyeFollow_Pose_05.blockyanim",
+          "Looping": true,
+          "BlendingDuration": 0.15
+        }
+      ]
+    },
+    "EyePose_06": {
+      "Animations": [
+        {
+          "Animation": "NPC/WraithBusters/Animations/SlothEyeFollow_Pose_06.blockyanim",
+          "Looping": true,
+          "BlendingDuration": 0.15
+        }
+      ]
+    },
+    "EyePose_07": {
+      "Animations": [
+        {
+          "Animation": "NPC/WraithBusters/Animations/SlothEyeFollow_Pose_07.blockyanim",
+          "Looping": true,
+          "BlendingDuration": 0.15
+        }
+      ]
+    },
+    "EyePose_08": {
+      "Animations": [
+        {
+          "Animation": "NPC/WraithBusters/Animations/SlothEyeFollow_Pose_08.blockyanim",
+          "Looping": true,
+          "BlendingDuration": 0.15
+        }
+      ]
+    },
+    "EyePose_09": {
+      "Animations": [
+        {
+          "Animation": "NPC/WraithBusters/Animations/SlothEyeFollow_Pose_09.blockyanim",
+          "Looping": true,
+          "BlendingDuration": 0.15
+        }
+      ]
+    },
+    "EyePose_10": {
+      "Animations": [
+        {
+          "Animation": "NPC/WraithBusters/Animations/SlothEyeFollow_Pose_10.blockyanim",
+          "Looping": true,
+          "BlendingDuration": 0.15
+        }
+      ]
+    }
+  },
+  "Icon": "Icons/ModelsGenerated/WraithBusters_Sloth_Portrait.png",
+  "IconProperties": {
+    "Scale": 0.3,
+    "Rotation": [
+      0,
+      0,
+      352
+    ],
+    "Translation": [
+      -6,
+      -34
+    ]
+  }
+}

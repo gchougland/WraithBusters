@@ -44,7 +44,7 @@
   "GameMode": "Adventure",
   "IsSpawningNPC": false,
   "IsSpawnMarkersEnabled": true,
-  "IsAllNPCFrozen": true,
+  "IsAllNPCFrozen": false,
   "GameplayConfig": "WraithBusters",
   "IsCompassUpdating": true,
   "IsSavingPlayers": false,

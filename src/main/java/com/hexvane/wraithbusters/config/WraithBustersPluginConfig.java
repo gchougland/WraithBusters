@@ -60,6 +60,24 @@ public final class WraithBustersPluginConfig {
                 o -> o.defaultArenaId
             )
             .add()
+            .append(
+                new KeyedCodec<>("SlothPortraitTrackRange", Codec.DOUBLE),
+                (o, v) -> o.slothPortraitTrackRange = v,
+                o -> o.slothPortraitTrackRange
+            )
+            .add()
+            .append(
+                new KeyedCodec<>("SlothPortraitHalfFovWidth", Codec.DOUBLE),
+                (o, v) -> o.slothPortraitHalfFovWidth = v,
+                o -> o.slothPortraitHalfFovWidth
+            )
+            .add()
+            .append(
+                new KeyedCodec<>("SlothPortraitPoseCount", Codec.INTEGER),
+                (o, v) -> o.slothPortraitPoseCount = v,
+                o -> o.slothPortraitPoseCount
+            )
+            .add()
             .build();
 
     private int minPlayers = 2;
@@ -75,6 +93,9 @@ public final class WraithBustersPluginConfig {
     private int countdownSeconds = 5;
     @Nonnull
     private String defaultArenaId = "mansion_v1";
+    private double slothPortraitTrackRange = 14.0;
+    private double slothPortraitHalfFovWidth = 4.0;
+    private int slothPortraitPoseCount = 11;
 
     public int getMinPlayers() {
         return minPlayers;
@@ -123,5 +144,17 @@ public final class WraithBustersPluginConfig {
     @Nonnull
     public String getDefaultArenaId() {
         return defaultArenaId;
+    }
+
+    public double getSlothPortraitTrackRange() {
+        return slothPortraitTrackRange;
+    }
+
+    public double getSlothPortraitHalfFovWidth() {
+        return slothPortraitHalfFovWidth;
+    }
+
+    public int getSlothPortraitPoseCount() {
+        return slothPortraitPoseCount;
     }
 }

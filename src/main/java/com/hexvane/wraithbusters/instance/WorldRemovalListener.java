@@ -1,6 +1,7 @@
 package com.hexvane.wraithbusters.instance;
 
 import com.hexvane.wraithbusters.util.WorldThreadTasks;
+import com.hexvane.wraithbusters.portrait.SlothPortraitService;
 import com.hypixel.hytale.builtin.portals.systems.PortalInvalidDestinationSystem;
 import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.event.EventPriority;
@@ -24,6 +25,11 @@ public final class WorldRemovalListener {
         var registry = plugin.getEventRegistry();
         registry.registerGlobal(EventPriority.FIRST, RemoveWorldEvent.class, WorldRemovalListener::runPortalCleanupNow);
         registry.registerGlobal(EventPriority.LAST, RemoveWorldEvent.class, WorldRemovalListener::drainDeferredCleanup);
+        registry.registerGlobal(EventPriority.LAST, RemoveWorldEvent.class, WorldRemovalListener::shutdownPortraits);
+    }
+
+    private static void shutdownPortraits(@Nonnull RemoveWorldEvent event) {
+        SlothPortraitService.shutdownWorld(event.getWorld());
     }
 
     private static void runPortalCleanupNow(@Nonnull RemoveWorldEvent event) {

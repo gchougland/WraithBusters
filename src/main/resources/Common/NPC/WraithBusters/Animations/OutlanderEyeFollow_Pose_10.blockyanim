@@ -1,0 +1,24 @@
+{
+  "formatVersion": 1,
+  "duration": 1,
+  "holdLastKeyframe": true,
+  "nodeAnimations": {
+    "Eyes": {
+      "position": [
+        {
+          "time": 0,
+          "delta": {
+            "x": 3.25,
+            "y": -23,
+            "z": 0
+          },
+          "interpolationType": "linear"
+        }
+      ],
+      "orientation": [],
+      "shapeStretch": [],
+      "shapeVisible": [],
+      "shapeUvOffset": []
+    }
+  }
+}
