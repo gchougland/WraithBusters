@@ -1,0 +1,2212 @@
+{
+  "nodes": [
+    {
+      "id": "1",
+      "name": "R-Attachment",
+      "position": {"x": 0, "y": 32, "z": 0},
+      "orientation": {"x": 0, "y": 0, "z": 0, "w": 1},
+      "shape": {
+        "type": "none",
+        "offset": {"x": 0, "y": 0, "z": 0},
+        "stretch": {"x": 1, "y": 1, "z": 1},
+        "settings": {
+          "isPiece": true
+        },
+        "textureLayout": {},
+        "unwrapMode": "custom",
+        "visible": true,
+        "doubleSided": false,
+        "shadingMode": "flat"
+      },
+      "children": [
+        {
+          "id": "2",
+          "name": "Statue-Plynth",
+          "position": {"x": 0, "y": -27.5, "z": 0},
+          "orientation": {"x": 0, "y": 0, "z": 0, "w": 1},
+          "shape": {
+            "type": "box",
+            "offset": {"x": 0, "y": 0, "z": 0},
+            "stretch": {"x": 1, "y": 1, "z": 1},
+            "settings": {
+              "isPiece": false,
+              "size": {"x": 26, "y": 9, "z": 26}
+            },
+            "textureLayout": {
+              "back": {
+                "offset": {"x": 121, "y": 87},
+                "mirror": {"x": false, "y": false},
+                "angle": 0
+              },
+              "right": {
+                "offset": {"x": 121, "y": 87},
+                "mirror": {"x": false, "y": false},
+                "angle": 0
+              },
+              "front": {
+                "offset": {"x": 121, "y": 87},
+                "mirror": {"x": false, "y": false},
+                "angle": 0
+              },
+              "left": {
+                "offset": {"x": 121, "y": 87},
+                "mirror": {"x": false, "y": false},
+                "angle": 0
+              },
+              "bottom": {
+                "offset": {"x": 46, "y": 67},
+                "mirror": {"x": false, "y": false},
+                "angle": 0
+              }
+            },
+            "unwrapMode": "custom",
+            "visible": true,
+            "doubleSided": false,
+            "shadingMode": "standard"
+          },
+          "children": [
+            {
+              "id": "3",
+              "name": "Statue-Plynth",
+              "position": {"x": 0, "y": 8, "z": 0},
+              "orientation": {"x": 0, "y": 0, "z": 0, "w": 1},
+              "shape": {
+                "type": "box",
+                "offset": {"x": 0, "y": 3.27154, "z": 0},
+                "stretch": {"x": 0.99, "y": 1, "z": 0.99},
+                "settings": {
+                  "isPiece": false,
+                  "size": {"x": 38, "y": 6, "z": 32}
+                },
+                "textureLayout": {
+                  "back": {
+                    "offset": {"x": 121, "y": 77},
+                    "mirror": {"x": false, "y": false},
+                    "angle": 0
+                  },
+                  "right": {
+                    "offset": {"x": 121, "y": 71},
+                    "mirror": {"x": false, "y": false},
+                    "angle": 0
+                  },
+                  "front": {
+                    "offset": {"x": 121, "y": 77},
+                    "mirror": {"x": false, "y": false},
+                    "angle": 0
+                  },
+                  "left": {
+                    "offset": {"x": 121, "y": 71},
+                    "mirror": {"x": false, "y": false},
+                    "angle": 0
+                  },
+                  "top": {
+                    "offset": {"x": 78, "y": 64},
+                    "mirror": {"x": false, "y": false},
+                    "angle": 0
+                  },
+                  "bottom": {
+                    "offset": {"x": 40, "y": 64},
+                    "mirror": {"x": false, "y": false},
+                    "angle": 0
+                  }
+                },
+                "unwrapMode": "custom",
+                "visible": true,
+                "doubleSided": false,
+                "shadingMode": "standard"
+              }
+            },
+            {
+              "id": "4",
+              "name": "Statue-Plynth",
+              "position": {"x": 0, "y": 4.5, "z": 0},
+              "orientation": {"x": 0, "y": 0, "z": 0, "w": 1},
+              "shape": {
+                "type": "box",
+                "offset": {"x": 0, "y": 2, "z": 0},
+                "stretch": {"x": 1, "y": 1, "z": 1},
+                "settings": {
+                  "isPiece": false,
+                  "size": {"x": 32, "y": 4, "z": 30}
+                },
+                "textureLayout": {
+                  "back": {
+                    "offset": {"x": 121, "y": 83},
+                    "mirror": {"x": false, "y": false},
+                    "angle": 0
+                  },
+                  "right": {
+                    "offset": {"x": 122, "y": 83},
+                    "mirror": {"x": false, "y": false},
+                    "angle": 0
+                  },
+                  "front": {
+                    "offset": {"x": 121, "y": 83},
+                    "mirror": {"x": false, "y": false},
+                    "angle": 0
+                  },
+                  "left": {
+                    "offset": {"x": 122, "y": 83},
+                    "mirror": {"x": false, "y": false},
+                    "angle": 0
+                  },
+                  "bottom": {
+                    "offset": {"x": 43, "y": 65},
+                    "mirror": {"x": false, "y": false},
+                    "angle": 0
+                  }
+                },
+                "unwrapMode": "custom",
+                "visible": true,
+                "doubleSided": false,
+                "shadingMode": "standard"
+              }
+            },
+            {
+              "id": "5",
+              "name": "Statue-Belly",
+              "position": {"x": 0, "y": 49.71041, "z": -6},
+              "orientation": {"x": 0, "y": 0, "z": 0, "w": 1},
+              "shape": {
+                "type": "box",
+                "offset": {"x": 0, "y": 5.3, "z": 0},
+                "stretch": {"x": 1, "y": 1, "z": 1},
+                "settings": {
+                  "isPiece": false,
+                  "size": {"x": 17, "y": 5, "z": 12}
+                },
+                "textureLayout": {
+                  "right": {
+                    "offset": {"x": 24, "y": 72},
+                    "mirror": {"x": false, "y": false},
+                    "angle": 0
+                  },
+                  "left": {
+                    "offset": {"x": 24, "y": 72},
+                    "mirror": {"x": false, "y": false},
+                    "angle": 0
+                  }
+                },
+                "unwrapMode": "custom",
+                "visible": true,
+                "doubleSided": false,
+                "shadingMode": "standard"
+              },
+              "children": [
+                {
+                  "id": "6",
+                  "name": "Statue-R-Thigh",
+                  "position": {"x": -5, "y": -9.68979, "z": 0},
+                  "orientation": {"x": -0.0002, "y": -0.01919, "z": 0.01047, "w": 0.99976},
+                  "shape": {
+                    "type": "box",
+                    "offset": {"x": 0, "y": -7.3, "z": 0},
+                    "stretch": {"x": 0.98, "y": 1, "z": 1},
+                    "settings": {
+                      "isPiece": false,
+                      "size": {"x": 8, "y": 10, "z": 10}
+                    },
+                    "textureLayout": {
+                      "back": {
+                        "offset": {"x": 151, "y": 0},
+                        "mirror": {"x": true, "y": false},
+                        "angle": 0
+                      },
+                      "right": {
+                        "offset": {"x": 106, "y": 1},
+                        "mirror": {"x": false, "y": false},
+                        "angle": 0
+                      },
+                      "front": {
+                        "offset": {"x": 125, "y": 0},
+                        "mirror": {"x": false, "y": false},
+                        "angle": 0
+                      },
+                      "left": {
+                        "offset": {"x": 143, "y": 0},
+                        "mirror": {"x": true, "y": false},
+                        "angle": 0
+                      }
+                    },
+                    "unwrapMode": "custom",
+                    "visible": true,
+                    "doubleSided": false,
+                    "shadingMode": "standard"
+                  }
+                },
+                {
+                  "id": "7",
+                  "name": "Statue-L-Thigh",
+                  "position": {"x": 5, "y": -9.68979, "z": 0},
+                  "orientation": {"x": -0.0002, "y": 0.01919, "z": -0.01047, "w": 0.99976},
+                  "shape": {
+                    "type": "box",
+                    "offset": {"x": 0, "y": -7.3, "z": 0},
+                    "stretch": {"x": -0.98, "y": 1, "z": 1},
+                    "settings": {
+                      "isPiece": false,
+                      "size": {"x": 8, "y": 10, "z": 10}
+                    },
+                    "textureLayout": {
+                      "back": {
+                        "offset": {"x": 151, "y": 0},
+                        "mirror": {"x": true, "y": false},
+                        "angle": 0
+                      },
+                      "right": {
+                        "offset": {"x": 106, "y": 1},
+                        "mirror": {"x": false, "y": false},
+                        "angle": 0
+                      },
+                      "front": {
+                        "offset": {"x": 125, "y": 0},
+                        "mirror": {"x": false, "y": false},
+                        "angle": 0
+                      },
+                      "left": {
+                        "offset": {"x": 143, "y": 0},
+                        "mirror": {"x": true, "y": false},
+                        "angle": 0
+                      }
+                    },
+                    "unwrapMode": "custom",
+                    "visible": true,
+                    "doubleSided": false,
+                    "shadingMode": "standard"
+                  }
+                },
+                {
+                  "id": "8",
+                  "name": "Statue-Calfs",
+                  "position": {"x": 0, "y": -21.86574, "z": 1.91022},
+                  "orientation": {"x": 0, "y": 0, "z": 0, "w": 1},
+                  "shape": {
+                    "type": "box",
+                    "offset": {"x": 0, "y": -8, "z": -1.3},
+                    "stretch": {"x": 1, "y": 1, "z": 1},
+                    "settings": {
+                      "isPiece": false,
+                      "size": {"x": 16, "y": 16, "z": 10}
+                    },
+                    "textureLayout": {
+                      "back": {
+                        "offset": {"x": 125, "y": 10},
+                        "mirror": {"x": false, "y": false},
+                        "angle": 0
+                      },
+                      "right": {
+                        "offset": {"x": 151, "y": 10},
+                        "mirror": {"x": true, "y": false},
+                        "angle": 0
+                      },
+                      "front": {
+                        "offset": {"x": 142, "y": 51},
+                        "mirror": {"x": false, "y": false},
+                        "angle": 0
+                      },
+                      "left": {
+                        "offset": {"x": 141, "y": 10},
+                        "mirror": {"x": false, "y": false},
+                        "angle": 0
+                      },
+                      "top": {
+                        "offset": {"x": 142, "y": 41},
+                        "mirror": {"x": false, "y": false},
+                        "angle": 0
+                      }
+                    },
+                    "unwrapMode": "custom",
+                    "visible": true,
+                    "doubleSided": false,
+                    "shadingMode": "standard"
+                  },
+                  "children": [
+                    {
+                      "id": "9",
+                      "name": "Statue-Feet",
+                      "position": {"x": 0, "y": -7.59658, "z": -2.58459},
+                      "orientation": {"x": 0, "y": 0, "z": 0, "w": 1},
+                      "shape": {
+                        "type": "box",
+                        "offset": {"x": 0, "y": 0, "z": 4},
+                        "stretch": {"x": 1, "y": 1, "z": 1},
+                        "settings": {
+                          "isPiece": false,
+                          "size": {"x": 18, "y": 7, "z": 13}
+                        },
+                        "textureLayout": {
+                          "back": {
+                            "offset": {"x": 134, "y": 60},
+                            "mirror": {"x": true, "y": true},
+                            "angle": 90
+                          },
+                          "right": {
+                            "offset": {"x": 134, "y": 60},
+                            "mirror": {"x": false, "y": true},
+                            "angle": 180
+                          },
+                          "front": {
+                            "offset": {"x": 134, "y": 60},
+                            "mirror": {"x": true, "y": true},
+                            "angle": 90
+                          },
+                          "left": {
+                            "offset": {"x": 121, "y": 60},
+                            "mirror": {"x": false, "y": false},
+                            "angle": 0
+                          },
+                          "top": {
+                            "offset": {"x": 121, "y": 60},
+                            "mirror": {"x": true, "y": true},
+                            "angle": 90
+                          }
+                        },
+                        "unwrapMode": "custom",
+                        "visible": true,
+                        "doubleSided": false,
+                        "shadingMode": "standard"
+                      }
+                    },
+                    {
+                      "id": "10",
+                      "name": "Statue-Kneepad",
+                      "position": {"x": -4.73327, "y": 7.49695, "z": 4.9942},
+                      "orientation": {"x": -0.00753, "y": -0.01765, "z": 0.39226, "w": 0.91965},
+                      "shape": {
+                        "type": "box",
+                        "offset": {"x": 0, "y": 0, "z": 0},
+                        "stretch": {"x": 1, "y": 1, "z": 1},
+                        "settings": {
+                          "isPiece": false,
+                          "size": {"x": 8, "y": 8, "z": 2}
+                        },
+                        "textureLayout": {
+                          "back": {
+                            "offset": {"x": 69, "y": 42},
+                            "mirror": {"x": false, "y": false},
+                            "angle": 0
+                          },
+                          "right": {
+                            "offset": {"x": 65, "y": 42},
+                            "mirror": {"x": false, "y": false},
+                            "angle": 0
+                          },
+                          "front": {
+                            "offset": {"x": 69, "y": 50},
+                            "mirror": {"x": true, "y": true},
+                            "angle": 90
+                          },
+                          "left": {
+                            "offset": {"x": 67, "y": 42},
+                            "mirror": {"x": false, "y": false},
+                            "angle": 0
+                          },
+                          "top": {
+                            "offset": {"x": 67, "y": 50},
+                            "mirror": {"x": true, "y": false},
+                            "angle": 90
+                          },
+                          "bottom": {
+                            "offset": {"x": 69, "y": 50},
+                            "mirror": {"x": true, "y": false},
+                            "angle": 90
+                          }
+                        },
+                        "unwrapMode": "custom",
+                        "visible": true,
+                        "doubleSided": false,
+                        "shadingMode": "standard"
+                      }
+                    },
+                    {
+                      "id": "11",
+                      "name": "Statue-Kneepad",
+                      "position": {"x": 4.73323, "y": 7.4974, "z": 4.99371},
+                      "orientation": {"x": -0.00753, "y": 0.01765, "z": -0.39226, "w": 0.91965},
+                      "shape": {
+                        "type": "box",
+                        "offset": {"x": 0, "y": 0, "z": 0},
+                        "stretch": {"x": -1, "y": 1, "z": 1},
+                        "settings": {
+                          "isPiece": false,
+                          "size": {"x": 8, "y": 8, "z": 2}
+                        },
+                        "textureLayout": {
+                          "back": {
+                            "offset": {"x": 69, "y": 42},
+                            "mirror": {"x": false, "y": false},
+                            "angle": 0
+                          },
+                          "right": {
+                            "offset": {"x": 65, "y": 42},
+                            "mirror": {"x": false, "y": false},
+                            "angle": 0
+                          },
+                          "front": {
+                            "offset": {"x": 69, "y": 50},
+                            "mirror": {"x": true, "y": true},
+                            "angle": 90
+                          },
+                          "left": {
+                            "offset": {"x": 67, "y": 42},
+                            "mirror": {"x": false, "y": false},
+                            "angle": 0
+                          },
+                          "top": {
+                            "offset": {"x": 67, "y": 50},
+                            "mirror": {"x": true, "y": false},
+                            "angle": 90
+                          },
+                          "bottom": {
+                            "offset": {"x": 69, "y": 50},
+                            "mirror": {"x": true, "y": false},
+                            "angle": 90
+                          }
+                        },
+                        "unwrapMode": "custom",
+                        "visible": true,
+                        "doubleSided": false,
+                        "shadingMode": "standard"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "id": "12",
+                  "name": "Statue-Pelvis",
+                  "position": {"x": 0, "y": -7.37906, "z": 0},
+                  "orientation": {"x": 0, "y": 0, "z": 0, "w": 1},
+                  "shape": {
+                    "type": "box",
+                    "offset": {"x": 0, "y": 0, "z": 0},
+                    "stretch": {"x": 0.98, "y": 0.98312, "z": 0.98},
+                    "settings": {
+                      "isPiece": false,
+                      "size": {"x": 18, "y": 10, "z": 16}
+                    },
+                    "textureLayout": {
+                      "back": {
+                        "offset": {"x": 0, "y": 78},
+                        "mirror": {"x": false, "y": false},
+                        "angle": 0
+                      },
+                      "right": {
+                        "offset": {"x": 18, "y": 78},
+                        "mirror": {"x": false, "y": false},
+                        "angle": 0
+                      },
+                      "front": {
+                        "offset": {"x": 0, "y": 78},
+                        "mirror": {"x": false, "y": false},
+                        "angle": 0
+                      },
+                      "left": {
+                        "offset": {"x": 18, "y": 78},
+                        "mirror": {"x": false, "y": false},
+                        "angle": 0
+                      },
+                      "top": {
+                        "offset": {"x": 1, "y": 38},
+                        "mirror": {"x": false, "y": false},
+                        "angle": 0
+                      },
+                      "bottom": {
+                        "offset": {"x": 1, "y": 38},
+                        "mirror": {"x": false, "y": false},
+                        "angle": 0
+                      }
+                    },
+                    "unwrapMode": "custom",
+                    "visible": true,
+                    "doubleSided": false,
+                    "shadingMode": "standard"
+                  }
+                },
+                {
+                  "id": "13",
+                  "name": "Statue-Armor-Front",
+                  "position": {"x": 0, "y": -2.45322, "z": 7},
+                  "orientation": {"x": 0, "y": 0, "z": 0, "w": 1},
+                  "shape": {
+                    "type": "box",
+                    "offset": {"x": 0, "y": 2.08, "z": 0},
+                    "stretch": {"x": 1, "y": 1, "z": 1},
+                    "settings": {
+                      "isPiece": false,
+                      "size": {"x": 20, "y": 6, "z": 3}
+                    },
+                    "textureLayout": {
+                      "back": {
+                        "offset": {"x": 0, "y": 72},
+                        "mirror": {"x": false, "y": false},
+                        "angle": 0
+                      },
+                      "right": {
+                        "offset": {"x": 20, "y": 72},
+                        "mirror": {"x": false, "y": false},
+                        "angle": 0
+                      },
+                      "front": {
+                        "offset": {"x": 0, "y": 72},
+                        "mirror": {"x": false, "y": false},
+                        "angle": 0
+                      },
+                      "left": {
+                        "offset": {"x": 20, "y": 72},
+                        "mirror": {"x": false, "y": false},
+                        "angle": 0
+                      },
+                      "top": {
+                        "offset": {"x": 49, "y": 67},
+                        "mirror": {"x": false, "y": false},
+                        "angle": 0
+                      },
+                      "bottom": {
+                        "offset": {"x": 49, "y": 67},
+                        "mirror": {"x": false, "y": false},
+                        "angle": 0
+                      }
+                    },
+                    "unwrapMode": "custom",
+                    "visible": true,
+                    "doubleSided": false,
+                    "shadingMode": "standard"
+                  }
+                },
+                {
+                  "id": "14",
+                  "name": "Statue-Armor-Back",
+                  "position": {"x": 0, "y": -2.51733, "z": -6.99292},
+                  "orientation": {"x": 0, "y": 0, "z": 0, "w": 1},
+                  "shape": {
+                    "type": "box",
+                    "offset": {"x": 0, "y": 2.08, "z": 0},
+                    "stretch": {"x": 1, "y": 1, "z": -1},
+                    "settings": {
+                      "isPiece": false,
+                      "size": {"x": 20, "y": 4, "z": 3}
+                    },
+                    "textureLayout": {
+                      "back": {
+                        "offset": {"x": 0, "y": 73},
+                        "mirror": {"x": false, "y": false},
+                        "angle": 0
+                      },
+                      "right": {
+                        "offset": {"x": 20, "y": 74},
+                        "mirror": {"x": false, "y": false},
+                        "angle": 0
+                      },
+                      "front": {
+                        "offset": {"x": 0, "y": 73},
+                        "mirror": {"x": false, "y": false},
+                        "angle": 0
+                      },
+                      "left": {
+                        "offset": {"x": 20, "y": 74},
+                        "mirror": {"x": false, "y": false},
+                        "angle": 0
+                      },
+                      "top": {
+                        "offset": {"x": 49, "y": 67},
+                        "mirror": {"x": false, "y": false},
+                        "angle": 0
+                      },
+                      "bottom": {
+                        "offset": {"x": 49, "y": 67},
+                        "mirror": {"x": false, "y": false},
+                        "angle": 0
+                      }
+                    },
+                    "unwrapMode": "custom",
+                    "visible": true,
+                    "doubleSided": false,
+                    "shadingMode": "standard"
+                  }
+                },
+                {
+                  "id": "15",
+                  "name": "Statue-Chest",
+                  "position": {"x": 0, "y": 3.83121, "z": -2},
+                  "orientation": {"x": -0.04362, "y": 0, "z": 0, "w": 0.99905},
+                  "shape": {
+                    "type": "box",
+                    "offset": {"x": 0, "y": 6.3, "z": 2},
+                    "stretch": {"x": 0.98, "y": 0.98, "z": 0.95},
+                    "settings": {
+                      "isPiece": false,
+                      "size": {"x": 19, "y": 17, "z": 17}
+                    },
+                    "textureLayout": {
+                      "back": {
+                        "offset": {"x": 0, "y": 55},
+                        "mirror": {"x": false, "y": false},
+                        "angle": 0
+                      },
+                      "right": {
+                        "offset": {"x": 19, "y": 55},
+                        "mirror": {"x": false, "y": false},
+                        "angle": 0
+                      },
+                      "front": {
+                        "offset": {"x": 0, "y": 55},
+                        "mirror": {"x": false, "y": false},
+                        "angle": 0
+                      },
+                      "left": {
+                        "offset": {"x": 19, "y": 55},
+                        "mirror": {"x": false, "y": false},
+                        "angle": 0
+                      },
+                      "top": {
+                        "offset": {"x": 0, "y": 38},
+                        "mirror": {"x": false, "y": false},
+                        "angle": 0
+                      },
+                      "bottom": {
+                        "offset": {"x": 0, "y": 38},
+                        "mirror": {"x": false, "y": false},
+                        "angle": 0
+                      }
+                    },
+                    "unwrapMode": "custom",
+                    "visible": true,
+                    "doubleSided": false,
+                    "shadingMode": "standard"
+                  },
+                  "children": [
+                    {
+                      "id": "16",
+                      "name": "Statue-Head",
+                      "position": {"x": 0, "y": 6.3, "z": -0.6},
+                      "orientation": {"x": 0.13053, "y": 0, "z": 0, "w": 0.99144},
+                      "shape": {
+                        "type": "box",
+                        "offset": {"x": 0, "y": 13.3, "z": 1.3},
+                        "stretch": {"x": 1, "y": 1, "z": 1},
+                        "settings": {
+                          "isPiece": false,
+                          "size": {"x": 21, "y": 18, "z": 19}
+                        },
+                        "textureLayout": {
+                          "back": {
+                            "offset": {"x": 21, "y": 37},
+                            "mirror": {"x": false, "y": false},
+                            "angle": 0
+                          },
+                          "right": {
+                            "offset": {"x": 21, "y": 19},
+                            "mirror": {"x": false, "y": false},
+                            "angle": 0
+                          },
+                          "front": {
+                            "offset": {"x": 0, "y": 19},
+                            "mirror": {"x": false, "y": false},
+                            "angle": 0
+                          },
+                          "left": {
+                            "offset": {"x": 40, "y": 19},
+                            "mirror": {"x": true, "y": false},
+                            "angle": 0
+                          },
+                          "top": {
+                            "offset": {"x": 0, "y": 0},
+                            "mirror": {"x": false, "y": false},
+                            "angle": 0
+                          },
+                          "bottom": {
+                            "offset": {"x": 21, "y": 0},
+                            "mirror": {"x": false, "y": false},
+                            "angle": 0
+                          }
+                        },
+                        "unwrapMode": "custom",
+                        "visible": true,
+                        "doubleSided": false,
+                        "shadingMode": "standard"
+                      },
+                      "children": [
+                        {
+                          "id": "17",
+                          "name": "Statue-Neck",
+                          "position": {"x": 0, "y": -13.33182, "z": -0.6},
+                          "orientation": {"x": 0, "y": 0, "z": 0, "w": 1},
+                          "shape": {
+                            "type": "box",
+                            "offset": {"x": 0, "y": 2, "z": 0},
+                            "stretch": {"x": 1, "y": 1, "z": 1},
+                            "settings": {
+                              "isPiece": false,
+                              "size": {"x": 16, "y": 4, "z": 7}
+                            },
+                            "textureLayout": {
+                              "back": {
+                                "offset": {"x": 7, "y": 89},
+                                "mirror": {"x": false, "y": false},
+                                "angle": 0
+                              },
+                              "right": {
+                                "offset": {"x": 0, "y": 89},
+                                "mirror": {"x": false, "y": false},
+                                "angle": 0
+                              },
+                              "left": {
+                                "offset": {"x": 0, "y": 89},
+                                "mirror": {"x": false, "y": false},
+                                "angle": 0
+                              }
+                            },
+                            "unwrapMode": "custom",
+                            "visible": true,
+                            "doubleSided": false,
+                            "shadingMode": "standard"
+                          }
+                        },
+                        {
+                          "id": "18",
+                          "name": "Statue-Helmet",
+                          "position": {"x": 0.05, "y": -0.59056, "z": 13.65079},
+                          "orientation": {"x": 0, "y": -0.19509, "z": 0, "w": 0.98079},
+                          "shape": {
+                            "type": "quad",
+                            "offset": {"x": -5.5, "y": 0, "z": 0},
+                            "stretch": {"x": 1, "y": 1, "z": 1},
+                            "settings": {
+                              "isPiece": false,
+                              "size": {"x": 11, "y": 26},
+                              "normal": "+Z"
+                            },
+                            "textureLayout": {
+                              "front": {
+                                "offset": {"x": 42, "y": 0},
+                                "mirror": {"x": false, "y": false},
+                                "angle": 0
+                              }
+                            },
+                            "unwrapMode": "custom",
+                            "visible": true,
+                            "doubleSided": true,
+                            "shadingMode": "standard"
+                          },
+                          "children": [
+                            {
+                              "id": "19",
+                              "name": "Statue-Helmet-Cache",
+                              "position": {"x": 5.40761, "y": 7, "z": 0.03826},
+                              "orientation": {"x": 0.65328, "y": 0.2706, "z": -0.2706, "w": 0.65328},
+                              "shape": {
+                                "type": "quad",
+                                "offset": {"x": 5.5, "y": -2.5, "z": 0},
+                                "stretch": {"x": -1, "y": 1, "z": 1},
+                                "settings": {
+                                  "isPiece": false,
+                                  "size": {"x": 11, "y": 5},
+                                  "normal": "+Z"
+                                },
+                                "textureLayout": {
+                                  "front": {
+                                    "offset": {"x": 25, "y": 89},
+                                    "mirror": {"x": false, "y": false},
+                                    "angle": 0
+                                  }
+                                },
+                                "unwrapMode": "custom",
+                                "visible": true,
+                                "doubleSided": true,
+                                "shadingMode": "standard"
+                              },
+                              "children": [
+                                {
+                                  "id": "20",
+                                  "name": "Cache",
+                                  "position": {"x": -5.40761, "y": 2.53827, "z": 0},
+                                  "orientation": {"x": 0.00008, "y": -0.00003, "z": 0.38268, "w": 0.92388},
+                                  "shape": {
+                                    "type": "quad",
+                                    "offset": {"x": -5.5, "y": -2.5, "z": 0},
+                                    "stretch": {"x": 1, "y": 1, "z": 1},
+                                    "settings": {
+                                      "isPiece": false,
+                                      "size": {"x": 11, "y": 5},
+                                      "normal": "+Z"
+                                    },
+                                    "textureLayout": {
+                                      "front": {
+                                        "offset": {"x": 25, "y": 89},
+                                        "mirror": {"x": false, "y": false},
+                                        "angle": 0
+                                      }
+                                    },
+                                    "unwrapMode": "custom",
+                                    "visible": true,
+                                    "doubleSided": true,
+                                    "shadingMode": "standard"
+                                  }
+                                }
+                              ]
+                            },
+                            {
+                              "id": "21",
+                              "name": "Statue-Helmet",
+                              "position": {"x": 5.5, "y": 0, "z": 0},
+                              "orientation": {"x": 0, "y": 0.38268, "z": 0, "w": 0.92388},
+                              "shape": {
+                                "type": "quad",
+                                "offset": {"x": 5.5, "y": 0, "z": 0},
+                                "stretch": {"x": -1, "y": 1, "z": 1},
+                                "settings": {
+                                  "isPiece": false,
+                                  "size": {"x": 11, "y": 26},
+                                  "normal": "+Z"
+                                },
+                                "textureLayout": {
+                                  "front": {
+                                    "offset": {"x": 64, "y": 0},
+                                    "mirror": {"x": true, "y": false},
+                                    "angle": 0
+                                  }
+                                },
+                                "unwrapMode": "custom",
+                                "visible": true,
+                                "doubleSided": true,
+                                "shadingMode": "standard"
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "id": "22",
+                      "name": "Statue-R-Arm",
+                      "position": {"x": -9.668, "y": 6, "z": -0.6},
+                      "orientation": {"x": -0.0128, "y": 0.25158, "z": -0.28919, "w": 0.92353},
+                      "shape": {
+                        "type": "box",
+                        "offset": {"x": -0.6, "y": -5.3, "z": 0},
+                        "stretch": {"x": 0.98, "y": 1, "z": 1},
+                        "settings": {
+                          "isPiece": false,
+                          "size": {"x": 5, "y": 13, "z": 8}
+                        },
+                        "textureLayout": {
+                          "back": {
+                            "offset": {"x": 119, "y": 0},
+                            "mirror": {"x": false, "y": false},
+                            "angle": 0
+                          },
+                          "right": {
+                            "offset": {"x": 111, "y": 0},
+                            "mirror": {"x": false, "y": false},
+                            "angle": 0
+                          },
+                          "front": {
+                            "offset": {"x": 106, "y": 0},
+                            "mirror": {"x": false, "y": false},
+                            "angle": 0
+                          },
+                          "left": {
+                            "offset": {"x": 98, "y": 0},
+                            "mirror": {"x": false, "y": false},
+                            "angle": 0
+                          },
+                          "bottom": {
+                            "offset": {"x": 119, "y": 11},
+                            "mirror": {"x": true, "y": true},
+                            "angle": 270
+                          }
+                        },
+                        "unwrapMode": "custom",
+                        "visible": true,
+                        "doubleSided": false,
+                        "shadingMode": "standard"
+                      },
+                      "children": [
+                        {
+                          "id": "23",
+                          "name": "Statue-R-Forearm",
+                          "position": {"x": 0, "y": -6.6, "z": -1},
+                          "orientation": {"x": -0.35951, "y": 0.16525, "z": -0.37757, "w": 0.83719},
+                          "shape": {
+                            "type": "box",
+                            "offset": {"x": 0, "y": -5.3, "z": 1},
+                            "stretch": {"x": 1, "y": 1, "z": 1},
+                            "settings": {
+                              "isPiece": false,
+                              "size": {"x": 5, "y": 11, "z": 8}
+                            },
+                            "textureLayout": {
+                              "back": {
+                                "offset": {"x": 119, "y": 13},
+                                "mirror": {"x": false, "y": false},
+                                "angle": 0
+                              },
+                              "right": {
+                                "offset": {"x": 111, "y": 13},
+                                "mirror": {"x": false, "y": false},
+                                "angle": 0
+                              },
+                              "front": {
+                                "offset": {"x": 106, "y": 13},
+                                "mirror": {"x": false, "y": false},
+                                "angle": 0
+                              },
+                              "left": {
+                                "offset": {"x": 98, "y": 13},
+                                "mirror": {"x": false, "y": false},
+                                "angle": 0
+                              },
+                              "top": {
+                                "offset": {"x": 119, "y": 11},
+                                "mirror": {"x": true, "y": true},
+                                "angle": 270
+                              }
+                            },
+                            "unwrapMode": "custom",
+                            "visible": true,
+                            "doubleSided": false,
+                            "shadingMode": "standard"
+                          },
+                          "children": [
+                            {
+                              "id": "24",
+                              "name": "Statue-R-Hand",
+                              "position": {"x": 0, "y": -5.3, "z": 0},
+                              "orientation": {"x": -0.123, "y": 0.01334, "z": 0.00501, "w": 0.9923},
+                              "shape": {
+                                "type": "box",
+                                "offset": {"x": 0, "y": -3.3, "z": 0},
+                                "stretch": {"x": 1, "y": 1, "z": 1},
+                                "settings": {
+                                  "isPiece": false,
+                                  "size": {"x": 8, "y": 8, "z": 10}
+                                },
+                                "textureLayout": {
+                                  "back": {
+                                    "offset": {"x": 114, "y": 24},
+                                    "mirror": {"x": true, "y": false},
+                                    "angle": 0
+                                  },
+                                  "right": {
+                                    "offset": {"x": 114, "y": 24},
+                                    "mirror": {"x": false, "y": false},
+                                    "angle": 0
+                                  },
+                                  "front": {
+                                    "offset": {"x": 106, "y": 24},
+                                    "mirror": {"x": false, "y": false},
+                                    "angle": 0
+                                  },
+                                  "left": {
+                                    "offset": {"x": 96, "y": 24},
+                                    "mirror": {"x": false, "y": false},
+                                    "angle": 0
+                                  },
+                                  "top": {
+                                    "offset": {"x": 121, "y": 14},
+                                    "mirror": {"x": true, "y": false},
+                                    "angle": 0
+                                  },
+                                  "bottom": {
+                                    "offset": {"x": 114, "y": 40},
+                                    "mirror": {"x": true, "y": true},
+                                    "angle": 90
+                                  }
+                                },
+                                "unwrapMode": "custom",
+                                "visible": true,
+                                "doubleSided": false,
+                                "shadingMode": "standard"
+                              }
+                            },
+                            {
+                              "id": "25",
+                              "name": "Statue-Gauntlet",
+                              "position": {"x": -2.5, "y": 2.5, "z": -1},
+                              "orientation": {"x": 0.00175, "y": 0.00349, "z": -0.00001, "w": 0.99999},
+                              "shape": {
+                                "type": "box",
+                                "offset": {"x": 0, "y": -5.3, "z": 1},
+                                "stretch": {"x": 1, "y": 1, "z": 1},
+                                "settings": {
+                                  "isPiece": false,
+                                  "size": {"x": 2, "y": 6, "z": 9}
+                                },
+                                "textureLayout": {
+                                  "back": {
+                                    "offset": {"x": 111, "y": 33},
+                                    "mirror": {"x": false, "y": false},
+                                    "angle": 0
+                                  },
+                                  "right": {
+                                    "offset": {"x": 102, "y": 33},
+                                    "mirror": {"x": false, "y": false},
+                                    "angle": 0
+                                  },
+                                  "front": {
+                                    "offset": {"x": 111, "y": 33},
+                                    "mirror": {"x": false, "y": false},
+                                    "angle": 0
+                                  },
+                                  "left": {
+                                    "offset": {"x": 102, "y": 33},
+                                    "mirror": {"x": false, "y": false},
+                                    "angle": 0
+                                  },
+                                  "top": {
+                                    "offset": {"x": 111, "y": 33},
+                                    "mirror": {"x": true, "y": true},
+                                    "angle": 270
+                                  }
+                                },
+                                "unwrapMode": "custom",
+                                "visible": true,
+                                "doubleSided": false,
+                                "shadingMode": "standard"
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "id": "26",
+                          "name": "Statue-Shoulder-Pad",
+                          "position": {"x": -0.81519, "y": 4.82635, "z": 0},
+                          "orientation": {"x": 0, "y": 0, "z": -0.08716, "w": 0.99619},
+                          "shape": {
+                            "type": "box",
+                            "offset": {"x": 0, "y": 0, "z": 0},
+                            "stretch": {"x": 1, "y": 1, "z": 1},
+                            "settings": {
+                              "isPiece": false,
+                              "size": {"x": 8, "y": 8, "z": 12}
+                            },
+                            "textureLayout": {
+                              "back": {
+                                "offset": {"x": 55, "y": 41},
+                                "mirror": {"x": false, "y": false},
+                                "angle": 0
+                              },
+                              "right": {
+                                "offset": {"x": 43, "y": 42},
+                                "mirror": {"x": false, "y": false},
+                                "angle": 0
+                              },
+                              "front": {
+                                "offset": {"x": 55, "y": 49},
+                                "mirror": {"x": true, "y": true},
+                                "angle": 90
+                              },
+                              "left": {
+                                "offset": {"x": 43, "y": 34},
+                                "mirror": {"x": false, "y": false},
+                                "angle": 0
+                              },
+                              "top": {
+                                "offset": {"x": 55, "y": 34},
+                                "mirror": {"x": true, "y": false},
+                                "angle": 90
+                              },
+                              "bottom": {
+                                "offset": {"x": 55, "y": 54},
+                                "mirror": {"x": true, "y": false},
+                                "angle": 90
+                              }
+                            },
+                            "unwrapMode": "custom",
+                            "visible": true,
+                            "doubleSided": false,
+                            "shadingMode": "standard"
+                          },
+                          "children": [
+                            {
+                              "id": "27",
+                              "name": "Statue-Shoulder-Pad",
+                              "position": {"x": -3.4, "y": -3.4, "z": 0},
+                              "orientation": {"x": 0, "y": 0, "z": 0.21644, "w": 0.9763},
+                              "shape": {
+                                "type": "box",
+                                "offset": {"x": 0, "y": 0, "z": 0},
+                                "stretch": {"x": 1, "y": 1, "z": 1},
+                                "settings": {
+                                  "isPiece": false,
+                                  "size": {"x": 5, "y": 2, "z": 13}
+                                },
+                                "textureLayout": {
+                                  "back": {
+                                    "offset": {"x": 55, "y": 39},
+                                    "mirror": {"x": false, "y": false},
+                                    "angle": 0
+                                  },
+                                  "right": {
+                                    "offset": {"x": 42, "y": 38},
+                                    "mirror": {"x": false, "y": false},
+                                    "angle": 0
+                                  },
+                                  "front": {
+                                    "offset": {"x": 60, "y": 39},
+                                    "mirror": {"x": true, "y": false},
+                                    "angle": 0
+                                  },
+                                  "left": {
+                                    "offset": {"x": 42, "y": 40},
+                                    "mirror": {"x": false, "y": false},
+                                    "angle": 0
+                                  },
+                                  "top": {
+                                    "offset": {"x": 60, "y": 26},
+                                    "mirror": {"x": true, "y": false},
+                                    "angle": 0
+                                  },
+                                  "bottom": {
+                                    "offset": {"x": 55, "y": 26},
+                                    "mirror": {"x": false, "y": false},
+                                    "angle": 0
+                                  }
+                                },
+                                "unwrapMode": "custom",
+                                "visible": true,
+                                "doubleSided": false,
+                                "shadingMode": "standard"
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "id": "28",
+                      "name": "Statue-L-Arm",
+                      "position": {"x": 9.668, "y": 6, "z": -0.6},
+                      "orientation": {"x": -0.10448, "y": -0.50479, "z": 0.1136, "w": 0.84933},
+                      "shape": {
+                        "type": "box",
+                        "offset": {"x": 0.6, "y": -5.3, "z": 0},
+                        "stretch": {"x": -0.98, "y": 1, "z": 1},
+                        "settings": {
+                          "isPiece": false,
+                          "size": {"x": 5, "y": 13, "z": 8}
+                        },
+                        "textureLayout": {
+                          "back": {
+                            "offset": {"x": 119, "y": 0},
+                            "mirror": {"x": false, "y": false},
+                            "angle": 0
+                          },
+                          "right": {
+                            "offset": {"x": 111, "y": 0},
+                            "mirror": {"x": false, "y": false},
+                            "angle": 0
+                          },
+                          "front": {
+                            "offset": {"x": 106, "y": 0},
+                            "mirror": {"x": false, "y": false},
+                            "angle": 0
+                          },
+                          "left": {
+                            "offset": {"x": 98, "y": 0},
+                            "mirror": {"x": false, "y": false},
+                            "angle": 0
+                          },
+                          "bottom": {
+                            "offset": {"x": 119, "y": 11},
+                            "mirror": {"x": true, "y": true},
+                            "angle": 270
+                          }
+                        },
+                        "unwrapMode": "custom",
+                        "visible": true,
+                        "doubleSided": false,
+                        "shadingMode": "standard"
+                      },
+                      "children": [
+                        {
+                          "id": "29",
+                          "name": "Statue-L-Forearm",
+                          "position": {"x": 0, "y": -6.6, "z": -1},
+                          "orientation": {"x": -0.13124, "y": -0.18362, "z": 0.39094, "w": 0.89232},
+                          "shape": {
+                            "type": "box",
+                            "offset": {"x": 0, "y": -5.3, "z": 1},
+                            "stretch": {"x": -1, "y": 1, "z": 1},
+                            "settings": {
+                              "isPiece": false,
+                              "size": {"x": 5, "y": 11, "z": 8}
+                            },
+                            "textureLayout": {
+                              "back": {
+                                "offset": {"x": 119, "y": 13},
+                                "mirror": {"x": false, "y": false},
+                                "angle": 0
+                              },
+                              "right": {
+                                "offset": {"x": 111, "y": 13},
+                                "mirror": {"x": false, "y": false},
+                                "angle": 0
+                              },
+                              "front": {
+                                "offset": {"x": 106, "y": 13},
+                                "mirror": {"x": false, "y": false},
+                                "angle": 0
+                              },
+                              "left": {
+                                "offset": {"x": 98, "y": 13},
+                                "mirror": {"x": false, "y": false},
+                                "angle": 0
+                              },
+                              "top": {
+                                "offset": {"x": 119, "y": 11},
+                                "mirror": {"x": true, "y": true},
+                                "angle": 270
+                              }
+                            },
+                            "unwrapMode": "custom",
+                            "visible": true,
+                            "doubleSided": false,
+                            "shadingMode": "standard"
+                          },
+                          "children": [
+                            {
+                              "id": "30",
+                              "name": "Statue-L-Hand",
+                              "position": {"x": 0, "y": -5.3, "z": 0},
+                              "orientation": {"x": 0.00216, "y": -0.00254, "z": 0.01432, "w": 0.99989},
+                              "shape": {
+                                "type": "box",
+                                "offset": {"x": 0, "y": -3.3, "z": 0},
+                                "stretch": {"x": -1, "y": 1, "z": 1},
+                                "settings": {
+                                  "isPiece": false,
+                                  "size": {"x": 8, "y": 8, "z": 10}
+                                },
+                                "textureLayout": {
+                                  "back": {
+                                    "offset": {"x": 114, "y": 24},
+                                    "mirror": {"x": true, "y": false},
+                                    "angle": 0
+                                  },
+                                  "right": {
+                                    "offset": {"x": 114, "y": 24},
+                                    "mirror": {"x": false, "y": false},
+                                    "angle": 0
+                                  },
+                                  "front": {
+                                    "offset": {"x": 106, "y": 24},
+                                    "mirror": {"x": false, "y": false},
+                                    "angle": 0
+                                  },
+                                  "left": {
+                                    "offset": {"x": 96, "y": 24},
+                                    "mirror": {"x": false, "y": false},
+                                    "angle": 0
+                                  },
+                                  "top": {
+                                    "offset": {"x": 121, "y": 14},
+                                    "mirror": {"x": true, "y": false},
+                                    "angle": 0
+                                  },
+                                  "bottom": {
+                                    "offset": {"x": 114, "y": 40},
+                                    "mirror": {"x": true, "y": true},
+                                    "angle": 90
+                                  }
+                                },
+                                "unwrapMode": "custom",
+                                "visible": true,
+                                "doubleSided": false,
+                                "shadingMode": "standard"
+                              }
+                            },
+                            {
+                              "id": "31",
+                              "name": "Statue-Gauntlet",
+                              "position": {"x": 2.49988, "y": 2.5, "z": -1.03491},
+                              "orientation": {"x": 0.00175, "y": 0.00349, "z": -0.00001, "w": 0.99999},
+                              "shape": {
+                                "type": "box",
+                                "offset": {"x": 0, "y": -5.3, "z": 1},
+                                "stretch": {"x": 1, "y": 1, "z": 1},
+                                "settings": {
+                                  "isPiece": false,
+                                  "size": {"x": 2, "y": 6, "z": 9}
+                                },
+                                "textureLayout": {
+                                  "back": {
+                                    "offset": {"x": 111, "y": 33},
+                                    "mirror": {"x": false, "y": false},
+                                    "angle": 0
+                                  },
+                                  "right": {
+                                    "offset": {"x": 102, "y": 33},
+                                    "mirror": {"x": false, "y": false},
+                                    "angle": 0
+                                  },
+                                  "front": {
+                                    "offset": {"x": 111, "y": 33},
+                                    "mirror": {"x": false, "y": false},
+                                    "angle": 0
+                                  },
+                                  "left": {
+                                    "offset": {"x": 102, "y": 33},
+                                    "mirror": {"x": false, "y": false},
+                                    "angle": 0
+                                  },
+                                  "top": {
+                                    "offset": {"x": 111, "y": 33},
+                                    "mirror": {"x": true, "y": true},
+                                    "angle": 270
+                                  }
+                                },
+                                "unwrapMode": "custom",
+                                "visible": true,
+                                "doubleSided": false,
+                                "shadingMode": "standard"
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "id": "32",
+                          "name": "Statue-Shoulder-Pad",
+                          "position": {"x": 0.8218, "y": 5.19013, "z": 0.00185},
+                          "orientation": {"x": 0.08664, "y": 0.28627, "z": -0.05215, "w": 0.9528},
+                          "shape": {
+                            "type": "box",
+                            "offset": {"x": 0, "y": 0, "z": 0},
+                            "stretch": {"x": 1, "y": 1, "z": 1},
+                            "settings": {
+                              "isPiece": false,
+                              "size": {"x": 8, "y": 8, "z": 12}
+                            },
+                            "textureLayout": {
+                              "back": {
+                                "offset": {"x": 63, "y": 41},
+                                "mirror": {"x": true, "y": false},
+                                "angle": 0
+                              },
+                              "right": {
+                                "offset": {"x": 43, "y": 34},
+                                "mirror": {"x": false, "y": false},
+                                "angle": 0
+                              },
+                              "front": {
+                                "offset": {"x": 55, "y": 41},
+                                "mirror": {"x": false, "y": false},
+                                "angle": 0
+                              },
+                              "left": {
+                                "offset": {"x": 43, "y": 42},
+                                "mirror": {"x": false, "y": false},
+                                "angle": 0
+                              },
+                              "top": {
+                                "offset": {"x": 55, "y": 26},
+                                "mirror": {"x": true, "y": true},
+                                "angle": 270
+                              },
+                              "bottom": {
+                                "offset": {"x": 55, "y": 46},
+                                "mirror": {"x": true, "y": true},
+                                "angle": 270
+                              }
+                            },
+                            "unwrapMode": "custom",
+                            "visible": true,
+                            "doubleSided": false,
+                            "shadingMode": "standard"
+                          },
+                          "children": [
+                            {
+                              "id": "33",
+                              "name": "Statue-Shoulder-Pad",
+                              "position": {"x": 3.4, "y": -3.4, "z": 0},
+                              "orientation": {"x": 0, "y": 0, "z": -0.21644, "w": 0.9763},
+                              "shape": {
+                                "type": "box",
+                                "offset": {"x": 0, "y": 0, "z": 0},
+                                "stretch": {"x": 1, "y": 1, "z": 1},
+                                "settings": {
+                                  "isPiece": false,
+                                  "size": {"x": 5, "y": 2, "z": 13}
+                                },
+                                "textureLayout": {
+                                  "back": {
+                                    "offset": {"x": 60, "y": 39},
+                                    "mirror": {"x": true, "y": false},
+                                    "angle": 0
+                                  },
+                                  "right": {
+                                    "offset": {"x": 42, "y": 40},
+                                    "mirror": {"x": false, "y": false},
+                                    "angle": 0
+                                  },
+                                  "front": {
+                                    "offset": {"x": 55, "y": 39},
+                                    "mirror": {"x": false, "y": false},
+                                    "angle": 0
+                                  },
+                                  "left": {
+                                    "offset": {"x": 42, "y": 38},
+                                    "mirror": {"x": false, "y": false},
+                                    "angle": 0
+                                  },
+                                  "top": {
+                                    "offset": {"x": 55, "y": 26},
+                                    "mirror": {"x": false, "y": false},
+                                    "angle": 0
+                                  },
+                                  "bottom": {
+                                    "offset": {"x": 55, "y": 26},
+                                    "mirror": {"x": false, "y": false},
+                                    "angle": 0
+                                  }
+                                },
+                                "unwrapMode": "custom",
+                                "visible": true,
+                                "doubleSided": false,
+                                "shadingMode": "standard"
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "34",
+              "name": "Statue-Shield",
+              "position": {"x": 8.62174, "y": 40.57144, "z": 8.67102},
+              "orientation": {"x": 0.02362, "y": -0.70671, "z": -0.04415, "w": 0.70573},
+              "shape": {
+                "type": "box",
+                "offset": {"x": 0, "y": -2.6, "z": 0},
+                "stretch": {"x": 1, "y": 1, "z": 1},
+                "settings": {
+                  "isPiece": false,
+                  "size": {"x": 4, "y": 30, "z": 17}
+                },
+                "textureLayout": {
+                  "back": {
+                    "offset": {"x": 65, "y": 0},
+                    "mirror": {"x": false, "y": false},
+                    "angle": 0
+                  },
+                  "right": {
+                    "offset": {"x": 65, "y": 0},
+                    "mirror": {"x": false, "y": false},
+                    "angle": 0
+                  },
+                  "front": {
+                    "offset": {"x": 65, "y": 0},
+                    "mirror": {"x": false, "y": false},
+                    "angle": 0
+                  },
+                  "left": {
+                    "offset": {"x": 65, "y": 0},
+                    "mirror": {"x": false, "y": false},
+                    "angle": 0
+                  },
+                  "top": {
+                    "offset": {"x": 93, "y": 1},
+                    "mirror": {"x": false, "y": false},
+                    "angle": 0
+                  },
+                  "bottom": {
+                    "offset": {"x": 86, "y": 30},
+                    "mirror": {"x": true, "y": true},
+                    "angle": 270
+                  }
+                },
+                "unwrapMode": "custom",
+                "visible": true,
+                "doubleSided": false,
+                "shadingMode": "standard"
+              },
+              "children": [
+                {
+                  "id": "35",
+                  "name": "Statue-Shield",
+                  "position": {"x": 1.93, "y": 0, "z": 7.6},
+                  "orientation": {"x": 0.02318, "y": -0.21619, "z": -0.0038, "w": 0.97607},
+                  "shape": {
+                    "type": "box",
+                    "offset": {"x": -2, "y": 0, "z": 3.6},
+                    "stretch": {"x": 1, "y": 1, "z": 1},
+                    "settings": {
+                      "isPiece": false,
+                      "size": {"x": 4, "y": 28, "z": 7}
+                    },
+                    "textureLayout": {
+                      "right": {
+                        "offset": {"x": 89, "y": 1},
+                        "mirror": {"x": true, "y": false},
+                        "angle": 0
+                      },
+                      "front": {
+                        "offset": {"x": 93, "y": 1},
+                        "mirror": {"x": true, "y": false},
+                        "angle": 0
+                      },
+                      "left": {
+                        "offset": {"x": 82, "y": 1},
+                        "mirror": {"x": false, "y": false},
+                        "angle": 0
+                      },
+                      "top": {
+                        "offset": {"x": 93, "y": 1},
+                        "mirror": {"x": false, "y": false},
+                        "angle": 0
+                      },
+                      "bottom": {
+                        "offset": {"x": 89, "y": 25},
+                        "mirror": {"x": true, "y": true},
+                        "angle": 270
+                      }
+                    },
+                    "unwrapMode": "custom",
+                    "visible": true,
+                    "doubleSided": false,
+                    "shadingMode": "standard"
+                  }
+                },
+                {
+                  "id": "36",
+                  "name": "Statue-Shield-Bottom",
+                  "position": {"x": -1.3, "y": -19.3, "z": 0},
+                  "orientation": {"x": 0.0923, "y": 0.70106, "z": -0.0923, "w": 0.70106},
+                  "shape": {
+                    "type": "quad",
+                    "offset": {"x": 0, "y": 0, "z": 0},
+                    "stretch": {"x": 1, "y": 1, "z": 0.1},
+                    "settings": {
+                      "isPiece": false,
+                      "size": {"x": 25, "y": 11},
+                      "normal": "+Z"
+                    },
+                    "textureLayout": {
+                      "front": {
+                        "offset": {"x": 65, "y": 30},
+                        "mirror": {"x": false, "y": false},
+                        "angle": 0
+                      }
+                    },
+                    "unwrapMode": "custom",
+                    "visible": true,
+                    "doubleSided": true,
+                    "shadingMode": "standard"
+                  }
+                },
+                {
+                  "id": "37",
+                  "name": "Statue-Shield",
+                  "position": {"x": 1.93, "y": 0, "z": -7.6},
+                  "orientation": {"x": -0.02318, "y": 0.21619, "z": -0.0038, "w": 0.97607},
+                  "shape": {
+                    "type": "box",
+                    "offset": {"x": -2, "y": 0, "z": -3.6},
+                    "stretch": {"x": 1, "y": 1, "z": -1},
+                    "settings": {
+                      "isPiece": false,
+                      "size": {"x": 4, "y": 28, "z": 7}
+                    },
+                    "textureLayout": {
+                      "right": {
+                        "offset": {"x": 89, "y": 1},
+                        "mirror": {"x": true, "y": false},
+                        "angle": 0
+                      },
+                      "front": {
+                        "offset": {"x": 93, "y": 1},
+                        "mirror": {"x": true, "y": false},
+                        "angle": 0
+                      },
+                      "left": {
+                        "offset": {"x": 82, "y": 1},
+                        "mirror": {"x": false, "y": false},
+                        "angle": 0
+                      },
+                      "top": {
+                        "offset": {"x": 93, "y": 1},
+                        "mirror": {"x": false, "y": false},
+                        "angle": 0
+                      },
+                      "bottom": {
+                        "offset": {"x": 89, "y": 25},
+                        "mirror": {"x": true, "y": true},
+                        "angle": 270
+                      }
+                    },
+                    "unwrapMode": "custom",
+                    "visible": true,
+                    "doubleSided": false,
+                    "shadingMode": "standard"
+                  }
+                }
+              ]
+            },
+            {
+              "id": "38",
+              "name": "Statue-Sword",
+              "position": {"x": -13.64434, "y": 60.47386, "z": 9.91755},
+              "orientation": {"x": -0.72604, "y": 0.6862, "z": -0.02254, "w": 0.03862},
+              "shape": {
+                "type": "box",
+                "offset": {"x": -6.4755, "y": 0, "z": 0},
+                "stretch": {"x": 1, "y": 1, "z": 1},
+                "settings": {
+                  "isPiece": false,
+                  "size": {"x": 15, "y": 3, "z": 3}
+                },
+                "textureLayout": {
+                  "back": {
+                    "offset": {"x": 63, "y": 56},
+                    "mirror": {"x": true, "y": false},
+                    "angle": 0
+                  },
+                  "front": {
+                    "offset": {"x": 48, "y": 56},
+                    "mirror": {"x": false, "y": false},
+                    "angle": 0
+                  },
+                  "left": {
+                    "offset": {"x": 44, "y": 56},
+                    "mirror": {"x": false, "y": false},
+                    "angle": 0
+                  },
+                  "top": {
+                    "offset": {"x": 48, "y": 56},
+                    "mirror": {"x": false, "y": false},
+                    "angle": 0
+                  },
+                  "bottom": {
+                    "offset": {"x": 48, "y": 56},
+                    "mirror": {"x": false, "y": false},
+                    "angle": 0
+                  }
+                },
+                "unwrapMode": "custom",
+                "visible": true,
+                "doubleSided": false,
+                "shadingMode": "standard"
+              },
+              "children": [
+                {
+                  "id": "39",
+                  "name": "Statue-Sword--C1",
+                  "position": {"x": 20.9, "y": 0.00004, "z": 0.00005},
+                  "orientation": {"x": 0, "y": 0, "z": 0, "w": 1},
+                  "shape": {
+                    "type": "box",
+                    "offset": {"x": 0, "y": 0, "z": 0},
+                    "stretch": {"x": 1, "y": 1, "z": 1},
+                    "settings": {
+                      "isPiece": false,
+                      "size": {"x": 18, "y": 9, "z": 2},
+                      "isStaticBox": true
+                    },
+                    "textureLayout": {
+                      "back": {
+                        "offset": {"x": 68, "y": 52},
+                        "mirror": {"x": false, "y": false},
+                        "angle": 0
+                      },
+                      "right": {
+                        "offset": {"x": 84, "y": 52},
+                        "mirror": {"x": false, "y": false},
+                        "angle": 0
+                      },
+                      "front": {
+                        "offset": {"x": 68, "y": 52},
+                        "mirror": {"x": false, "y": false},
+                        "angle": 0
+                      },
+                      "top": {
+                        "offset": {"x": 68, "y": 52},
+                        "mirror": {"x": false, "y": false},
+                        "angle": 0
+                      },
+                      "bottom": {
+                        "offset": {"x": 68, "y": 52},
+                        "mirror": {"x": false, "y": false},
+                        "angle": 0
+                      }
+                    },
+                    "unwrapMode": "custom",
+                    "visible": true,
+                    "doubleSided": false,
+                    "shadingMode": "standard"
+                  }
+                },
+                {
+                  "id": "40",
+                  "name": "Statue-Sword--C2",
+                  "position": {"x": 38.31588, "y": 0.00004, "z": 0.00005},
+                  "orientation": {"x": 0, "y": 0, "z": 0, "w": 1},
+                  "shape": {
+                    "type": "box",
+                    "offset": {"x": 0, "y": 0, "z": 0},
+                    "stretch": {"x": 1, "y": 1, "z": 1},
+                    "settings": {
+                      "isPiece": false,
+                      "size": {"x": 17, "y": 7, "z": 1},
+                      "isStaticBox": true
+                    },
+                    "textureLayout": {
+                      "back": {
+                        "offset": {"x": 86, "y": 53},
+                        "mirror": {"x": false, "y": false},
+                        "angle": 0
+                      },
+                      "right": {
+                        "offset": {"x": 102, "y": 53},
+                        "mirror": {"x": false, "y": false},
+                        "angle": 0
+                      },
+                      "front": {
+                        "offset": {"x": 86, "y": 53},
+                        "mirror": {"x": false, "y": false},
+                        "angle": 0
+                      },
+                      "top": {
+                        "offset": {"x": 86, "y": 53},
+                        "mirror": {"x": false, "y": false},
+                        "angle": 0
+                      },
+                      "bottom": {
+                        "offset": {"x": 86, "y": 53},
+                        "mirror": {"x": false, "y": false},
+                        "angle": 0
+                      }
+                    },
+                    "unwrapMode": "custom",
+                    "visible": true,
+                    "doubleSided": false,
+                    "shadingMode": "standard"
+                  }
+                },
+                {
+                  "id": "41",
+                  "name": "Statue-Sword_Tip--C3",
+                  "position": {"x": 49.91588, "y": 0.00004, "z": 0.00005},
+                  "orientation": {"x": 0, "y": 0, "z": 0, "w": 1},
+                  "shape": {
+                    "type": "quad",
+                    "offset": {"x": 0, "y": 0, "z": 0},
+                    "stretch": {"x": 1, "y": 1, "z": 1},
+                    "settings": {
+                      "isPiece": false,
+                      "size": {"x": 7, "y": 7},
+                      "normal": "+Z",
+                      "isStaticBox": true
+                    },
+                    "textureLayout": {
+                      "front": {
+                        "offset": {"x": 103, "y": 53},
+                        "mirror": {"x": false, "y": false},
+                        "angle": 0
+                      }
+                    },
+                    "unwrapMode": "custom",
+                    "visible": true,
+                    "doubleSided": true,
+                    "shadingMode": "standard"
+                  }
+                },
+                {
+                  "id": "42",
+                  "name": "Statue-Guard--C4",
+                  "position": {"x": 10, "y": 0.00002, "z": 0.00003},
+                  "orientation": {"x": 0, "y": 0, "z": 0, "w": 1},
+                  "shape": {
+                    "type": "box",
+                    "offset": {"x": 0, "y": 0, "z": 0},
+                    "stretch": {"x": 1, "y": 1, "z": 1},
+                    "settings": {
+                      "isPiece": false,
+                      "size": {"x": 5, "y": 12, "z": 4},
+                      "isStaticBox": true
+                    },
+                    "textureLayout": {
+                      "back": {
+                        "offset": {"x": 68, "y": 52},
+                        "mirror": {"x": true, "y": false},
+                        "angle": 0
+                      },
+                      "right": {
+                        "offset": {"x": 58, "y": 60},
+                        "mirror": {"x": true, "y": true},
+                        "angle": 270
+                      },
+                      "front": {
+                        "offset": {"x": 63, "y": 52},
+                        "mirror": {"x": false, "y": false},
+                        "angle": 0
+                      },
+                      "left": {
+                        "offset": {"x": 58, "y": 60},
+                        "mirror": {"x": true, "y": true},
+                        "angle": 270
+                      },
+                      "top": {
+                        "offset": {"x": 58, "y": 60},
+                        "mirror": {"x": false, "y": false},
+                        "angle": 0
+                      },
+                      "bottom": {
+                        "offset": {"x": 63, "y": 60},
+                        "mirror": {"x": false, "y": false},
+                        "angle": 0
+                      }
+                    },
+                    "unwrapMode": "custom",
+                    "visible": true,
+                    "doubleSided": false,
+                    "shadingMode": "standard"
+                  }
+                },
+                {
+                  "id": "43",
+                  "name": "Statue-Guard--C5",
+                  "position": {"x": 11.89274, "y": -5.70094, "z": 0.00003},
+                  "orientation": {"x": 0, "y": 0, "z": 0, "w": 1},
+                  "shape": {
+                    "type": "box",
+                    "offset": {"x": 0, "y": 0, "z": 0},
+                    "stretch": {"x": 1, "y": 1, "z": 0.935},
+                    "settings": {
+                      "isPiece": false,
+                      "size": {"x": 6, "y": 4, "z": 3},
+                      "isStaticBox": true
+                    },
+                    "textureLayout": {
+                      "back": {
+                        "offset": {"x": 111, "y": 57},
+                        "mirror": {"x": false, "y": false},
+                        "angle": 0
+                      },
+                      "right": {
+                        "offset": {"x": 104, "y": 60},
+                        "mirror": {"x": false, "y": false},
+                        "angle": 0
+                      },
+                      "front": {
+                        "offset": {"x": 111, "y": 57},
+                        "mirror": {"x": false, "y": false},
+                        "angle": 0
+                      },
+                      "top": {
+                        "offset": {"x": 111, "y": 61},
+                        "mirror": {"x": false, "y": false},
+                        "angle": 0
+                      },
+                      "bottom": {
+                        "offset": {"x": 111, "y": 61},
+                        "mirror": {"x": false, "y": false},
+                        "angle": 0
+                      }
+                    },
+                    "unwrapMode": "custom",
+                    "visible": true,
+                    "doubleSided": false,
+                    "shadingMode": "standard"
+                  }
+                },
+                {
+                  "id": "44",
+                  "name": "Statue-Guard--C6",
+                  "position": {"x": 11.98619, "y": 5.48, "z": 0.00012},
+                  "orientation": {"x": 0, "y": 0, "z": 0, "w": 1},
+                  "shape": {
+                    "type": "box",
+                    "offset": {"x": 0, "y": 0, "z": 0},
+                    "stretch": {"x": 1, "y": 1, "z": -0.935},
+                    "settings": {
+                      "isPiece": false,
+                      "size": {"x": 6, "y": 4, "z": 3},
+                      "isStaticBox": true
+                    },
+                    "textureLayout": {
+                      "back": {
+                        "offset": {"x": 111, "y": 57},
+                        "mirror": {"x": false, "y": false},
+                        "angle": 0
+                      },
+                      "right": {
+                        "offset": {"x": 104, "y": 60},
+                        "mirror": {"x": false, "y": false},
+                        "angle": 0
+                      },
+                      "front": {
+                        "offset": {"x": 111, "y": 57},
+                        "mirror": {"x": false, "y": false},
+                        "angle": 0
+                      },
+                      "top": {
+                        "offset": {"x": 111, "y": 61},
+                        "mirror": {"x": false, "y": false},
+                        "angle": 0
+                      },
+                      "bottom": {
+                        "offset": {"x": 111, "y": 61},
+                        "mirror": {"x": false, "y": false},
+                        "angle": 0
+                      }
+                    },
+                    "unwrapMode": "custom",
+                    "visible": true,
+                    "doubleSided": false,
+                    "shadingMode": "standard"
+                  }
+                },
+                {
+                  "id": "45",
+                  "name": "Statue-Pommel--C7",
+                  "position": {"x": 0.03114, "y": 5.01284, "z": -0.54795},
+                  "orientation": {"x": 0, "y": 0, "z": 0, "w": 1},
+                  "shape": {
+                    "type": "box",
+                    "offset": {"x": -3.97603, "y": -5.01754, "z": 0.69303},
+                    "stretch": {"x": 1, "y": 1, "z": 1},
+                    "settings": {
+                      "isPiece": false,
+                      "size": {"x": 3, "y": 5, "z": 5},
+                      "isStaticBox": true
+                    },
+                    "textureLayout": {
+                      "back": {
+                        "offset": {"x": 48, "y": 55},
+                        "mirror": {"x": false, "y": false},
+                        "angle": 0
+                      },
+                      "right": {
+                        "offset": {"x": 43, "y": 55},
+                        "mirror": {"x": false, "y": false},
+                        "angle": 0
+                      },
+                      "front": {
+                        "offset": {"x": 48, "y": 55},
+                        "mirror": {"x": false, "y": false},
+                        "angle": 0
+                      },
+                      "left": {
+                        "offset": {"x": 43, "y": 55},
+                        "mirror": {"x": false, "y": false},
+                        "angle": 0
+                      },
+                      "top": {
+                        "offset": {"x": 48, "y": 55},
+                        "mirror": {"x": false, "y": false},
+                        "angle": 0
+                      },
+                      "bottom": {
+                        "offset": {"x": 48, "y": 55},
+                        "mirror": {"x": false, "y": false},
+                        "angle": 0
+                      }
+                    },
+                    "unwrapMode": "custom",
+                    "visible": true,
+                    "doubleSided": false,
+                    "shadingMode": "standard"
+                  }
+                },
+                {
+                  "id": "46",
+                  "name": "Statue-Pommel--C8",
+                  "position": {"x": -4.86403, "y": -2.39999, "z": -3.11823},
+                  "orientation": {"x": 0, "y": 0.88701, "z": 0, "w": -0.46175},
+                  "shape": {
+                    "type": "box",
+                    "offset": {"x": 4.37218, "y": 2.61583, "z": -3.08236},
+                    "stretch": {"x": 1, "y": 0.994, "z": 1},
+                    "settings": {
+                      "isPiece": false,
+                      "size": {"x": 4, "y": 2, "z": 3},
+                      "isStaticBox": true
+                    },
+                    "textureLayout": {
+                      "back": {
+                        "offset": {"x": 99, "y": 62},
+                        "mirror": {"x": false, "y": false},
+                        "angle": 0
+                      },
+                      "right": {
+                        "offset": {"x": 107, "y": 62},
+                        "mirror": {"x": false, "y": false},
+                        "angle": 0
+                      },
+                      "front": {
+                        "offset": {"x": 99, "y": 62},
+                        "mirror": {"x": false, "y": false},
+                        "angle": 0
+                      },
+                      "top": {
+                        "offset": {"x": 99, "y": 61},
+                        "mirror": {"x": false, "y": false},
+                        "angle": 0
+                      },
+                      "bottom": {
+                        "offset": {"x": 99, "y": 61},
+                        "mirror": {"x": false, "y": false},
+                        "angle": 0
+                      }
+                    },
+                    "unwrapMode": "custom",
+                    "visible": true,
+                    "doubleSided": false,
+                    "shadingMode": "standard"
+                  }
+                },
+                {
+                  "id": "47",
+                  "name": "Statue-Pommel--C9",
+                  "position": {"x": -5.12743, "y": -0.50227, "z": -4.9199},
+                  "orientation": {"x": -0.32651, "y": -0.62721, "z": 0.62721, "w": 0.32651},
+                  "shape": {
+                    "type": "box",
+                    "offset": {"x": 2.0768, "y": -4.94605, "z": -2.12845},
+                    "stretch": {"x": 1, "y": 0.994, "z": 1},
+                    "settings": {
+                      "isPiece": false,
+                      "size": {"x": 4, "y": 2, "z": 3},
+                      "isStaticBox": true
+                    },
+                    "textureLayout": {
+                      "back": {
+                        "offset": {"x": 99, "y": 62},
+                        "mirror": {"x": false, "y": false},
+                        "angle": 0
+                      },
+                      "right": {
+                        "offset": {"x": 107, "y": 62},
+                        "mirror": {"x": false, "y": false},
+                        "angle": 0
+                      },
+                      "front": {
+                        "offset": {"x": 99, "y": 62},
+                        "mirror": {"x": false, "y": false},
+                        "angle": 0
+                      },
+                      "top": {
+                        "offset": {"x": 99, "y": 61},
+                        "mirror": {"x": false, "y": false},
+                        "angle": 0
+                      },
+                      "bottom": {
+                        "offset": {"x": 99, "y": 61},
+                        "mirror": {"x": false, "y": false},
+                        "angle": 0
+                      }
+                    },
+                    "unwrapMode": "custom",
+                    "visible": true,
+                    "doubleSided": false,
+                    "shadingMode": "standard"
+                  }
+                },
+                {
+                  "id": "48",
+                  "name": "Statue-Pommel--C10",
+                  "position": {"x": -5.32987, "y": -4.78159, "z": -4.6799},
+                  "orientation": {"x": 0, "y": -0.46175, "z": 0, "w": 0.88701},
+                  "shape": {
+                    "type": "box",
+                    "offset": {"x": 1.70861, "y": 4.89538, "z": 0.56558},
+                    "stretch": {"x": -1, "y": 0.994, "z": 1},
+                    "settings": {
+                      "isPiece": false,
+                      "size": {"x": 4, "y": 2, "z": 3},
+                      "isStaticBox": true
+                    },
+                    "textureLayout": {
+                      "back": {
+                        "offset": {"x": 99, "y": 62},
+                        "mirror": {"x": false, "y": false},
+                        "angle": 0
+                      },
+                      "right": {
+                        "offset": {"x": 107, "y": 62},
+                        "mirror": {"x": false, "y": false},
+                        "angle": 0
+                      },
+                      "front": {
+                        "offset": {"x": 99, "y": 62},
+                        "mirror": {"x": false, "y": false},
+                        "angle": 0
+                      },
+                      "top": {
+                        "offset": {"x": 99, "y": 61},
+                        "mirror": {"x": false, "y": false},
+                        "angle": 0
+                      },
+                      "bottom": {
+                        "offset": {"x": 99, "y": 61},
+                        "mirror": {"x": false, "y": false},
+                        "angle": 0
+                      }
+                    },
+                    "unwrapMode": "custom",
+                    "visible": true,
+                    "doubleSided": false,
+                    "shadingMode": "standard"
+                  }
+                },
+                {
+                  "id": "49",
+                  "name": "Statue-Pommel--C11",
+                  "position": {"x": -5.13581, "y": -2.39999, "z": -7.11829},
+                  "orientation": {"x": -0.62721, "y": -0.32651, "z": 0.32651, "w": 0.62721},
+                  "shape": {
+                    "type": "box",
+                    "offset": {"x": 0.24735, "y": -6.73252, "z": -0.21663},
+                    "stretch": {"x": -1, "y": 0.994, "z": 1},
+                    "settings": {
+                      "isPiece": false,
+                      "size": {"x": 4, "y": 2, "z": 3},
+                      "isStaticBox": true
+                    },
+                    "textureLayout": {
+                      "back": {
+                        "offset": {"x": 99, "y": 62},
+                        "mirror": {"x": false, "y": false},
+                        "angle": 0
+                      },
+                      "right": {
+                        "offset": {"x": 107, "y": 62},
+                        "mirror": {"x": false, "y": false},
+                        "angle": 0
+                      },
+                      "front": {
+                        "offset": {"x": 99, "y": 62},
+                        "mirror": {"x": false, "y": false},
+                        "angle": 0
+                      },
+                      "top": {
+                        "offset": {"x": 99, "y": 61},
+                        "mirror": {"x": false, "y": false},
+                        "angle": 0
+                      },
+                      "bottom": {
+                        "offset": {"x": 99, "y": 61},
+                        "mirror": {"x": false, "y": false},
+                        "angle": 0
+                      }
+                    },
+                    "unwrapMode": "custom",
+                    "visible": true,
+                    "doubleSided": false,
+                    "shadingMode": "standard"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "format": "prop",
+  "lod": "auto"
+}

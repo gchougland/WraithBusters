@@ -8,8 +8,12 @@ import com.hexvane.wraithbusters.arena.ArenaLayout;
 import com.hexvane.wraithbusters.arena.RoomDefinition;
 import com.hexvane.wraithbusters.arena.ArenaLayoutStore;
 import com.hexvane.wraithbusters.arena.GhostPhaseDoorMarker;
+import com.hexvane.wraithbusters.config.WraithBustersPluginConfig;
 import com.hexvane.wraithbusters.debug.GhostTestService;
 import com.hexvane.wraithbusters.ghost.PhasePortalMarkerService;
+import com.hexvane.wraithbusters.player.PlayerRole;
+import com.hexvane.wraithbusters.player.PlayerSessionState;
+import com.hexvane.wraithbusters.ui.GhostManaHudSupport;
 import com.hexvane.wraithbusters.door.RoomProgressionService;
 import com.hexvane.wraithbusters.puzzle.PuzzleService;
 import com.hexvane.wraithbusters.game.GamePhase;
@@ -56,6 +60,7 @@ public final class WraithBustersCommand extends AbstractCommandCollection {
         root.addSubCommand(new StatusCommand());
         root.addSubCommand(new ReloadCommand());
         root.addSubCommand(new TestGhostCommand());
+        root.addSubCommand(new RefillManaCommand());
         root.addSubCommand(new CompleteRoomCommand());
         root.addSubCommand(new ResetPhaseDoorsCommand());
         root.addSubCommand(new SetupCommand());
@@ -380,6 +385,51 @@ public final class WraithBustersCommand extends AbstractCommandCollection {
             } else {
                 GhostTestService.disable(ref, store, playerRef, session, world);
             }
+        }
+    }
+
+    private static final class RefillManaCommand extends AbstractPlayerCommand {
+        RefillManaCommand() {
+            super("refillmana", WraithBustersMessages.commandDescription("commands.refillmana"));
+        }
+
+        @Override
+        protected void execute(
+            @Nonnull CommandContext context,
+            @Nonnull Store<EntityStore> store,
+            @Nonnull Ref<EntityStore> ref,
+            @Nonnull PlayerRef playerRef,
+            @Nonnull World world
+        ) {
+            WraithBustersPlugin plugin = WraithBustersPlugin.get();
+            UUIDComponent uuid = store.getComponent(ref, UUIDComponent.getComponentType());
+            if (plugin == null || uuid == null) {
+                return;
+            }
+            GameSession session = GameRegistry.get().getSessionForPlayer(uuid.getUuid());
+            if (session == null) {
+                session = GameRegistry.get().resolveSessionForWorld(world);
+            }
+            if (session == null) {
+                playerRef.sendMessage(WraithBustersMessages.translation("refillmana.noSession"));
+                return;
+            }
+            PlayerSessionState state = session.getPlayers().get(uuid.getUuid());
+            if (state == null || state.getRole() != PlayerRole.GHOST) {
+                playerRef.sendMessage(WraithBustersMessages.translation("refillmana.notGhost"));
+                return;
+            }
+            WraithBustersPluginConfig config = plugin.getPluginConfig();
+            state.setGhostMana(config.getGhostMaxMana());
+            Player player = store.getComponent(ref, Player.getComponentType());
+            if (player != null) {
+                GhostManaHudSupport.refresh(player, playerRef, state, config);
+            }
+            playerRef.sendMessage(
+                WraithBustersMessages.translation("refillmana.done")
+                    .param("current", state.getGhostMana())
+                    .param("max", config.getGhostMaxMana())
+            );
         }
     }
 

@@ -1,5 +1,6 @@
 package com.hexvane.wraithbusters.door;
 
+import com.hexvane.wraithbusters.util.BlockSectionQueries;
 import com.hexvane.wraithbusters.util.WraithBustersSoundUtil;
 import com.hypixel.hytale.math.util.ChunkUtil;
 import com.hypixel.hytale.server.core.asset.type.blocktype.config.BlockType;
@@ -24,13 +25,7 @@ public final class DoorStateHelper {
 
     @Nonnull
     public static Vector3i resolveDoorAnchor(@Nonnull World world, @Nonnull Vector3i blockPos) {
-        com.hypixel.hytale.server.core.universe.world.chunk.WorldChunk chunk = world.getChunk(
-            ChunkUtil.indexChunkFromBlock(blockPos.x, blockPos.z)
-        );
-        if (chunk == null) {
-            return new Vector3i(blockPos);
-        }
-        int filler = chunk.getFiller(blockPos.x, blockPos.y, blockPos.z);
+        int filler = BlockSectionQueries.getFiller(world, blockPos.x, blockPos.y, blockPos.z);
         if (filler == 0) {
             return new Vector3i(blockPos);
         }
@@ -119,8 +114,7 @@ public final class DoorStateHelper {
         if (variantBlockType == null) {
             return false;
         }
-        @SuppressWarnings("deprecation")
-        int rotation = chunk.getRotationIndex(blockPosition.x, blockPosition.y, blockPosition.z);
+        int rotation = BlockSectionQueries.getRotationIndex(world, blockPosition.x, blockPosition.y, blockPosition.z);
         return world.testPlaceBlock(
             blockPosition.x,
             blockPosition.y,

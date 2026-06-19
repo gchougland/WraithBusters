@@ -234,12 +234,18 @@ public final class OfferingPuzzleService {
             spawnFeedbackParticles(
                 store,
                 position,
+                feedback.insertParticleOffset(),
                 feedback.insertParticleSystem(),
                 feedback.resolveInsertParticleDuration()
             );
         }
         if (feedback.hasInsertSound()) {
-            playOfferingSound(world, position, feedback.resolveInsertSoundEvent(), feedback);
+            playOfferingSound(
+                world,
+                position,
+                feedback.resolveInsertSoundEvent(),
+                feedback.resolveInsertSoundVolume()
+            );
         }
     }
 
@@ -252,10 +258,16 @@ public final class OfferingPuzzleService {
         spawnFeedbackParticles(
             store,
             position,
+            feedback.rejectParticleOffset(),
             feedback.resolveRejectParticleSystem(),
             feedback.resolveRejectParticleDuration()
         );
-        playOfferingSound(world, position, feedback.resolveRejectSoundEvent(), feedback);
+        playOfferingSound(
+            world,
+            position,
+            feedback.resolveRejectSoundEvent(),
+            feedback.resolveRejectSoundVolume()
+        );
     }
 
     private static void playSuccessFeedback(
@@ -267,17 +279,23 @@ public final class OfferingPuzzleService {
         spawnFeedbackParticles(
             store,
             position,
+            feedback.successParticleOffset(),
             feedback.resolveSuccessParticleSystem(),
             feedback.resolveSuccessParticleDuration()
         );
-        playOfferingSound(world, position, feedback.resolveSuccessSoundEvent(), feedback);
+        playOfferingSound(
+            world,
+            position,
+            feedback.resolveSuccessSoundEvent(),
+            feedback.resolveSuccessSoundVolume()
+        );
     }
 
     private static void playOfferingSound(
         @Nonnull World world,
         @Nonnull Vector3d position,
         @Nonnull String soundEventId,
-        @Nonnull OfferingFeedbackConfig feedback
+        float volumeModifier
     ) {
         if (soundEventId.isBlank()) {
             return;
@@ -288,7 +306,7 @@ public final class OfferingPuzzleService {
             position.y,
             position.z,
             soundEventId,
-            feedback.resolveSoundVolume(),
+            volumeModifier,
             1.0f
         );
     }
@@ -296,15 +314,17 @@ public final class OfferingPuzzleService {
     private static void spawnFeedbackParticles(
         @Nonnull Store<EntityStore> store,
         @Nonnull Vector3d position,
+        @Nonnull Vector3d offset,
         @Nonnull String particleSystem,
         float duration
     ) {
         if (particleSystem.isBlank()) {
             return;
         }
+        Vector3d spawnPosition = new Vector3d(position).add(offset);
         ParticleUtil.spawnParticleEffect(
             particleSystem,
-            position,
+            spawnPosition,
             0.0f,
             0.0f,
             0.0f,

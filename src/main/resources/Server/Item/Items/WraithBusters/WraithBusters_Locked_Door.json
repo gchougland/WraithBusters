@@ -5,14 +5,21 @@
   "PlayerAnimationsId": "Block",
   "Categories": [
     "Furniture.Doors",
-    "Blocks.WraithBusters"
+    "WraithBusters.Blocks"
   ],
   "Set": "WraithBusters",
   "Icon": "Icons/ItemsGenerated/Furniture_Temple_Dark_Door.png",
   "IconProperties": {
-    "Rotation": [22.5, 45, 22.5],
+    "Rotation": [
+      22.5,
+      45,
+      22.5
+    ],
     "Scale": 0.39,
-    "Translation": [0, -27.13]
+    "Translation": [
+      0,
+      -27.13
+    ]
   },
   "Interactions": {
     "Primary": "Block_Primary",
@@ -35,6 +42,9 @@
       }
     },
     "HitboxType": "Door",
+    "Flags": {
+      "IsUsable": false
+    },
     "Material": "Solid",
     "Opacity": "Transparent",
     "State": {
@@ -51,18 +61,14 @@
         "OpenDoorIn": {
           "SoundOcclusionOpacity": 0.0,
           "HitboxType": "Door_Open_In",
-          "InteractionHitboxType": "Door_Open_In_Interaction",
           "InteractionSoundEventId": "SFX_Door_Temple_Dark_Open",
-          "CustomModelAnimation": "Blocks/Animations/Door/Door_Open_In.blockyanim",
-          "InteractionHint": "server.interactionHints.closeDoor"
+          "CustomModelAnimation": "Blocks/Animations/Door/Door_Open_In.blockyanim"
         },
         "OpenDoorOut": {
           "SoundOcclusionOpacity": 0.0,
           "HitboxType": "Door_Open_Out",
-          "InteractionHitboxType": "Door_Open_Out_Interaction",
           "InteractionSoundEventId": "SFX_Door_Temple_Dark_Open",
-          "CustomModelAnimation": "Blocks/Animations/Door/Door_Open_Out.blockyanim",
-          "InteractionHint": "server.interactionHints.closeDoor"
+          "CustomModelAnimation": "Blocks/Animations/Door/Door_Open_Out.blockyanim"
         }
       }
     },
@@ -70,18 +76,6 @@
     "BlockSoundSetId": "Stone",
     "PhysicalMaterialId": "Stone",
     "SoundOcclusionOpacity": 2.0,
-    "InteractionHint": "server.interactionHints.openDoor",
-    "IsDoor": true,
-    "Interactions": {
-      "Use": {
-        "Interactions": [
-          {
-            "Type": "WraithBusters_LockedDoor",
-            "SymbolId": "circle"
-          }
-        ]
-      }
-    },
     "ConnectedBlockRuleSet": {
       "Type": "CustomTemplate",
       "TemplateShapeAssetId": "DoorConnectedBlockTemplate",

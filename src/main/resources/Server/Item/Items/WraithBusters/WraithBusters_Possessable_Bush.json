@@ -1,0 +1,76 @@
+{
+  "TranslationProperties": {
+    "Name": "server.items.WraithBusters_Possessable_Bush.name"
+  },
+  "Categories": [
+    "WraithBusters.Blocks"
+  ],
+  "Set": "WraithBusters",
+  "PlayerAnimationsId": "Block",
+  "Interactions": {
+    "Primary": "Block_Primary",
+    "Secondary": "Block_Secondary"
+  },
+  "Icon": "Icons/ItemsGenerated/Plant_Coral_Bush_Poisoned.png",
+  "BlockType": {
+    "DrawType": "Model",
+    "Material": "Solid",
+    "Opacity": "Transparent",
+    "HitboxType": "Plant_Small",
+    "RandomRotation": "YawStep1",
+    "Flags": {
+      "IsStackable": true
+    },
+    "Gathering": {
+      "Breaking": {
+        "GatherType": "Unbreakable"
+      }
+    },
+    "Interactions": {
+      "Use": {
+        "Interactions": [
+          {
+            "Type": "WraithBusters_Possess"
+          }
+        ]
+      }
+    },
+    "CustomModel": "Blocks/Foliage/Water/Coral_Bush.blockymodel",
+    "CustomModelTexture": [
+      {
+        "Texture": "Blocks/Foliage/Water/Coral_Bush_Textures/Poison.png",
+        "Weight": 1
+      }
+    ],
+    "Support": {
+      "Down": [
+        {
+          "FaceType": "Full"
+        }
+      ]
+    },
+    "ParticleColor": "#8e45d2",
+    "TextureComputedColor": "#6B3D9E",
+    "InteractionHint": "server.wraithbusters.possess.hint"
+  },
+  "IconProperties": {
+    "Scale": 0.385,
+    "Rotation": [
+      22.5,
+      45,
+      22.5
+    ],
+    "Translation": [
+      3.1,
+      -22.700001
+    ]
+  },
+  "Tags": {
+    "Type": [
+      "Plant"
+    ],
+    "Family": [
+      "WraithBusters"
+    ]
+  }
+}

@@ -1,0 +1,84 @@
+{
+  "TranslationProperties": {
+    "Name": "server.items.WraithBusters_Sword_Statue.name"
+  },
+  "PlayerAnimationsId": "Block",
+  "Categories": [
+    "WraithBusters.Blocks"
+  ],
+  "Set": "WraithBusters",
+  "Icon": "Icons/ItemsGenerated/Furniture_Village_Statue.png",
+  "IconProperties": {
+    "Scale": 0.282,
+    "Rotation": [
+      22.5,
+      45,
+      22.5
+    ],
+    "Translation": [
+      2.113,
+      -42.254
+    ]
+  },
+  "BlockType": {
+    "BlockParticleSetId": "Stone",
+    "BlockSoundSetId": "Stone",
+    "PhysicalMaterialId": "Stone",
+    "CustomModel": "NPC/WraithBusters/SwordStatue.blockymodel",
+    "CustomModelTexture": [
+      {
+        "Texture": "Blocks/Decorative_Sets/Village/Statue_Texture.png",
+        "Weight": 1
+      }
+    ],
+    "DrawType": "Model",
+    "Flags": {},
+    "Gathering": {
+      "Breaking": {
+        "GatherType": "Unbreakable"
+      }
+    },
+    "HitboxType": "Statue_Full",
+    "Material": "Solid",
+    "Opacity": "Transparent",
+    "Support": {
+      "Down": [
+        {
+          "FaceType": "Full"
+        }
+      ]
+    },
+    "VariantRotation": "NESW",
+    "ParticleColor": "#9f9e81",
+    "TextureComputedColor": "#605F44",
+    "InteractionHint": "server.wraithbusters.possess.hint",
+    "Interactions": {
+      "Use": {
+        "Interactions": [
+          {
+            "Type": "WraithBusters_Possess"
+          }
+        ]
+      }
+    },
+    "State": {
+      "Definitions": {
+        "Swing": {
+          "InteractionSoundEventId": "SFX_NPC_Unarmed_Swing",
+          "CustomModelAnimation": "NPC/WraithBusters/Animations/Statue_Swing_Sword.blockyanim"
+        }
+      }
+    }
+  },
+  "Tags": {
+    "Type": [
+      "Furniture"
+    ],
+    "Family": [
+      "WraithBusters"
+    ]
+  },
+  "Scale": 0.6,
+  "ItemSoundSetId": "ISS_Blocks_Stone",
+  "MaxStack": 1
+}

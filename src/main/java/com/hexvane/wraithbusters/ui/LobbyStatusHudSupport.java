@@ -2,7 +2,6 @@ package com.hexvane.wraithbusters.ui;
 
 import com.hexvane.wraithbusters.WraithBustersConstants;
 import com.hexvane.wraithbusters.WraithBustersPlugin;
-import com.hexvane.wraithbusters.config.WraithBustersPluginConfig;
 import com.hexvane.wraithbusters.game.GamePhase;
 import com.hexvane.wraithbusters.game.GameSession;
 import com.hypixel.hytale.component.Ref;
@@ -32,10 +31,9 @@ public final class LobbyStatusHudSupport {
     public static void refresh(
         @Nonnull Player player,
         @Nonnull PlayerRef playerRef,
-        @Nonnull GameSession session,
-        @Nonnull WraithBustersPluginConfig config
+        @Nonnull GameSession session
     ) {
-        obtainHud(player, playerRef).refresh(session, config);
+        obtainHud(player, playerRef).refresh(session);
     }
 
     public static void refreshAll(@Nonnull GameSession session, @Nonnull World world) {
@@ -47,11 +45,7 @@ public final class LobbyStatusHudSupport {
         if (plugin == null) {
             return;
         }
-        WraithBustersPluginConfig config = plugin.getPluginConfig();
-        Store<EntityStore> store = world.getEntityStore().getStore();
-        if (store == null) {
-            return;
-        }
+        UUID sessionWorldUuid = world.getWorldConfig().getUuid();
         for (UUID playerUuid : session.playerUuidList()) {
             PlayerRef playerRef = Universe.get().getPlayer(playerUuid);
             if (playerRef == null) {
@@ -61,9 +55,14 @@ public final class LobbyStatusHudSupport {
             if (ref == null || !ref.isValid()) {
                 continue;
             }
-            Player player = store.getComponent(ref, Player.getComponentType());
+            Store<EntityStore> playerStore = ref.getStore();
+            World playerWorld = playerStore.getExternalData().getWorld();
+            if (!sessionWorldUuid.equals(playerWorld.getWorldConfig().getUuid())) {
+                continue;
+            }
+            Player player = playerStore.getComponent(ref, Player.getComponentType());
             if (player != null) {
-                refresh(player, playerRef, session, config);
+                refresh(player, playerRef, session);
             }
         }
     }

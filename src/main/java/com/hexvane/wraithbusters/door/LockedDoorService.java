@@ -1,6 +1,7 @@
 package com.hexvane.wraithbusters.door;
 
 import com.hexvane.wraithbusters.arena.RoomDefinition;
+import com.hexvane.wraithbusters.game.GamePhase;
 import com.hexvane.wraithbusters.game.GameSession;
 import com.hexvane.wraithbusters.player.PlayerRole;
 import com.hexvane.wraithbusters.player.PlayerSessionState;
@@ -18,6 +19,29 @@ import org.joml.Vector3i;
 
 public final class LockedDoorService {
     private LockedDoorService() {}
+
+    /** Living humans during an active round may use locked doors; ghosts use phase portals instead. */
+    public static boolean isAliveHuman(
+        @Nullable GameSession session,
+        @Nonnull Ref<EntityStore> playerRef,
+        @Nonnull Store<EntityStore> store
+    ) {
+        if (session == null || session.getPhase() != GamePhase.ACTIVE) {
+            return false;
+        }
+        PlayerSessionState state = playerState(session, playerRef, store);
+        return state != null && state.getRole() == PlayerRole.HUMAN && state.isAlive();
+    }
+
+    @Nullable
+    public static RoomDefinition findRoom(@Nonnull GameSession session, @Nonnull String roomId) {
+        for (RoomDefinition room : session.getArenaLayout().getRooms()) {
+            if (roomId.equals(room.getRoomId())) {
+                return room;
+            }
+        }
+        return null;
+    }
 
     @Nullable
     public static RoomDefinition findRoomAtDoor(@Nonnull GameSession session, @Nonnull Vector3i blockPos) {

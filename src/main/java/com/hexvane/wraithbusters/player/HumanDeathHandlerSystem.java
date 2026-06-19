@@ -7,6 +7,7 @@ import com.hexvane.wraithbusters.game.GameSession;
 import com.hexvane.wraithbusters.team.Team;
 import com.hexvane.wraithbusters.team.TeamSetupService;
 import com.hexvane.wraithbusters.util.DeferredWorldTasks;
+import com.hexvane.wraithbusters.util.WraithBustersVoiceUtil;
 import com.hypixel.hytale.component.CommandBuffer;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
@@ -63,6 +64,7 @@ public final class HumanDeathHandlerSystem extends DeathSystems.OnDeathSystem {
             TeamSetupService.applySpectator(victimRef, world.getEntityStore().getStore());
             TeamSetupService.hidePlayerFromSession(session, pr.getUuid());
             TeamSetupService.refreshVisibility(session, world);
+            WraithBustersVoiceUtil.unsilence(pr);
         });
         commandBuffer.removeComponent(victimRef, DeathComponent.getComponentType());
     }

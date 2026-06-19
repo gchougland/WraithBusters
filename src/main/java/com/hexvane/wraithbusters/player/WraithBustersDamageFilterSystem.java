@@ -1,5 +1,6 @@
 package com.hexvane.wraithbusters.player;
 
+import com.hexvane.wraithbusters.WraithBustersConstants;
 import com.hexvane.wraithbusters.WraithBustersPlugin;
 import com.hexvane.wraithbusters.game.GamePhase;
 import com.hexvane.wraithbusters.game.GameRegistry;
@@ -18,6 +19,7 @@ import com.hypixel.hytale.server.core.modules.entity.damage.DamageEventSystem;
 import com.hypixel.hytale.server.core.modules.entity.damage.DamageModule;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
+import com.hypixel.hytale.server.npc.entities.NPCEntity;
 import java.util.UUID;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -65,6 +67,17 @@ public final class WraithBustersDamageFilterSystem extends DamageEventSystem {
         }
         Ref<EntityStore> attackerRef = entitySource.getRef();
         if (!attackerRef.isValid()) {
+            return;
+        }
+        NPCEntity attackerNpc = store.getComponent(attackerRef, NPCEntity.getComponentType());
+        if (attackerNpc != null
+            && WraithBustersConstants.POSSESSABLE_SNAPDRAGON_NPC_ROLE.equals(attackerNpc.getRoleName())
+            && victimState != null
+            && victimState.getRole() == PlayerRole.HUMAN
+            && victimState.isAlive()) {
+            WraithBustersPlugin plugin = WraithBustersPlugin.get();
+            float snapdragonDamage = plugin == null ? 12f : plugin.getPluginConfig().getBushSnapdragonDamage();
+            damage.setAmount(Math.min(damage.getAmount(), snapdragonDamage));
             return;
         }
         PlayerRef attackerPlayer = store.getComponent(attackerRef, PlayerRef.getComponentType());

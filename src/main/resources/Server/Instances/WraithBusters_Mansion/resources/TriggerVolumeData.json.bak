@@ -38,12 +38,33 @@
             "Y": 0.0,
             "Z": -4.0
           },
+          "InsertParticleSystem": "WraithBusters_Furnace_Fire_Flare",
+          "InsertParticleDuration": 0.8500000238418579,
+          "InsertParticleOffset": {
+            "X": 0.0,
+            "Y": -0.5,
+            "Z": 0.0
+          },
+          "InsertSoundEvent": "SFX_Staff_Flame_Fireball_Impact",
+          "InsertSoundVolume": 1.0,
           "RejectParticleSystem": "WraithBusters_Smoke_Black",
           "RejectParticleDuration": 2.0,
+          "RejectParticleOffset": {
+            "X": 0.0,
+            "Y": -0.5,
+            "Z": 0.0
+          },
           "RejectSoundEvent": "SFX_Arrow_Fire_Miss",
+          "RejectSoundVolume": 1.0,
           "SuccessParticleSystem": "Campfire_New2",
           "SuccessParticleDuration": 2.0,
-          "SuccessSoundEvent": "SFX_Campfire_Build"
+          "SuccessParticleOffset": {
+            "X": 0.0,
+            "Y": -0.5,
+            "Z": 0.0
+          },
+          "SuccessSoundEvent": "SFX_Campfire_Build",
+          "SuccessSoundVolume": 1.0
         }
       ],
       "TargetTypes": [
@@ -90,12 +111,33 @@
             "Y": 4.0,
             "Z": 0.0
           },
+          "InsertParticleSystem": "Corrupted_Bubbles",
+          "InsertParticleDuration": 1.0,
+          "InsertParticleOffset": {
+            "X": 0.0,
+            "Y": -0.8,
+            "Z": 0.0
+          },
+          "InsertSoundEvent": "SFX_Tool_Watering_Can_Water",
+          "InsertSoundVolume": 2.0,
           "RejectParticleSystem": "WraithBusters_Smoke_Tall_Round",
           "RejectParticleDuration": 2.0,
+          "RejectParticleOffset": {
+            "X": 0.0,
+            "Y": -0.8,
+            "Z": 0.0
+          },
           "RejectSoundEvent": "SFX_Drop_Blocks_Splatty",
+          "RejectSoundVolume": 1.0,
           "SuccessParticleSystem": "WraithBusters_Smoke_Tall_Round",
           "SuccessParticleDuration": 2.0,
-          "SuccessSoundEvent": "SFX_Alchemy_Bench_Craft"
+          "SuccessParticleOffset": {
+            "X": 0.0,
+            "Y": -0.8,
+            "Z": 0.0
+          },
+          "SuccessSoundEvent": "SFX_Alchemy_Bench_Craft",
+          "SuccessSoundVolume": 1.0
         }
       ],
       "TargetTypes": [

@@ -1,7 +1,6 @@
 package com.hexvane.wraithbusters.ui;
 
 import com.hexvane.wraithbusters.WraithBustersConstants;
-import com.hexvane.wraithbusters.config.WraithBustersPluginConfig;
 import com.hexvane.wraithbusters.game.GameSession;
 import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.entity.entities.player.hud.CustomUIHud;
@@ -19,16 +18,15 @@ public final class LobbyStatusHud extends CustomUIHud {
         commandBuilder.append("WraithBusters/LobbyStatusHud.ui");
     }
 
-    public void refresh(@Nonnull GameSession session, @Nonnull WraithBustersPluginConfig config) {
+    public void refresh(@Nonnull GameSession session) {
         UICommandBuilder b = new UICommandBuilder();
         int ready = session.readyCount();
         int joined = session.getPlayers().size();
-        String total = joined >= config.getMinPlayers() ? String.valueOf(joined) : "?";
         b.set(
             "#LobbyStatus.TextSpans",
             Message.translation("server.wraithbusters.lobby.status")
                 .param("ready", ready)
-                .param("total", total)
+                .param("total", joined)
         );
         this.update(false, b);
     }

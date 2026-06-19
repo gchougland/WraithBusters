@@ -3,7 +3,7 @@
     "Name": "server.items.WraithBusters_Cheese.name"
   },
   "Categories": [
-    "Items.WraithBusters"
+    "WraithBusters.Items"
   ],
   "Set": "WraithBusters",
   "Quality": "Uncommon",

@@ -16,11 +16,19 @@ public final class SetupTargetUtil {
     private SetupTargetUtil() {}
 
     @Nullable
+    public static Vector3d resolveLookedAtHit(
+        @Nonnull Ref<EntityStore> ref,
+        @Nonnull Store<EntityStore> store
+    ) {
+        return TargetUtil.getTargetLocation(ref, TARGET_DISTANCE, store);
+    }
+
+    @Nullable
     public static Vector3i resolveLookedAtBlock(
         @Nonnull Ref<EntityStore> ref,
         @Nonnull Store<EntityStore> store
     ) {
-        Vector3d hit = TargetUtil.getTargetLocation(ref, TARGET_DISTANCE, store);
+        Vector3d hit = resolveLookedAtHit(ref, store);
         if (hit == null) {
             return null;
         }

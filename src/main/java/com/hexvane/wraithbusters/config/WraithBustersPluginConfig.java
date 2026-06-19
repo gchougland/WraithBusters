@@ -39,6 +39,58 @@ public final class WraithBustersPluginConfig {
             .add()
             .append(new KeyedCodec<>("CandleManaCost", Codec.INTEGER), (o, v) -> o.candleManaCost = v, o -> o.candleManaCost)
             .add()
+            .append(new KeyedCodec<>("StatueManaCost", Codec.INTEGER), (o, v) -> o.statueManaCost = v, o -> o.statueManaCost)
+            .add()
+            .append(new KeyedCodec<>("BushManaCost", Codec.INTEGER), (o, v) -> o.bushManaCost = v, o -> o.bushManaCost)
+            .add()
+            .append(
+                new KeyedCodec<>("BushSnapdragonDurationSeconds", Codec.INTEGER),
+                (o, v) -> o.bushSnapdragonDurationSeconds = v,
+                o -> o.bushSnapdragonDurationSeconds
+            )
+            .add()
+            .append(
+                new KeyedCodec<>("BushSnapdragonDamage", Codec.FLOAT),
+                (o, v) -> o.bushSnapdragonDamage = v,
+                o -> o.bushSnapdragonDamage
+            )
+            .add()
+            .append(new KeyedCodec<>("HiveManaCost", Codec.INTEGER), (o, v) -> o.hiveManaCost = v, o -> o.hiveManaCost)
+            .add()
+            .append(new KeyedCodec<>("HiveBeeCount", Codec.INTEGER), (o, v) -> o.hiveBeeCount = v, o -> o.hiveBeeCount)
+            .add()
+            .append(new KeyedCodec<>("HiveBeeSpeed", Codec.FLOAT), (o, v) -> o.hiveBeeSpeed = v, o -> o.hiveBeeSpeed)
+            .add()
+            .append(
+                new KeyedCodec<>("HiveBeeHitRadius", Codec.FLOAT),
+                (o, v) -> o.hiveBeeHitRadius = v,
+                o -> o.hiveBeeHitRadius
+            )
+            .add()
+            .append(
+                new KeyedCodec<>("HiveBeeMaxDurationSeconds", Codec.INTEGER),
+                (o, v) -> o.hiveBeeMaxDurationSeconds = v,
+                o -> o.hiveBeeMaxDurationSeconds
+            )
+            .add()
+            .append(new KeyedCodec<>("HiveHitDamage", Codec.FLOAT), (o, v) -> o.hiveHitDamage = v, o -> o.hiveHitDamage)
+            .add()
+            .append(new KeyedCodec<>("StatueDamage", Codec.FLOAT), (o, v) -> o.statueDamage = v, o -> o.statueDamage)
+            .add()
+            .append(
+                new KeyedCodec<>("StatueSwingDamageDelayTicks", Codec.INTEGER),
+                (o, v) -> o.statueSwingDamageDelayTicks = v,
+                o -> o.statueSwingDamageDelayTicks
+            )
+            .add()
+            .append(
+                new KeyedCodec<>("StatueSwingDurationTicks", Codec.INTEGER),
+                (o, v) -> o.statueSwingDurationTicks = v,
+                o -> o.statueSwingDurationTicks
+            )
+            .add()
+            .append(new KeyedCodec<>("StatueSwingHitRadius", Codec.FLOAT), (o, v) -> o.statueSwingHitRadius = v, o -> o.statueSwingHitRadius)
+            .add()
             .append(new KeyedCodec<>("CandleFireRadius", Codec.FLOAT), (o, v) -> o.candleFireRadius = v, o -> o.candleFireRadius)
             .add()
             .append(
@@ -107,6 +159,20 @@ public final class WraithBustersPluginConfig {
     private int ghostMaxMana = 100;
     private int plateManaCost = 25;
     private int candleManaCost = 20;
+    private int statueManaCost = 15;
+    private int bushManaCost = 40;
+    private int bushSnapdragonDurationSeconds = 10;
+    private float bushSnapdragonDamage = 12f;
+    private int hiveManaCost = 35;
+    private int hiveBeeCount = 6;
+    private float hiveBeeSpeed = 5.0f;
+    private float hiveBeeHitRadius = 1.2f;
+    private int hiveBeeMaxDurationSeconds = 8;
+    private float hiveHitDamage = 2.0f;
+    private float statueDamage = 30f;
+    private int statueSwingDamageDelayTicks = 18;
+    private int statueSwingDurationTicks = 40;
+    private float statueSwingHitRadius = 3.0f;
     private float candleFireRadius = 4.5f;
     private int manaPickupAmount = 25;
     private int manaPickupRespawnSeconds = 30;
@@ -117,7 +183,7 @@ public final class WraithBustersPluginConfig {
     private double slothPortraitTrackRange = 14.0;
     private double slothPortraitHalfFovWidth = 4.0;
     private int slothPortraitPoseCount = 11;
-    /** Set to e.g. ["Dining_Room"] to force room order; use [] for normal shuffle. */
+    /** Set to e.g. ["Kitchen", "Garden"] to force room order; use [] for random finished-room shuffle. */
     @Nonnull
     private String[] debugForceRoomChain = new String[0];
     private int postRoundSeconds = 15;
@@ -152,6 +218,62 @@ public final class WraithBustersPluginConfig {
 
     public int getCandleManaCost() {
         return candleManaCost;
+    }
+
+    public int getStatueManaCost() {
+        return statueManaCost;
+    }
+
+    public int getBushManaCost() {
+        return bushManaCost;
+    }
+
+    public int getBushSnapdragonDurationSeconds() {
+        return bushSnapdragonDurationSeconds;
+    }
+
+    public float getBushSnapdragonDamage() {
+        return bushSnapdragonDamage;
+    }
+
+    public int getHiveManaCost() {
+        return hiveManaCost;
+    }
+
+    public int getHiveBeeCount() {
+        return hiveBeeCount;
+    }
+
+    public float getHiveBeeSpeed() {
+        return hiveBeeSpeed;
+    }
+
+    public float getHiveBeeHitRadius() {
+        return hiveBeeHitRadius;
+    }
+
+    public int getHiveBeeMaxDurationSeconds() {
+        return hiveBeeMaxDurationSeconds;
+    }
+
+    public float getHiveHitDamage() {
+        return hiveHitDamage;
+    }
+
+    public float getStatueDamage() {
+        return statueDamage;
+    }
+
+    public int getStatueSwingDamageDelayTicks() {
+        return statueSwingDamageDelayTicks;
+    }
+
+    public int getStatueSwingDurationTicks() {
+        return statueSwingDurationTicks;
+    }
+
+    public float getStatueSwingHitRadius() {
+        return statueSwingHitRadius;
     }
 
     public float getCandleFireRadius() {

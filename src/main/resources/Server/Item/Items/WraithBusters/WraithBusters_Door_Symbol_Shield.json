@@ -3,7 +3,7 @@
     "Name": "server.items.WraithBusters_Door_Symbol_Shield.name"
   },
   "Categories": [
-    "Blocks.WraithBusters"
+    "WraithBusters.Blocks"
   ],
   "Set": "WraithBusters",
   "PlayerAnimationsId": "Block",

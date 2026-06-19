@@ -5,7 +5,7 @@
   "PlayerAnimationsId": "Torch",
   "Categories": [
     "Furniture.Lighting",
-    "Blocks.WraithBusters"
+    "WraithBusters.Blocks"
   ],
   "Set": "WraithBusters",
   "Interactions": {
@@ -23,8 +23,12 @@
     "RandomRotation": "YawStep1",
     "Support": {
       "Down": [
-        { "FaceType": "Full" },
-        { "FaceType": "Wood_Beam" }
+        {
+          "FaceType": "Full"
+        },
+        {
+          "FaceType": "Wood_Beam"
+        }
       ]
     },
     "Gathering": {

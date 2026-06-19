@@ -11,8 +11,12 @@ import com.hexvane.wraithbusters.inventory.MinigameInventoryService;
 import com.hexvane.wraithbusters.instance.GameInstanceService;
 import com.hexvane.wraithbusters.util.WorldThreadTasks;
 import com.hypixel.hytale.builtin.instances.config.InstanceEntityConfig;
+import com.hexvane.wraithbusters.door.HumanLockedDoorMarkerService;
 import com.hexvane.wraithbusters.ghost.PhasePortalMarkerService;
 import com.hexvane.wraithbusters.portrait.SlothPortraitService;
+import com.hexvane.wraithbusters.possessable.PossessableHiveSwarmService;
+import com.hexvane.wraithbusters.possessable.PossessableSnapdragonService;
+import com.hexvane.wraithbusters.possessable.SwordStatueSwingService;
 import com.hexvane.wraithbusters.pickup.ManaPickupService;
 import com.hexvane.wraithbusters.possessable.PossessableVisualEffects;
 import com.hexvane.wraithbusters.player.PlayerRole;
@@ -25,6 +29,8 @@ import com.hexvane.wraithbusters.puzzle.KeySpawnService;
 import com.hexvane.wraithbusters.puzzle.PuzzleService;
 import com.hexvane.wraithbusters.setup.SetupModeService;
 import com.hexvane.wraithbusters.triggervolume.OfferingPuzzleService;
+import com.hexvane.wraithbusters.block.ExorcismTableFillerRepairService;
+import com.hexvane.wraithbusters.block.StatueFillerRepairService;
 import com.hexvane.wraithbusters.triggervolume.OfferingVolumeRepairService;
 import com.hexvane.wraithbusters.ui.GhostManaHudSupport;
 import com.hexvane.wraithbusters.ui.LobbyStatusHudSupport;
@@ -32,6 +38,7 @@ import com.hexvane.wraithbusters.ui.RoundEndPage;
 import com.hexvane.wraithbusters.ui.RoundTimerHudSupport;
 import com.hexvane.wraithbusters.util.DeferredWorldTasks;
 import com.hexvane.wraithbusters.util.PlayerHealUtil;
+import com.hexvane.wraithbusters.util.WraithBustersVoiceUtil;
 import com.hexvane.wraithbusters.util.PlayerTeleportUtil;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
@@ -246,7 +253,7 @@ public final class GameService {
             GamePhase phase = session.getPhase();
             PlayerSessionState state = session.getOrCreatePlayer(pr.getUuid());
             if (phase == GamePhase.LOBBY || phase == GamePhase.COUNTDOWN) {
-                LobbyStatusHudSupport.refresh(player, pr, session, plugin.getPluginConfig());
+                LobbyStatusHudSupport.refresh(player, pr, session);
                 LobbyStatusHudSupport.refreshAll(session, world);
             }
         }
@@ -395,6 +402,8 @@ public final class GameService {
         GhostTestService.onRoundStarting(session);
         PuzzleService.resetCandlesForRound(session, world);
         OfferingVolumeRepairService.repairIfNeeded(world);
+        ExorcismTableFillerRepairService.repairAt(world, session.getArenaLayout().getExorcismTable());
+        StatueFillerRepairService.repairForLayout(world, session.getArenaLayout());
         OfferingPuzzleService.resetForSession(session);
         session.setPhase(GamePhase.ACTIVE);
         session.setRoundEndEpochMs(System.currentTimeMillis() + config.getRoundDurationSeconds() * 1000L);
@@ -445,6 +454,7 @@ public final class GameService {
         broadcastTitle(world, session, Message.translation("server.wraithbusters.round.start"));
         SetupModeService.exitAll(world);
         PhasePortalMarkerService.prepareForRound(session, world);
+        HumanLockedDoorMarkerService.prepareForRound(session, world);
         RoomDoorService.applyRoundStart(session, world);
         ManaPickupService.startRound(session, world);
         KeySpawnService.startRound(session, world);
@@ -497,8 +507,11 @@ public final class GameService {
         }
         ManaPickupService.endRound(session, world);
         PhasePortalMarkerService.endRound(session, world);
+        HumanLockedDoorMarkerService.endRound(session, world);
         KeySpawnService.endRound(session, world);
         CheeseChaseService.endRound(session, world);
+        PossessableSnapdragonService.endRound(session, world);
+        PossessableHiveSwarmService.endRound(session, world);
         PossessableVisualEffects.clear();
         session.setPhase(GamePhase.ENDING);
         session.setWinningTeam(winners);
@@ -510,6 +523,7 @@ public final class GameService {
             session.getOrCreatePlayer(playerUuid).setRoundEndDismissed(false);
             TeamSetupService.revealPlayerGlobally(playerUuid);
         }
+        WraithBustersVoiceUtil.unsilenceSession(session);
         TeamSetupService.refreshVisibility(session, world);
         Store<EntityStore> store = world.getEntityStore().getStore();
         for (UUID playerUuid : session.playerUuidList()) {
@@ -539,27 +553,34 @@ public final class GameService {
     }
 
     public void playAgain(@Nonnull GameSession session, @Nonnull World world, @Nonnull UUID playerUuid) {
-        migrateToPlayAgainLobby(session, world, playerUuid);
+        migrateToPlayAgainLobby(session, world, playerUuid, null, true);
     }
 
-    private void migrateToPlayAgainLobby(
+    private boolean migrateToPlayAgainLobby(
         @Nonnull GameSession oldSession,
         @Nonnull World world,
-        @Nonnull UUID playerUuid
+        @Nonnull UUID playerUuid,
+        @Nullable PlayAgainMigrationTarget sharedTarget,
+        boolean markDismissedBeforeJoin
     ) {
         if (oldSession.getPhase() != GamePhase.ENDING) {
-            return;
+            return false;
+        }
+        if (!oldSession.getPlayers().containsKey(playerUuid)) {
+            return true;
         }
         Ref<EntityStore> ref = findPlayerRef(world, playerUuid);
         if (ref == null) {
-            return;
+            return false;
         }
         Store<EntityStore> store = world.getEntityStore().getStore();
         PlayerSessionState state = oldSession.getPlayers().get(playerUuid);
         boolean trackedPlayer = state != null;
         if (trackedPlayer) {
-            state.setRoundEndDismissed(true);
-            state.setReady(false);
+            if (markDismissedBeforeJoin) {
+                state.setRoundEndDismissed(true);
+                state.setReady(false);
+            }
             TeamSetupService.clearModes(ref, store, oldSession);
         }
         PlayerHealUtil.fullyHeal(ref, store);
@@ -578,30 +599,118 @@ public final class GameService {
         if (returnWorldUuid == null) {
             returnWorldUuid = GameInstanceService.resolveOverworldReturnWorldUuid(ref, store, null);
         }
-        GameSession targetSession = GameRegistry.get().findJoinableLobby(oldSession.getSessionId());
-        boolean joined;
-        if (targetSession != null) {
-            joined = joinSession(targetSession, ref, store, returnPoint, returnWorldUuid);
-        } else {
-            World originWorld = Universe.get().getWorld(returnWorldUuid);
-            if (originWorld == null) {
-                originWorld = world;
-            }
-            GameStartHandle handle = beginStartGame(playerUuid, originWorld, returnPoint, oldSession.getArenaId());
-            joined = beginHostJoin(handle, ref, store, returnPoint, returnWorldUuid);
-        }
+        boolean joined = joinPlayAgainTarget(oldSession, world, playerUuid, ref, store, returnPoint, returnWorldUuid, sharedTarget);
         if (!joined) {
             if (pr != null) {
                 pr.sendMessage(Message.translation("server.wraithbusters.playAgain.failed"));
             }
-            return;
+            return false;
         }
         if (trackedPlayer) {
+            state.setRoundEndDismissed(true);
+            state.setReady(false);
             transferPlayerOutOfSession(oldSession, playerUuid, ref, store);
         }
         if (pr != null) {
             pr.sendMessage(Message.translation("server.wraithbusters.playAgain.success"));
         }
+        return true;
+    }
+
+    private boolean joinPlayAgainTarget(
+        @Nonnull GameSession oldSession,
+        @Nonnull World world,
+        @Nonnull UUID playerUuid,
+        @Nonnull Ref<EntityStore> ref,
+        @Nonnull Store<EntityStore> store,
+        @Nonnull Transform returnPoint,
+        @Nonnull UUID returnWorldUuid,
+        @Nullable PlayAgainMigrationTarget sharedTarget
+    ) {
+        if (sharedTarget != null) {
+            if (sharedTarget.session().getSessionId().equals(oldSession.getSessionId())) {
+                return false;
+            }
+            return beginJoinSession(
+                sharedTarget.session(),
+                ref,
+                store,
+                returnWorldUuid,
+                returnPoint,
+                sharedTarget.worldFuture()
+            );
+        }
+        GameSession targetSession = GameRegistry.get().findJoinableLobby(oldSession.getSessionId());
+        if (targetSession != null) {
+            World instanceWorld = Universe.get().getWorld(targetSession.getWorldUuid());
+            if (isInstanceJoinable(instanceWorld)) {
+                return beginJoinSession(
+                    targetSession,
+                    ref,
+                    store,
+                    returnWorldUuid,
+                    returnPoint,
+                    CompletableFuture.completedFuture(instanceWorld)
+                );
+            }
+        }
+        World originWorld = Universe.get().getWorld(returnWorldUuid);
+        if (originWorld == null) {
+            originWorld = world;
+        }
+        GameStartHandle handle = beginStartGame(playerUuid, originWorld, returnPoint, oldSession.getArenaId());
+        return beginHostJoin(handle, ref, store, returnPoint, returnWorldUuid);
+    }
+
+    @Nullable
+    private PlayAgainMigrationTarget resolvePlayAgainTarget(
+        @Nonnull GameSession oldSession,
+        @Nonnull World world,
+        @Nonnull UUID anchorPlayerUuid
+    ) {
+        GameSession existing = GameRegistry.get().findJoinableLobby(oldSession.getSessionId());
+        if (existing != null) {
+            World instanceWorld = Universe.get().getWorld(existing.getWorldUuid());
+            if (isInstanceJoinable(instanceWorld)) {
+                return new PlayAgainMigrationTarget(existing, CompletableFuture.completedFuture(instanceWorld));
+            }
+        }
+        Ref<EntityStore> ref = findPlayerRef(world, anchorPlayerUuid);
+        if (ref == null) {
+            return null;
+        }
+        Store<EntityStore> store = world.getEntityStore().getStore();
+        PlayerSessionState state = oldSession.getPlayers().get(anchorPlayerUuid);
+        Transform returnPoint = state != null
+            ? resolvePlayerReturnPoint(state, ref, store)
+            : resolveEntityReturnPoint(ref, store);
+        UUID returnWorldUuid = state != null ? state.getSavedReturnWorldUuid() : null;
+        if (returnWorldUuid == null) {
+            returnWorldUuid = GameInstanceService.resolveOverworldReturnWorldUuid(ref, store, null);
+        }
+        World originWorld = Universe.get().getWorld(returnWorldUuid);
+        if (originWorld == null) {
+            originWorld = world;
+        }
+        GameStartHandle handle = beginStartGame(anchorPlayerUuid, originWorld, returnPoint, oldSession.getArenaId());
+        return new PlayAgainMigrationTarget(handle.session(), handle.worldFuture());
+    }
+
+    @Nonnull
+    private List<UUID> collectAutoPlayAgainPlayers(@Nonnull GameSession session, @Nonnull World world) {
+        List<UUID> toMigrate = new ArrayList<>();
+        for (UUID playerUuid : session.playerUuidList()) {
+            if (!session.getOrCreatePlayer(playerUuid).isRoundEndDismissed()) {
+                toMigrate.add(playerUuid);
+            }
+        }
+        for (PlayerRef playerRef : world.getPlayerRefs()) {
+            UUID playerUuid = playerRef.getUuid();
+            if (!session.getPlayers().containsKey(playerUuid) && !toMigrate.contains(playerUuid)) {
+                toMigrate.add(playerUuid);
+            }
+        }
+        return toMigrate;
     }
 
     private void transferPlayerOutOfSession(
@@ -668,20 +777,27 @@ public final class GameService {
         if (session.getPhase() != GamePhase.ENDING) {
             return;
         }
-        session.setPostRoundEndEpochMs(0L);
-        closeAllRoundEndPages(session, world);
-        for (UUID playerUuid : new ArrayList<>(session.playerUuidList())) {
-            if (session.getOrCreatePlayer(playerUuid).isRoundEndDismissed()) {
-                continue;
-            }
-            migrateToPlayAgainLobby(session, world, playerUuid);
+        List<UUID> toMigrate = collectAutoPlayAgainPlayers(session, world);
+        if (toMigrate.isEmpty()) {
+            session.setPostRoundEndEpochMs(0L);
+            return;
         }
-        for (PlayerRef playerRef : new ArrayList<>(world.getPlayerRefs())) {
-            UUID playerUuid = playerRef.getUuid();
-            if (session.getPlayers().containsKey(playerUuid)) {
+        closeAllRoundEndPages(session, world);
+        PlayAgainMigrationTarget target = resolvePlayAgainTarget(session, world, toMigrate.getFirst());
+        if (target == null) {
+            return;
+        }
+        int failed = 0;
+        for (UUID playerUuid : toMigrate) {
+            if (!session.getPlayers().containsKey(playerUuid)) {
                 continue;
             }
-            migrateToPlayAgainLobby(session, world, playerUuid);
+            if (!migrateToPlayAgainLobby(session, world, playerUuid, target, false)) {
+                failed++;
+            }
+        }
+        if (failed == 0) {
+            session.setPostRoundEndEpochMs(0L);
         }
     }
 
@@ -841,7 +957,29 @@ public final class GameService {
         if (session.isAwaitingFirstJoin() && !session.hadPlayers()) {
             return;
         }
+        World instance = Universe.get().getWorld(session.getWorldUuid());
+        if (instance != null && hasBlockingPlayersInInstance(instance, session)) {
+            return;
+        }
         shutdownSession(session);
+    }
+
+    /**
+     * Players removed from the session map during play-again can still be inside the old instance
+     * while teleporting to their new lobby. Wait until they leave before tearing the instance down.
+     */
+    private boolean hasBlockingPlayersInInstance(@Nonnull World instance, @Nonnull GameSession session) {
+        for (PlayerRef playerRef : instance.getPlayerRefs()) {
+            UUID playerUuid = playerRef.getUuid();
+            if (session.getPlayers().containsKey(playerUuid)) {
+                return true;
+            }
+            GameSession linkedSession = GameRegistry.get().getSessionForPlayer(playerUuid);
+            if (linkedSession != null && !linkedSession.getSessionId().equals(session.getSessionId())) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public void shutdownSession(@Nonnull GameSession session) {
@@ -851,12 +989,16 @@ public final class GameService {
         World instance = Universe.get().getWorld(session.getWorldUuid());
         if (instance != null) {
             evictStragglersFromInstance(instance, session);
+            WraithBustersVoiceUtil.unsilenceWorldPlayers(instance);
             WorldThreadTasks.runOnWorldThread(instance, () -> {
                 ManaPickupService.endRound(session, instance);
                 PhasePortalMarkerService.shutdownSession(session, instance);
                 KeySpawnService.endRound(session, instance);
                 CheeseChaseService.endRound(session, instance);
+                PossessableSnapdragonService.endRound(session, instance);
+                PossessableHiveSwarmService.endRound(session, instance);
                 SlothPortraitService.shutdownWorld(instance);
+                SwordStatueSwingService.clearWorld(instance.getWorldConfig().getUuid());
             });
             WorldThreadTasks.drainQueue(instance);
         }
@@ -884,7 +1026,12 @@ public final class GameService {
 
     private void evictStragglersFromInstance(@Nonnull World instance, @Nonnull GameSession session) {
         for (PlayerRef playerRef : new ArrayList<>(instance.getPlayerRefs())) {
-            if (session.getPlayers().containsKey(playerRef.getUuid())) {
+            UUID playerUuid = playerRef.getUuid();
+            if (session.getPlayers().containsKey(playerUuid)) {
+                continue;
+            }
+            GameSession linkedSession = GameRegistry.get().getSessionForPlayer(playerUuid);
+            if (linkedSession != null && !linkedSession.getSessionId().equals(session.getSessionId())) {
                 continue;
             }
             Ref<EntityStore> ref = playerRef.getReference();

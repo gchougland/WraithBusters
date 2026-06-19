@@ -1,6 +1,7 @@
 package com.hexvane.wraithbusters.instance;
 
 import com.hexvane.wraithbusters.util.WorldThreadTasks;
+import com.hexvane.wraithbusters.possessable.SwordStatueSwingService;
 import com.hexvane.wraithbusters.portrait.SlothPortraitService;
 import com.hypixel.hytale.builtin.portals.systems.PortalInvalidDestinationSystem;
 import com.hypixel.hytale.component.Store;
@@ -30,6 +31,7 @@ public final class WorldRemovalListener {
 
     private static void shutdownPortraits(@Nonnull RemoveWorldEvent event) {
         SlothPortraitService.shutdownWorld(event.getWorld());
+        SwordStatueSwingService.clearWorld(event.getWorld().getWorldConfig().getUuid());
     }
 
     private static void runPortalCleanupNow(@Nonnull RemoveWorldEvent event) {

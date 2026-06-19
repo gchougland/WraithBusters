@@ -31,7 +31,7 @@ public final class WraithBustersOfferingEffect extends TriggerEffect {
         .append(new KeyedCodec<>("RoomId", Codec.STRING), (e, v) -> e.roomId = v, e -> e.roomId)
         .add()
         .append(
-            new KeyedCodec<>("Mode", new EnumCodec<>(OfferingMode.class, EnumCodec.EnumStyle.LEGACY), false),
+            new KeyedCodec<>("Mode", new EnumCodec<>(OfferingMode.class), false),
             (e, v) -> e.mode = v,
             e -> e.mode
         )
@@ -69,15 +69,21 @@ public final class WraithBustersOfferingEffect extends TriggerEffect {
         )
         .add()
         .append(
+            new KeyedCodec<>("InsertParticleOffset", Vector3dUtil.CODEC, false),
+            (e, v) -> e.insertParticleOffset = v != null ? v : new Vector3d(),
+            e -> e.insertParticleOffset
+        )
+        .add()
+        .append(
             new KeyedCodec<>("InsertSoundEvent", Codec.STRING, false),
             (e, v) -> e.insertSoundEvent = v,
             e -> e.insertSoundEvent
         )
         .add()
         .append(
-            new KeyedCodec<>("SoundVolume", Codec.FLOAT, false),
-            (e, v) -> e.soundVolume = v != null ? v : WraithBustersConstants.OFFERING_DEFAULT_SOUND_VOLUME,
-            e -> e.soundVolume
+            new KeyedCodec<>("InsertSoundVolume", Codec.FLOAT, false),
+            (e, v) -> e.insertSoundVolume = v != null ? v : WraithBustersConstants.OFFERING_DEFAULT_SOUND_VOLUME,
+            e -> e.insertSoundVolume
         )
         .add()
         .append(
@@ -95,9 +101,21 @@ public final class WraithBustersOfferingEffect extends TriggerEffect {
         )
         .add()
         .append(
+            new KeyedCodec<>("RejectParticleOffset", Vector3dUtil.CODEC, false),
+            (e, v) -> e.rejectParticleOffset = v != null ? v : new Vector3d(),
+            e -> e.rejectParticleOffset
+        )
+        .add()
+        .append(
             new KeyedCodec<>("RejectSoundEvent", Codec.STRING, false),
             (e, v) -> e.rejectSoundEvent = v,
             e -> e.rejectSoundEvent
+        )
+        .add()
+        .append(
+            new KeyedCodec<>("RejectSoundVolume", Codec.FLOAT, false),
+            (e, v) -> e.rejectSoundVolume = v != null ? v : WraithBustersConstants.OFFERING_DEFAULT_SOUND_VOLUME,
+            e -> e.rejectSoundVolume
         )
         .add()
         .append(
@@ -115,9 +133,21 @@ public final class WraithBustersOfferingEffect extends TriggerEffect {
         )
         .add()
         .append(
+            new KeyedCodec<>("SuccessParticleOffset", Vector3dUtil.CODEC, false),
+            (e, v) -> e.successParticleOffset = v != null ? v : new Vector3d(),
+            e -> e.successParticleOffset
+        )
+        .add()
+        .append(
             new KeyedCodec<>("SuccessSoundEvent", Codec.STRING, false),
             (e, v) -> e.successSoundEvent = v,
             e -> e.successSoundEvent
+        )
+        .add()
+        .append(
+            new KeyedCodec<>("SuccessSoundVolume", Codec.FLOAT, false),
+            (e, v) -> e.successSoundVolume = v != null ? v : WraithBustersConstants.OFFERING_DEFAULT_SOUND_VOLUME,
+            e -> e.successSoundVolume
         )
         .add()
         .build();
@@ -135,18 +165,26 @@ public final class WraithBustersOfferingEffect extends TriggerEffect {
     private String insertParticleSystem = "";
     private float insertParticleDuration = WraithBustersConstants.OFFERING_INSERT_PARTICLE_DURATION_SEC;
     @Nonnull
+    private Vector3d insertParticleOffset = new Vector3d();
+    @Nonnull
     private String insertSoundEvent = "";
-    private float soundVolume = WraithBustersConstants.OFFERING_DEFAULT_SOUND_VOLUME;
+    private float insertSoundVolume = WraithBustersConstants.OFFERING_DEFAULT_SOUND_VOLUME;
     @Nonnull
     private String rejectParticleSystem = "";
     private float rejectParticleDuration = WraithBustersConstants.OFFERING_FEEDBACK_PARTICLE_DURATION_SEC;
     @Nonnull
+    private Vector3d rejectParticleOffset = new Vector3d();
+    @Nonnull
     private String rejectSoundEvent = "";
+    private float rejectSoundVolume = WraithBustersConstants.OFFERING_DEFAULT_SOUND_VOLUME;
     @Nonnull
     private String successParticleSystem = "";
     private float successParticleDuration = WraithBustersConstants.OFFERING_FEEDBACK_PARTICLE_DURATION_SEC;
     @Nonnull
+    private Vector3d successParticleOffset = new Vector3d();
+    @Nonnull
     private String successSoundEvent = "";
+    private float successSoundVolume = WraithBustersConstants.OFFERING_DEFAULT_SOUND_VOLUME;
 
     public boolean isProperlyConfigured() {
         return !roomId.isBlank() && requiredItems.length > 0;
@@ -188,14 +226,19 @@ public final class WraithBustersOfferingEffect extends TriggerEffect {
         OfferingFeedbackConfig feedback = new OfferingFeedbackConfig(
             insertParticleSystem,
             insertParticleDuration,
+            new Vector3d(insertParticleOffset),
             insertSoundEvent,
+            insertSoundVolume,
             rejectParticleSystem,
             rejectParticleDuration,
+            new Vector3d(rejectParticleOffset),
             rejectSoundEvent,
+            rejectSoundVolume,
             successParticleSystem,
             successParticleDuration,
+            new Vector3d(successParticleOffset),
             successSoundEvent,
-            soundVolume
+            successSoundVolume
         );
         OfferingPuzzleService.handleInsert(
             session,

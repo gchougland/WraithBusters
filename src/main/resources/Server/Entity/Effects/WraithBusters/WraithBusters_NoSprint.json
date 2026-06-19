@@ -1,0 +1,8 @@
+{
+  "Infinite": true,
+  "ApplicationEffects": {
+    "MovementEffects": {
+      "DisableSprint": true
+    }
+  }
+}

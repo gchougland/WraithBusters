@@ -20,9 +20,29 @@
   },
   "InitialVelocity": {
     "Yaw": { "Min": 0, "Max": 360 },
-    "Pitch": { "Min": 0, "Max": 40 },
-    "Speed": { "Min": 0.02, "Max": 0.05 }
+    "Pitch": { "Min": 55, "Max": 80 },
+    "Speed": { "Min": 0.05, "Max": 0.1 }
   },
+  "Attractors": [
+    {
+      "Position": {
+        "X": 0,
+        "Y": 0.4,
+        "Z": 0
+      },
+      "Radius": 0.6,
+      "LinearAcceleration": {
+        "X": 0,
+        "Y": 0.35,
+        "Z": 0
+      },
+      "RadialAxis": {
+        "X": 0,
+        "Y": 0,
+        "Z": 0
+      }
+    }
+  ],
   "Particle": {
     "Texture": "Particles/Textures/Weather/Dust.png",
     "FrameSize": {

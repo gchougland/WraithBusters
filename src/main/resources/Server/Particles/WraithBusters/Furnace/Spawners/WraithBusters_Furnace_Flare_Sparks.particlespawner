@@ -1,0 +1,133 @@
+{
+  "RenderMode": "Erosion",
+  "EmitOffset": {
+    "X": {
+      "Min": -0.12,
+      "Max": 0.12
+    },
+    "Y": {
+      "Min": 0,
+      "Max": 0.08
+    },
+    "Z": {
+      "Min": -0.12,
+      "Max": 0.12
+    }
+  },
+  "ParticleRotationInfluence": "Velocity",
+  "LinearFiltering": true,
+  "LightInfluence": 0,
+  "ParticleRotateWithSpawner": true,
+  "MaxConcurrentParticles": 12,
+  "ParticleLifeSpan": {
+    "Min": 0.25,
+    "Max": 0.55
+  },
+  "SpawnRate": {
+    "Min": 40,
+    "Max": 40
+  },
+  "SpawnBurst": true,
+  "TotalParticles": {
+    "Min": 6,
+    "Max": 10
+  },
+  "InitialVelocity": {
+    "Speed": {
+      "Min": 1.2,
+      "Max": 3.5
+    },
+    "Yaw": {
+      "Min": -180,
+      "Max": 180
+    },
+    "Pitch": {
+      "Min": 65,
+      "Max": 120
+    }
+  },
+  "Attractors": [
+    {
+      "RadialAxis": {
+        "X": 0,
+        "Y": 1,
+        "Z": 0
+      },
+      "RadialTangentImpulse": -0.8,
+      "DampingMultiplier": {
+        "X": 0.92,
+        "Y": 0.85,
+        "Z": 0.92
+      }
+    }
+  ],
+  "Particle": {
+    "Texture": "Particles/Textures/Basic/Spark.png",
+    "FrameSize": {
+      "Width": 32,
+      "Height": 32
+    },
+    "ScaleRatioConstraint": "Preserved",
+    "UVOption": "RandomFlipU",
+    "Animation": {
+      "0": {
+        "FrameIndex": {
+          "Min": 0,
+          "Max": 0
+        },
+        "Opacity": 0
+      },
+      "10": {
+        "Opacity": 1,
+        "Color": "#fbe429"
+      },
+      "35": {
+        "Color": "#fb9d29",
+        "Opacity": 0.9
+      },
+      "100": {
+        "Color": "#f82727",
+        "Opacity": 0,
+        "Scale": {
+          "X": {
+            "Min": 0.3,
+            "Max": 0.4
+          },
+          "Y": {
+            "Min": 0.15,
+            "Max": 0.2
+          }
+        }
+      }
+    },
+    "InitialAnimationFrame": {
+      "Rotation": {
+        "X": {
+          "Min": 0,
+          "Max": 360
+        },
+        "Y": {
+          "Min": 90,
+          "Max": 90
+        }
+      },
+      "Scale": {
+        "X": {
+          "Min": 0.3,
+          "Max": 0.35
+        },
+        "Y": {
+          "Min": 0.8,
+          "Max": 1.2
+        }
+      },
+      "Opacity": 1,
+      "Color": "#fff288",
+      "FrameIndex": {
+        "Min": 0,
+        "Max": 0
+      }
+    }
+  },
+  "LifeSpan": 0.6
+}

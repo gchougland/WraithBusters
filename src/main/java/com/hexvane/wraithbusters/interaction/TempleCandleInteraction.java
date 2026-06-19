@@ -1,5 +1,6 @@
 package com.hexvane.wraithbusters.interaction;
 
+import com.hexvane.wraithbusters.util.BlockSectionQueries;
 import com.hexvane.wraithbusters.WraithBustersPlugin;
 import com.hexvane.wraithbusters.arena.PossessableMarker;
 import com.hexvane.wraithbusters.game.GamePhase;
@@ -75,7 +76,8 @@ public final class TempleCandleInteraction extends WraithBustersBlockInteraction
                         store,
                         commandBuffer,
                         marker,
-                        plugin.getPluginConfig()
+                        plugin.getPluginConfig(),
+                        targetBlock
                     );
                     switch (result) {
                         case SUCCESS -> {
@@ -135,7 +137,7 @@ public final class TempleCandleInteraction extends WraithBustersBlockInteraction
             return false;
         }
         BlockType newBlockType = BlockType.getAssetMap().getAsset(newBlockId);
-        int rotation = chunk.getRotationIndex(targetBlock.x, targetBlock.y, targetBlock.z);
+        int rotation = BlockSectionQueries.getRotationIndex(world, targetBlock.x, targetBlock.y, targetBlock.z);
         int settings = 262;
         chunk.setBlock(targetBlock.x(), targetBlock.y(), targetBlock.z(), newBlockId, newBlockType, rotation, 0, settings);
         BlockType interactionStateBlock = current.getBlockForState(newState);

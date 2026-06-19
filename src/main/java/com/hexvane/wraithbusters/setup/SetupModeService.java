@@ -9,6 +9,7 @@ import com.hexvane.wraithbusters.arena.GhostPhaseDoorMarker;
 import com.hexvane.wraithbusters.arena.PossessableMarker;
 import com.hexvane.wraithbusters.arena.RoomDefinition;
 import com.hexvane.wraithbusters.ghost.PhasePortalMarkerService;
+import com.hexvane.wraithbusters.util.StatueAnchorUtil;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.math.vector.Transform;
@@ -182,29 +183,25 @@ public final class SetupModeService {
             return;
         }
         if ("possessable".equalsIgnoreCase(markerType)) {
-            markPossessableAtLook(playerRef, session, ref, store, extra);
+            markPossessableAtLook(playerRef, session, world, ref, store, extra);
+            return;
+        }
+        if ("candle".equalsIgnoreCase(markerType)) {
+            markCandleAtLook(playerRef, session, ref, store, extra);
+            return;
+        }
+        if ("exorcism".equalsIgnoreCase(markerType)) {
+            markExorcismAtLook(playerRef, session, ref, store);
             return;
         }
         ArenaLayout layout = session.getLayout();
-        Vector3i block = new Vector3i(
-            (int) Math.floor(transform.getPosition().x),
-            (int) Math.floor(transform.getPosition().y),
-            (int) Math.floor(transform.getPosition().z)
-        );
+        Vector3i block = blockUnderFeet(transform);
         Transform feet = new Transform(transform.getTransform());
         switch (markerType.toLowerCase()) {
             case "lobbyspawn" -> layout.setLobbySpawn(feet);
             case "humanspawn" -> layout.getHumanSpawns().add(feet);
             case "ghostspawn" -> layout.getGhostSpawns().add(feet);
             case "manapickup" -> layout.getManaPickups().add(block);
-            case "candle" -> {
-                CandleMarker candle = new CandleMarker();
-                candle.setPuzzleId(extra == null || extra.isBlank() ? "candles" : extra);
-                candle.setIndex(layout.getCandles().size());
-                candle.setBlockPos(block);
-                layout.getCandles().add(candle);
-            }
-            case "exorcism" -> layout.setExorcismTable(block);
             case "small_mouse" -> layout.getCheeseChaseSmallMice().add(feet);
             case "large_mouse" -> layout.setCheeseChaseChumbo(feet);
             default -> {
@@ -221,7 +218,17 @@ public final class SetupModeService {
         );
     }
 
-    private static void markPossessableAtLook(
+    @Nonnull
+    private static Vector3i blockUnderFeet(@Nonnull TransformComponent transform) {
+        Vector3d pos = transform.getPosition();
+        return new Vector3i(
+            (int) Math.floor(pos.x),
+            (int) Math.floor(pos.y),
+            (int) Math.floor(pos.z)
+        );
+    }
+
+    private static void markCandleAtLook(
         @Nonnull PlayerRef playerRef,
         @Nonnull SetupSession session,
         @Nonnull Ref<EntityStore> ref,
@@ -230,13 +237,66 @@ public final class SetupModeService {
     ) {
         Vector3i block = SetupTargetUtil.resolveLookedAtBlock(ref, store);
         if (block == null) {
-            playerRef.sendMessage(WraithBustersMessages.translation("setup.room.noTarget"));
+            playerRef.sendMessage(WraithBustersMessages.translation("setup.noTarget"));
             return;
+        }
+        ArenaLayout layout = session.getLayout();
+        CandleMarker candle = new CandleMarker();
+        candle.setPuzzleId(extra == null || extra.isBlank() ? "candles" : extra);
+        candle.setIndex(layout.getCandles().size());
+        candle.setBlockPos(block);
+        layout.getCandles().add(candle);
+        playerRef.sendMessage(
+            WraithBustersMessages.translation("setup.marked")
+                .param("type", "candle")
+                .param("x", String.valueOf(block.x))
+                .param("y", String.valueOf(block.y))
+                .param("z", String.valueOf(block.z))
+        );
+    }
+
+    private static void markExorcismAtLook(
+        @Nonnull PlayerRef playerRef,
+        @Nonnull SetupSession session,
+        @Nonnull Ref<EntityStore> ref,
+        @Nonnull Store<EntityStore> store
+    ) {
+        Vector3i block = SetupTargetUtil.resolveLookedAtBlock(ref, store);
+        if (block == null) {
+            playerRef.sendMessage(WraithBustersMessages.translation("setup.noTarget"));
+            return;
+        }
+        session.getLayout().setExorcismTable(block);
+        playerRef.sendMessage(
+            WraithBustersMessages.translation("setup.marked")
+                .param("type", "exorcism")
+                .param("x", String.valueOf(block.x))
+                .param("y", String.valueOf(block.y))
+                .param("z", String.valueOf(block.z))
+        );
+    }
+
+    private static void markPossessableAtLook(
+        @Nonnull PlayerRef playerRef,
+        @Nonnull SetupSession session,
+        @Nonnull World world,
+        @Nonnull Ref<EntityStore> ref,
+        @Nonnull Store<EntityStore> store,
+        @Nullable String extra
+    ) {
+        Vector3i block = SetupTargetUtil.resolveLookedAtBlock(ref, store);
+        if (block == null) {
+            playerRef.sendMessage(WraithBustersMessages.translation("setup.noTarget"));
+            return;
+        }
+        String typeId = extra == null || extra.isBlank() ? "plate" : extra;
+        if ("statue".equalsIgnoreCase(typeId)) {
+            block = StatueAnchorUtil.resolveStatueAnchor(world, block);
         }
         ArenaLayout layout = session.getLayout();
         PossessableMarker marker = new PossessableMarker();
         marker.setBlockPos(block);
-        marker.setTypeId(extra == null || extra.isBlank() ? "plate" : extra);
+        marker.setTypeId(typeId);
         layout.getPossessables().add(marker);
         playerRef.sendMessage(
             WraithBustersMessages.translation("setup.marked")

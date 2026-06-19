@@ -2,6 +2,7 @@ package com.hexvane.wraithbusters.portrait;
 
 import com.hexvane.wraithbusters.WraithBustersPlugin;
 import com.hexvane.wraithbusters.config.WraithBustersPluginConfig;
+import com.hexvane.wraithbusters.util.BlockSectionQueries;
 import com.hexvane.wraithbusters.util.DeferredWorldTasks;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.RemoveReason;
@@ -218,10 +219,7 @@ public final class SlothPortraitService {
             return;
         }
         Vector3i anchor = resolvePortraitRegistrationAnchor(world, blockPos, variant);
-        com.hypixel.hytale.server.core.universe.world.chunk.WorldChunk chunk = world.getChunk(
-            ChunkUtil.indexChunkFromBlock(anchor.x, anchor.z)
-        );
-        int rotationIndex = chunk == null ? 0 : chunk.getRotationIndex(anchor.x, anchor.y, anchor.z);
+        int rotationIndex = BlockSectionQueries.getRotationIndex(world, anchor.x, anchor.y, anchor.z);
         RotationTuple anchorRotation = RotationTuple.get(rotationIndex);
         long key = packBlockPos(anchor);
         ConcurrentHashMap<Long, PortraitEntry> portraits = BY_WORLD.computeIfAbsent(
@@ -497,13 +495,7 @@ public final class SlothPortraitService {
 
     @Nonnull
     private static Vector3i resolvePortraitAnchor(@Nonnull World world, @Nonnull Vector3i blockPos) {
-        com.hypixel.hytale.server.core.universe.world.chunk.WorldChunk chunk = world.getChunk(
-            ChunkUtil.indexChunkFromBlock(blockPos.x, blockPos.z)
-        );
-        if (chunk == null) {
-            return new Vector3i(blockPos);
-        }
-        int filler = chunk.getFiller(blockPos.x, blockPos.y, blockPos.z);
+        int filler = BlockSectionQueries.getFiller(world, blockPos.x, blockPos.y, blockPos.z);
         if (filler == 0) {
             return new Vector3i(blockPos);
         }

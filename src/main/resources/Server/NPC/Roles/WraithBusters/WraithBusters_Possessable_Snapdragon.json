@@ -1,0 +1,15 @@
+{
+  "Type": "Variant",
+  "Reference": "Snapdragon",
+  "Modify": {
+    "NameTranslationKey": {
+      "Compute": "NameTranslationKey"
+    }
+  },
+  "Parameters": {
+    "NameTranslationKey": {
+      "Value": "server.npcRoles.WraithBusters_Possessable_Snapdragon.name",
+      "Description": "Translation key for NPC name display"
+    }
+  }
+}

@@ -71,7 +71,8 @@ public final class PossessInteraction extends WraithBustersBlockInteractionBase 
             store,
             commandBuffer,
             marker,
-            plugin.getPluginConfig()
+            plugin.getPluginConfig(),
+            targetBlock
         );
         switch (result) {
             case SUCCESS -> context.getState().state = InteractionState.Finished;
@@ -83,7 +84,7 @@ public final class PossessInteraction extends WraithBustersBlockInteractionBase 
                 send(player, "server.wraithbusters.possess.notGhost");
                 context.getState().state = InteractionState.Failed;
             }
-            case NOT_ENOUGH_MANA, NO_TARGET, UNKNOWN_TYPE -> context.getState().state = InteractionState.Failed;
+            case NOT_ENOUGH_MANA, NO_TARGET, BUSY, UNKNOWN_TYPE -> context.getState().state = InteractionState.Failed;
         }
     }
 

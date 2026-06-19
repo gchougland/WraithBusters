@@ -68,7 +68,7 @@ public final class CheeseChaseService {
         COMPLETED.keySet().removeIf(key -> key.startsWith(prefix));
     }
 
-    /** Marks a cheese-chase room solved and clears mice without advancing progression. */
+    /** Marks a cheese-chase room solved and clears puzzle cheese without advancing progression. */
     public static void markRoomComplete(
         @Nonnull GameSession session,
         @Nonnull RoomDefinition room,
@@ -78,7 +78,6 @@ public final class CheeseChaseService {
             return;
         }
         COMPLETED.put(puzzleKey(session, room), Boolean.TRUE);
-        clearSession(session.getSessionId(), world);
         stripCheeseFromHumans(session, world);
     }
 
@@ -94,6 +93,21 @@ public final class CheeseChaseService {
 
     public static void clearForLobby(@Nonnull GameSession session, @Nonnull World world) {
         clearSession(session.getSessionId(), world);
+    }
+
+    public static void forEachActiveNpc(
+        @Nonnull GameSession session,
+        @Nonnull java.util.function.Consumer<Ref<EntityStore>> consumer
+    ) {
+        SessionMice mice = SESSIONS.get(session.getSessionId());
+        if (mice == null) {
+            return;
+        }
+        for (Ref<EntityStore> ref : new ArrayList<>(mice.activeRefs)) {
+            if (ref != null && ref.isValid()) {
+                consumer.accept(ref);
+            }
+        }
     }
 
     public static void onCurrentRoomChanged(@Nonnull GameSession session, @Nonnull World world) {
@@ -141,6 +155,12 @@ public final class CheeseChaseService {
         }
         inventory.addItemStack(cheese);
         send(store, playerRef, "server.wraithbusters.puzzle.cheeseChase.gotCheese");
+        WraithBustersSoundUtil.play3dAtEntity(
+            world,
+            mouseRef,
+            store,
+            WraithBustersConstants.CHEESE_CHASE_CATCH_MOUSE_SOUND_EVENT
+        );
         DeferredWorldTasks.run(world, () -> despawnMouse(session.getSessionId(), world, mouseRef));
         return true;
     }
@@ -192,6 +212,12 @@ public final class CheeseChaseService {
         }
 
         mice.feedCount++;
+        WraithBustersSoundUtil.play3dAtEntity(
+            world,
+            chumboRef,
+            store,
+            WraithBustersConstants.CHEESE_CHASE_FEED_CHUMBO_SOUND_EVENT
+        );
         send(
             store,
             playerRef,
@@ -209,16 +235,13 @@ public final class CheeseChaseService {
 
     private static void refreshForCurrentRoom(@Nonnull GameSession session, @Nonnull World world) {
         if (session.getPhase() != GamePhase.ACTIVE) {
-            clearSession(session.getSessionId(), world);
             return;
         }
         RoomDefinition currentRoom = RoomProgressionService.currentRoom(session);
         if (!WraithBustersConstants.CHEESE_CHASE_PUZZLE_ID.equals(currentRoom.getPuzzleId())) {
-            clearSession(session.getSessionId(), world);
             return;
         }
         if (isCompleted(session, currentRoom)) {
-            clearSession(session.getSessionId(), world);
             return;
         }
         spawnForRoom(session, world);
@@ -349,7 +372,6 @@ public final class CheeseChaseService {
             return;
         }
         COMPLETED.put(puzzleKey(session, room), Boolean.TRUE);
-        clearSession(session.getSessionId(), world);
         stripCheeseFromHumans(session, world);
         RoomProgressionService.advanceAfterPuzzle(session);
         KeySpawnService.spawnKeyForRoom(session, world, room);

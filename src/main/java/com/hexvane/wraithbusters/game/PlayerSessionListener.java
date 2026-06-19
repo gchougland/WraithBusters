@@ -87,6 +87,11 @@ public final class PlayerSessionListener {
         if (!session.getPlayers().containsKey(playerUuid)) {
             return;
         }
+        GameSession linkedSession = GameRegistry.get().getSessionForPlayer(playerUuid);
+        if (linkedSession != null && !linkedSession.getSessionId().equals(session.getSessionId())) {
+            // Play-again teleports link the player to a new lobby before they leave this world.
+            return;
+        }
         plugin.getGameService().departPlayer(session, playerUuid, null, null, false, true);
     }
 }

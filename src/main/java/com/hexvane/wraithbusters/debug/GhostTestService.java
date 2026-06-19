@@ -7,6 +7,7 @@ import com.hexvane.wraithbusters.game.GamePhase;
 import com.hexvane.wraithbusters.game.GameSession;
 import com.hexvane.wraithbusters.ghost.PhasePortalMarkerService;
 import com.hexvane.wraithbusters.pickup.ManaPickupService;
+import com.hexvane.wraithbusters.possessable.PossessableSnapdragonService;
 import com.hexvane.wraithbusters.player.PlayerRole;
 import com.hexvane.wraithbusters.player.PlayerSessionState;
 import com.hexvane.wraithbusters.team.Team;
@@ -140,6 +141,7 @@ public final class GhostTestService {
             if (session.getPhase() != GamePhase.ACTIVE) {
                 PhasePortalMarkerService.clearForLobby(session, world);
                 ManaPickupService.clearForLobby(session, world);
+                PossessableSnapdragonService.clearForLobby(session, world);
             }
         } else {
             TEST_MARKER_REF_COUNT.put(sessionId, count - 1);

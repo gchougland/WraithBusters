@@ -3,6 +3,8 @@ package com.hexvane.wraithbusters.game;
 import com.hexvane.wraithbusters.debug.GhostTestService;
 import com.hexvane.wraithbusters.WraithBustersPlugin;
 import com.hexvane.wraithbusters.pickup.ManaPickupService;
+import com.hexvane.wraithbusters.possessable.PossessableHiveSwarmService;
+import com.hexvane.wraithbusters.possessable.PossessableSnapdragonService;
 import com.hexvane.wraithbusters.possessable.PossessableVisualEffects;
 import com.hexvane.wraithbusters.puzzle.KeySpawnService;
 import com.hexvane.wraithbusters.util.DeferredWorldTasks;
@@ -50,6 +52,8 @@ public final class GameTickSystem extends TickingSystem<EntityStore> {
             }
             if (session.getPhase() == GamePhase.ACTIVE) {
                 PossessableVisualEffects.tick(session, world, dt);
+                PossessableSnapdragonService.tick(session, world, plugin.getPluginConfig());
+                PossessableHiveSwarmService.tick(session, world, plugin.getPluginConfig());
             }
         });
     }

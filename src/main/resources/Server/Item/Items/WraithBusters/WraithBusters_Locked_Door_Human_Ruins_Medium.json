@@ -5,14 +5,21 @@
   "PlayerAnimationsId": "Block",
   "Categories": [
     "Furniture.Doors",
-    "Blocks.WraithBusters"
+    "WraithBusters.Blocks"
   ],
   "Set": "WraithBusters",
   "Icon": "Icons/ItemsGenerated/Furniture_Human_Ruins_Door_Medium.png",
   "IconProperties": {
-    "Rotation": [22.5, 43.615, 22.5],
+    "Rotation": [
+      22.5,
+      43.615,
+      22.5
+    ],
     "Scale": 0.35,
-    "Translation": [-22.8, -52.8]
+    "Translation": [
+      -22.8,
+      -52.8
+    ]
   },
   "Interactions": {
     "Primary": "Block_Primary",
@@ -33,6 +40,9 @@
       }
     },
     "HitboxType": "Door_Medium",
+    "Flags": {
+      "IsUsable": false
+    },
     "Material": "Solid",
     "State": {
       "Definitions": {
@@ -48,18 +58,14 @@
         "OpenDoorIn": {
           "SoundOcclusionOpacity": 0.0,
           "HitboxType": "Door_Medium_Open_In",
-          "InteractionHitboxType": "Door_Medium_Open_In_Interaction",
           "InteractionSoundEventId": "SFX_Door_Wooden_Open",
-          "CustomModelAnimation": "Blocks/Animations/Door/Door_Open_In.blockyanim",
-          "InteractionHint": "server.interactionHints.closeDoor"
+          "CustomModelAnimation": "Blocks/Animations/Door/Door_Open_In.blockyanim"
         },
         "OpenDoorOut": {
           "SoundOcclusionOpacity": 0.0,
           "HitboxType": "Door_Medium_Open_Out",
-          "InteractionHitboxType": "Door_Medium_Open_Out_Interaction",
           "InteractionSoundEventId": "SFX_Door_Wooden_Open",
-          "CustomModelAnimation": "Blocks/Animations/Door/Door_Open_Out.blockyanim",
-          "InteractionHint": "server.interactionHints.closeDoor"
+          "CustomModelAnimation": "Blocks/Animations/Door/Door_Open_Out.blockyanim"
         }
       }
     },
@@ -67,18 +73,6 @@
     "BlockSoundSetId": "Wood",
     "PhysicalMaterialId": "Wood",
     "SoundOcclusionOpacity": 2.0,
-    "InteractionHint": "server.interactionHints.openDoor",
-    "IsDoor": true,
-    "Interactions": {
-      "Use": {
-        "Interactions": [
-          {
-            "Type": "WraithBusters_LockedDoor",
-            "SymbolId": "circle"
-          }
-        ]
-      }
-    },
     "ParticleColor": "#4e462c",
     "TextureComputedColor": "#2F2A20"
   },

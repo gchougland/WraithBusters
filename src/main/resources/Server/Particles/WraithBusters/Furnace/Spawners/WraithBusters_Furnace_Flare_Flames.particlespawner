@@ -1,0 +1,161 @@
+{
+  "RenderMode": "Erosion",
+  "EmitOffset": {
+    "X": {
+      "Min": -0.1,
+      "Max": 0.1
+    },
+    "Y": {
+      "Min": 0,
+      "Max": 0.05
+    },
+    "Z": {
+      "Min": -0.1,
+      "Max": 0.1
+    }
+  },
+  "ParticleRotationInfluence": "Billboard",
+  "LinearFiltering": false,
+  "LightInfluence": 0,
+  "ParticleRotateWithSpawner": false,
+  "MaxConcurrentParticles": 12,
+  "ParticleLifeSpan": {
+    "Min": 0.45,
+    "Max": 0.75
+  },
+  "SpawnRate": {
+    "Min": 40,
+    "Max": 60
+  },
+  "SpawnBurst": true,
+  "TotalParticles": {
+    "Min": 8,
+    "Max": 12
+  },
+  "InitialVelocity": {
+    "Yaw": {
+      "Min": -25,
+      "Max": 25
+    },
+    "Pitch": {
+      "Min": 78,
+      "Max": 102
+    },
+    "Speed": {
+      "Min": 0.8,
+      "Max": 2.2
+    }
+  },
+  "Attractors": [
+    {
+      "Position": {
+        "X": 0,
+        "Y": 0.4,
+        "Z": 0
+      },
+      "Radius": 0.35,
+      "LinearAcceleration": {
+        "X": 0,
+        "Y": 1.2,
+        "Z": 0
+      }
+    }
+  ],
+  "UVMotion": {
+    "Texture": "Particles/Textures/UVMotion/FlowMap.png",
+    "Strength": 1.2,
+    "SpeedX": 0.17,
+    "SpeedY": 0.57,
+    "Scale": 1.4
+  },
+  "Particle": {
+    "Texture": "Particles/Textures/Fire/Fire_Erosion32.png",
+    "FrameSize": {
+      "Width": 32,
+      "Height": 32
+    },
+    "ScaleRatioConstraint": "OneToOne",
+    "UVOption": "RandomFlipU",
+    "Animation": {
+      "0": {
+        "FrameIndex": {
+          "Min": 0,
+          "Max": 3
+        },
+        "Opacity": 1,
+        "Color": "#ffff00",
+        "Scale": {
+          "X": {
+            "Min": 0.6,
+            "Max": 0.8
+          },
+          "Y": {
+            "Min": 0.6,
+            "Max": 0.8
+          }
+        }
+      },
+      "30": {
+        "Color": "#ffc626",
+        "Scale": {
+          "X": {
+            "Min": 1.2,
+            "Max": 1.6
+          },
+          "Y": {
+            "Min": 1.2,
+            "Max": 1.6
+          }
+        }
+      },
+      "55": {
+        "Color": "#ff9328"
+      },
+      "100": {
+        "Opacity": 0,
+        "Color": "#b61f1f",
+        "Scale": {
+          "X": {
+            "Min": 1.0,
+            "Max": 1.4
+          },
+          "Y": {
+            "Min": 1.0,
+            "Max": 1.4
+          }
+        },
+        "Rotation": {
+          "Z": {
+            "Min": -30,
+            "Max": 30
+          }
+        }
+      }
+    },
+    "InitialAnimationFrame": {
+      "Rotation": {
+        "Z": {
+          "Min": -30,
+          "Max": 30
+        }
+      },
+      "Scale": {
+        "X": {
+          "Min": 0.25,
+          "Max": 0.35
+        },
+        "Y": {
+          "Min": 0.25,
+          "Max": 0.35
+        }
+      },
+      "Opacity": 1,
+      "Color": "#ffff00",
+      "FrameIndex": {
+        "Min": 0,
+        "Max": 3
+      }
+    }
+  },
+  "LifeSpan": 0.75
+}

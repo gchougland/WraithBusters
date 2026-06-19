@@ -8,8 +8,11 @@ import com.hexvane.wraithbusters.config.WraithBustersPluginConfig;
 import com.hexvane.wraithbusters.game.GameService;
 import com.hexvane.wraithbusters.game.GameTickSystem;
 import com.hexvane.wraithbusters.generated.HstatsBuildMetadata;
+import com.hexvane.wraithbusters.door.HumanLockedDoorVisibilitySystem;
 import com.hexvane.wraithbusters.ghost.PhasePortalVisibilitySystem;
 import com.hexvane.wraithbusters.pickup.ManaOrbVisibilitySystem;
+import com.hexvane.wraithbusters.team.GhostPlayerVisibilitySystem;
+import com.hexvane.wraithbusters.team.TeamChatListener;
 import com.hexvane.wraithbusters.puzzle.HumanKeyPickupSystem;
 import com.hexvane.wraithbusters.portrait.SlothPortraitBreakSystem;
 import com.hexvane.wraithbusters.portrait.SlothPortraitEyeTickSystem;
@@ -19,19 +22,24 @@ import com.hexvane.wraithbusters.interaction.ExorcismInteraction;
 import com.hexvane.wraithbusters.interaction.LockedDoorInteraction;
 import com.hexvane.wraithbusters.npc.BuilderActionWraithBustersCheeseChaseChumbo;
 import com.hexvane.wraithbusters.npc.BuilderActionWraithBustersCheeseChaseMouse;
+import com.hexvane.wraithbusters.npc.BuilderActionWraithBustersOpenLockedDoor;
 import com.hexvane.wraithbusters.npc.BuilderActionWraithBustersPhasePortal;
 import com.hexvane.wraithbusters.interaction.PossessInteraction;
 import com.hexvane.wraithbusters.interaction.ReadyUpInteraction;
 import com.hexvane.wraithbusters.interaction.SetupPhaseDoorToolInteraction;
 import com.hexvane.wraithbusters.interaction.TempleCandleInteraction;
-import com.hexvane.wraithbusters.triggervolume.OfferingItemDropTickSystem;
 import com.hexvane.wraithbusters.triggervolume.OfferingVolumeRepairService;
+import com.hexvane.wraithbusters.triggervolume.OfferingItemDropTickSystem;
+import com.hexvane.wraithbusters.block.ExorcismTableFillerRepairService;
+import com.hexvane.wraithbusters.block.StatueFillerRepairService;
+import com.hexvane.wraithbusters.block.ExorcismTablePlaceSystem;
 import com.hexvane.wraithbusters.triggervolume.TriggerVolumeRegistration;
 import com.hexvane.wraithbusters.player.HumanDeathHandlerSystem;
 import com.hexvane.wraithbusters.player.RoundItemPickupGuardSystem;
 import com.hexvane.wraithbusters.player.WraithBustersDamageFilterSystem;
 import com.hexvane.wraithbusters.game.PlayerSessionListener;
 import com.hexvane.wraithbusters.instance.WorldRemovalListener;
+import com.hexvane.wraithbusters.util.DeferredWorldTasks;
 import com.hypixel.hytale.assetstore.AssetPack;
 import com.hypixel.hytale.common.plugin.PluginIdentifier;
 import com.hypixel.hytale.event.EventPriority;
@@ -51,6 +59,7 @@ import com.hypixel.hytale.server.core.plugin.JavaPlugin;
 import com.hypixel.hytale.server.npc.NPCPlugin;
 import com.hypixel.hytale.server.core.plugin.JavaPluginInit;
 import com.hypixel.hytale.server.core.universe.Universe;
+import com.hypixel.hytale.server.core.universe.world.World;
 import java.nio.file.Path;
 import java.util.List;
 import javax.annotation.Nonnull;
@@ -107,6 +116,8 @@ public final class WraithBustersPlugin extends JavaPlugin {
         getEntityStoreRegistry().registerSystem(new GameTickSystem(this));
         getEntityStoreRegistry().registerSystem(new ManaOrbVisibilitySystem());
         getEntityStoreRegistry().registerSystem(new PhasePortalVisibilitySystem());
+        getEntityStoreRegistry().registerSystem(new HumanLockedDoorVisibilitySystem());
+        getEntityStoreRegistry().registerSystem(new GhostPlayerVisibilitySystem());
         getEntityStoreRegistry().registerSystem(new HumanDeathHandlerSystem(this));
         getEntityStoreRegistry().registerSystem(new HumanKeyPickupSystem());
         getEntityStoreRegistry().registerSystem(new RoundItemPickupGuardSystem());
@@ -114,14 +125,23 @@ public final class WraithBustersPlugin extends JavaPlugin {
         getEntityStoreRegistry().registerSystem(new SlothPortraitPlaceSystem());
         getEntityStoreRegistry().registerSystem(new SlothPortraitBreakSystem());
         getEntityStoreRegistry().registerSystem(new SlothPortraitEyeTickSystem(this));
+        getEntityStoreRegistry().registerSystem(new ExorcismTablePlaceSystem());
         getEntityStoreRegistry().registerSystem(new OfferingItemDropTickSystem());
 
         PlayerSessionListener.register(this);
+        TeamChatListener.register(this);
         WorldRemovalListener.register(this);
         getEventRegistry().registerGlobal(
             EventPriority.LAST,
             StartWorldEvent.class,
-            event -> OfferingVolumeRepairService.repairIfNeeded(event.getWorld())
+            event -> {
+                World world = event.getWorld();
+                DeferredWorldTasks.run(world, () -> {
+                    OfferingVolumeRepairService.repairIfNeeded(world);
+                    ExorcismTableFillerRepairService.repairIfNeeded(world);
+                    StatueFillerRepairService.repairIfNeeded(world);
+                });
+            }
         );
 
         String hstatsModUuid = HstatsBuildMetadata.HSTATS_MOD_UUID;
@@ -152,6 +172,7 @@ public final class WraithBustersPlugin extends JavaPlugin {
         NPCPlugin npc = NPCPlugin.get();
         if (npc != null) {
             npc.registerCoreComponentType("WraithBustersPhasePortal", BuilderActionWraithBustersPhasePortal::new);
+            npc.registerCoreComponentType("WraithBustersOpenLockedDoor", BuilderActionWraithBustersOpenLockedDoor::new);
             npc.registerCoreComponentType("WraithBustersCheeseChaseMouse", BuilderActionWraithBustersCheeseChaseMouse::new);
             npc.registerCoreComponentType("WraithBustersCheeseChaseChumbo", BuilderActionWraithBustersCheeseChaseChumbo::new);
             LOGGER.atInfo().log("Registered WraithBusters NPC interaction actions");

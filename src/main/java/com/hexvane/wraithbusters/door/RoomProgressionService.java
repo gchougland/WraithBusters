@@ -31,12 +31,12 @@ public final class RoomProgressionService {
         }
         List<RoomDefinition> puzzlePool = new ArrayList<>();
         for (RoomDefinition room : allRooms) {
-            if (!WraithBustersConstants.ATTIC_ROOM_ID.equals(room.getRoomId())) {
+            if (WraithBustersConstants.FINISHED_ROOM_IDS.contains(room.getRoomId())) {
                 puzzlePool.add(room);
             }
         }
         Collections.shuffle(puzzlePool);
-        int roomsNeeded = Math.max(1, humanCount * config.getRoomsPerHuman());
+        int roomsNeeded = 1 + humanCount * config.getRoomsPerHuman();
         roomsNeeded = Math.min(roomsNeeded, puzzlePool.size());
         List<String> chain = new ArrayList<>();
         for (int i = 0; i < roomsNeeded; i++) {

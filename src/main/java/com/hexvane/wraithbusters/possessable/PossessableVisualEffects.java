@@ -22,8 +22,13 @@ import org.joml.Vector3i;
 
 /** Ghost-only continuous sparkle effects on possessable markers. Plate trails are model-attached particles. */
 public final class PossessableVisualEffects {
-    /** Block-center is +0.5; particle anchor was a full block too high at +0.58. */
-    private static final double SPARKLE_Y_OFFSET = -0.42;
+    /** Offset from block center (y + 0.5) per possessable type so sparkles sit above the object. */
+    private static final double PLATE_SPARKLE_Y_OFFSET = -0.42;
+    private static final double CANDLE_SPARKLE_Y_OFFSET = 0.35;
+    /** Statue_Full is three blocks tall from its anchor. */
+    private static final double STATUE_SPARKLE_Y_OFFSET = 2.35;
+    private static final double BUSH_SPARKLE_Y_OFFSET = 0.55;
+    private static final double HIVE_SPARKLE_Y_OFFSET = -0.2;
     private static final float SPARKLE_SPAWN_SCALE = 0.81f;
     private static final Set<String> ACTIVE_SPARKLES = new HashSet<>();
 
@@ -66,7 +71,8 @@ public final class PossessableVisualEffects {
                 if (ACTIVE_SPARKLES.contains(sparkleKey)) {
                     continue;
                 }
-                Vector3d pos = new Vector3d(blockPos.x + 0.5, blockPos.y + SPARKLE_Y_OFFSET, blockPos.z + 0.5);
+                double sparkleY = blockPos.y + 0.5 + sparkleYOffsetFromBlockCenter(marker.getTypeId());
+                Vector3d pos = new Vector3d(blockPos.x + 0.5, sparkleY, blockPos.z + 0.5);
                 ParticleUtil.spawnParticleEffect(
                     WraithBustersConstants.POSSESSABLE_SPARKLE_PARTICLE,
                     pos.x,
@@ -89,6 +95,16 @@ public final class PossessableVisualEffects {
     @Nonnull
     private static String sparkleKey(@Nonnull UUID sessionId, @Nonnull Vector3i blockPos, @Nonnull UUID viewerUuid) {
         return sessionId + ":" + blockPos.x + "," + blockPos.y + "," + blockPos.z + ":" + viewerUuid;
+    }
+
+    private static double sparkleYOffsetFromBlockCenter(@Nonnull String typeId) {
+        return switch (typeId) {
+            case "candle" -> CANDLE_SPARKLE_Y_OFFSET;
+            case "statue" -> STATUE_SPARKLE_Y_OFFSET;
+            case "bush" -> BUSH_SPARKLE_Y_OFFSET;
+            case "hive" -> HIVE_SPARKLE_Y_OFFSET;
+            default -> PLATE_SPARKLE_Y_OFFSET;
+        };
     }
 
     private static boolean canSeeSparkles(@Nonnull GameSession session, @Nonnull PlayerRef viewer) {

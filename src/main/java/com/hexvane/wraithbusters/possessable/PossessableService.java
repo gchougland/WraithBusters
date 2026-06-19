@@ -8,6 +8,8 @@ import com.hexvane.wraithbusters.game.GameSession;
 import com.hexvane.wraithbusters.player.PlayerRole;
 import com.hexvane.wraithbusters.player.PlayerSessionState;
 import com.hexvane.wraithbusters.ui.GhostManaHudSupport;
+import com.hexvane.wraithbusters.util.DeferredWorldTasks;
+import com.hexvane.wraithbusters.util.StatueAnchorUtil;
 import com.hexvane.wraithbusters.util.WraithBustersSoundUtil;
 import com.hypixel.hytale.component.CommandBuffer;
 import com.hypixel.hytale.component.Ref;
@@ -31,6 +33,8 @@ import org.joml.Vector3i;
 
 public final class PossessableService {
     private static final int MARKER_XZ_TOLERANCE = 1;
+    /** Statue_Full is three blocks tall; arena markers may be a few blocks off on Y. */
+    private static final int STATUE_MARKER_Y_TOLERANCE = 3;
 
     private PossessableService() {}
 
@@ -53,7 +57,8 @@ public final class PossessableService {
         }
         for (PossessableMarker marker : session.getArenaLayout().getPossessables()) {
             Vector3i pos = marker.getBlockPos();
-            if (pos.y == blockPos.y
+            int yTolerance = "statue".equals(marker.getTypeId()) ? STATUE_MARKER_Y_TOLERANCE : 0;
+            if (Math.abs(pos.y - blockPos.y) <= yTolerance
                 && Math.abs(pos.x - blockPos.x) <= MARKER_XZ_TOLERANCE
                 && Math.abs(pos.z - blockPos.z) <= MARKER_XZ_TOLERANCE) {
                 return marker;
@@ -71,6 +76,7 @@ public final class PossessableService {
         NOT_GHOST,
         NOT_ENOUGH_MANA,
         NO_TARGET,
+        BUSY,
         UNKNOWN_TYPE
     }
 
@@ -82,7 +88,8 @@ public final class PossessableService {
         @Nonnull Store<EntityStore> store,
         @Nonnull CommandBuffer<EntityStore> commandBuffer,
         @Nonnull PossessableMarker marker,
-        @Nonnull WraithBustersPluginConfig config
+        @Nonnull WraithBustersPluginConfig config,
+        @Nonnull Vector3i targetBlock
     ) {
         if (session.getPhase() != GamePhase.ACTIVE) {
             return ActivateResult.NOT_ACTIVE;
@@ -101,6 +108,15 @@ public final class PossessableService {
         }
         if ("candle".equals(typeId)) {
             return activateCandle(session, world, ghostRef, store, state, marker, config, pr);
+        }
+        if ("statue".equals(typeId)) {
+            return activateStatue(session, world, store, state, marker, config, pr, targetBlock);
+        }
+        if ("bush".equals(typeId)) {
+            return activateBush(session, world, ghostRef, store, state, marker, config, pr);
+        }
+        if ("hive".equals(typeId)) {
+            return activateHive(session, world, ghostRef, store, state, marker, config, pr);
         }
         return ActivateResult.UNKNOWN_TYPE;
     }
@@ -146,6 +162,13 @@ public final class PossessableService {
             com.hypixel.hytale.server.core.modules.projectile.ProjectileModule.get()
                 .spawnProjectile(ghostRef, commandBuffer, projectileConfig, origin, dir);
         }
+        WraithBustersSoundUtil.play3dAtPosition(
+            world,
+            origin.x,
+            origin.y,
+            origin.z,
+            WraithBustersConstants.PLATE_LAUNCH_SOUND_EVENT
+        );
         ghostPlayer.sendMessage(Message.translation("server.wraithbusters.possess.plate"));
         return ActivateResult.SUCCESS;
     }
@@ -192,6 +215,121 @@ public final class PossessableService {
         );
         applyBurnToHumansInRadius(session, world, store, origin, config.getCandleFireRadius());
         ghostPlayer.sendMessage(Message.translation("server.wraithbusters.possess.candle"));
+        return ActivateResult.SUCCESS;
+    }
+
+    @Nonnull
+    private static ActivateResult activateStatue(
+        @Nonnull GameSession session,
+        @Nonnull World world,
+        @Nonnull Store<EntityStore> store,
+        @Nonnull PlayerSessionState state,
+        @Nonnull PossessableMarker marker,
+        @Nonnull WraithBustersPluginConfig config,
+        @Nonnull PlayerRef ghostPlayer,
+        @Nonnull Vector3i targetBlock
+    ) {
+        if (state.getGhostMana() < config.getStatueManaCost()) {
+            ghostPlayer.sendMessage(Message.translation("server.wraithbusters.mana.notEnough"));
+            return ActivateResult.NOT_ENOUGH_MANA;
+        }
+        Vector3i anchor = StatueAnchorUtil.resolveStatueAnchor(world, targetBlock);
+        if (SwordStatueSwingService.isSwinging(world, anchor)) {
+            ghostPlayer.sendMessage(Message.translation("server.wraithbusters.possess.statueBusy"));
+            return ActivateResult.BUSY;
+        }
+        state.setGhostMana(state.getGhostMana() - config.getStatueManaCost());
+        Player player = store.getComponent(ghostPlayer.getReference(), Player.getComponentType());
+        if (player != null) {
+            GhostManaHudSupport.refresh(player, ghostPlayer, state, config);
+        }
+        SwordStatueSwingService.triggerSwing(world, anchor, config);
+        Vector3d origin = new Vector3d(anchor.x + 0.5, anchor.y + 1.2, anchor.z + 0.5);
+        WraithBustersSoundUtil.play3dAtPosition(
+            world,
+            origin.x,
+            origin.y,
+            origin.z,
+            WraithBustersConstants.STATUE_SWING_SOUND_EVENT
+        );
+        ghostPlayer.sendMessage(Message.translation("server.wraithbusters.possess.statue"));
+        return ActivateResult.SUCCESS;
+    }
+
+    @Nonnull
+    private static ActivateResult activateBush(
+        @Nonnull GameSession session,
+        @Nonnull World world,
+        @Nonnull Ref<EntityStore> ghostRef,
+        @Nonnull Store<EntityStore> store,
+        @Nonnull PlayerSessionState state,
+        @Nonnull PossessableMarker marker,
+        @Nonnull WraithBustersPluginConfig config,
+        @Nonnull PlayerRef ghostPlayer
+    ) {
+        if (state.getGhostMana() < config.getBushManaCost()) {
+            ghostPlayer.sendMessage(Message.translation("server.wraithbusters.mana.notEnough"));
+            return ActivateResult.NOT_ENOUGH_MANA;
+        }
+        state.setGhostMana(state.getGhostMana() - config.getBushManaCost());
+        Player player = store.getComponent(ghostRef, Player.getComponentType());
+        if (player != null) {
+            GhostManaHudSupport.refresh(player, ghostPlayer, state, config);
+        }
+        Vector3i pos = marker.getBlockPos();
+        Vector3d origin = new Vector3d(pos.x + 0.5, pos.y + 0.5, pos.z + 0.5);
+        Ref<EntityStore> preferredHuman = findNearestHuman(session, world, marker);
+        WraithBustersSoundUtil.play3dAtPosition(
+            world,
+            origin.x,
+            origin.y,
+            origin.z,
+            WraithBustersConstants.BUSH_ACTIVATE_SOUND_EVENT
+        );
+        DeferredWorldTasks.run(world, () -> PossessableSnapdragonService.spawn(session, world, origin, preferredHuman));
+        ghostPlayer.sendMessage(Message.translation("server.wraithbusters.possess.bush"));
+        return ActivateResult.SUCCESS;
+    }
+
+    @Nonnull
+    private static ActivateResult activateHive(
+        @Nonnull GameSession session,
+        @Nonnull World world,
+        @Nonnull Ref<EntityStore> ghostRef,
+        @Nonnull Store<EntityStore> store,
+        @Nonnull PlayerSessionState state,
+        @Nonnull PossessableMarker marker,
+        @Nonnull WraithBustersPluginConfig config,
+        @Nonnull PlayerRef ghostPlayer
+    ) {
+        if (state.getGhostMana() < config.getHiveManaCost()) {
+            ghostPlayer.sendMessage(Message.translation("server.wraithbusters.mana.notEnough"));
+            return ActivateResult.NOT_ENOUGH_MANA;
+        }
+        Ref<EntityStore> preferredHuman = findNearestHuman(session, world, marker);
+        if (preferredHuman == null) {
+            ghostPlayer.sendMessage(Message.translation("server.wraithbusters.possess.noTarget"));
+            return ActivateResult.NO_TARGET;
+        }
+        state.setGhostMana(state.getGhostMana() - config.getHiveManaCost());
+        Player player = store.getComponent(ghostRef, Player.getComponentType());
+        if (player != null) {
+            GhostManaHudSupport.refresh(player, ghostPlayer, state, config);
+        }
+        Vector3i pos = marker.getBlockPos();
+        Vector3d origin = new Vector3d(pos.x + 0.5, pos.y + 0.65, pos.z + 0.5);
+        WraithBustersSoundUtil.play3dAtPosition(
+            world,
+            origin.x,
+            origin.y,
+            origin.z,
+            WraithBustersConstants.HIVE_ACTIVATE_SOUND_EVENT
+        );
+        DeferredWorldTasks.run(
+            world,
+            () -> PossessableHiveSwarmService.spawn(session, world, origin, preferredHuman, config)
+        );
+        ghostPlayer.sendMessage(Message.translation("server.wraithbusters.possess.hive"));
         return ActivateResult.SUCCESS;
     }
 
@@ -254,7 +392,10 @@ public final class PossessableService {
         }
         String id = blockType.getId();
         return WraithBustersConstants.POSSESSABLE_PLATE_BLOCK_ID.equals(id)
-            || WraithBustersConstants.POSSESSABLE_CANDLE_BLOCK_ID.equals(id);
+            || WraithBustersConstants.POSSESSABLE_CANDLE_BLOCK_ID.equals(id)
+            || WraithBustersConstants.POSSESSABLE_STATUE_BLOCK_ID.equals(id)
+            || WraithBustersConstants.POSSESSABLE_BUSH_BLOCK_ID.equals(id)
+            || WraithBustersConstants.POSSESSABLE_HIVE_BLOCK_ID.equals(id);
     }
 
     @Nullable

@@ -40,6 +40,7 @@ public final class RoomDoorService {
     private static void openDoorNow(@Nonnull GameSession session, @Nonnull World world, @Nonnull RoomDefinition room) {
         DoorStateHelper.tryOpenAll(world, uniqueDoorBlocks(room));
         PhasePortalMarkerService.onRoomDoorOpened(session, world, room);
+        HumanLockedDoorMarkerService.onRoomDoorOpened(session, world, room);
     }
 
     private static void blockDoor(@Nonnull World world, @Nonnull RoomDefinition room) {

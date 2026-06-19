@@ -3,7 +3,7 @@
     "Name": "server.items.WraithBusters_Key_Pentagon.name"
   },
   "Categories": [
-    "Items.WraithBusters"
+    "WraithBusters.Items"
   ],
   "Set": "WraithBusters",
   "Quality": "Legendary",

@@ -3,7 +3,7 @@
     "Name": "server.items.WraithBusters_Ready_Pedestal.name"
   },
   "Categories": [
-    "Blocks.WraithBusters"
+    "WraithBusters.Blocks"
   ],
   "Set": "WraithBusters",
   "PlayerAnimationsId": "Block",

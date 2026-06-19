@@ -3,7 +3,7 @@
     "Name": "server.items.WraithBusters_Key_Diamond.name"
   },
   "Categories": [
-    "Items.WraithBusters"
+    "WraithBusters.Items"
   ],
   "Set": "WraithBusters",
   "Quality": "Legendary",

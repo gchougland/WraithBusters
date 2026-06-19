@@ -1,0 +1,16 @@
+{
+  "Icon": "Icons/ItemCategories/Blocks.png",
+  "Order": 100,
+  "Children": [
+    {
+      "Id": "Blocks",
+      "Name": "server.ui.itemcategory.wraithbusters.blocks",
+      "Icon": "Icons/ItemCategories/Blocks.png"
+    },
+    {
+      "Id": "Items",
+      "Name": "server.ui.itemcategory.wraithbusters.items",
+      "Icon": "Icons/ItemCategories/Items.png"
+    }
+  ]
+}

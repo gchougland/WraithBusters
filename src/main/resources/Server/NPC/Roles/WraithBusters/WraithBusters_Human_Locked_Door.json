@@ -1,0 +1,64 @@
+{
+  "Type": "Generic",
+  "Appearance": "WraithBusters_Human_Locked_Door",
+  "Invulnerable": true,
+  "KnockbackScale": 0,
+  "DropList": "Empty",
+  "DisableDamageGroups": ["Self"],
+  "DefaultNPCAttitude": "Neutral",
+  "DefaultPlayerAttitude": "Neutral",
+  "ApplySeparation": false,
+  "ApplyAvoidance": false,
+  "MotionControllerList": [
+    {
+      "Type": "Walk"
+    }
+  ],
+  "MaxHealth": 1,
+  "Instructions": [
+    {
+      "Continue": true,
+      "Instructions": [
+        {
+          "Sensor": {
+            "Type": "Any"
+          },
+          "BodyMotion": {
+            "Type": "Nothing"
+          },
+          "HeadMotion": {
+            "Type": "Nothing"
+          }
+        }
+      ]
+    }
+  ],
+  "InteractionInstruction": {
+    "Instructions": [
+      {
+        "Sensor": { "Type": "Not", "Sensor": { "Type": "CanInteract", "ViewSector": 360 } },
+        "Actions": [{ "Type": "SetInteractable", "Interactable": false }]
+      },
+      {
+        "Continue": true,
+        "Sensor": { "Type": "Any" },
+        "Actions": [
+          {
+            "Type": "SetInteractable",
+            "Interactable": true,
+            "Hint": "server.wraithbusters.lockedDoor.use"
+          }
+        ]
+      },
+      {
+        "Sensor": { "Type": "HasInteracted" },
+        "Instructions": [
+          {
+            "Actions": [{ "Type": "WraithBustersOpenLockedDoor" }]
+          }
+        ]
+      }
+    ]
+  },
+  "NameTranslationKey": "server.npcRoles.WraithBusters_Human_Locked_Door.name"
+}

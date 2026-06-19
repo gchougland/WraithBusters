@@ -1,0 +1,76 @@
+{
+  "TranslationProperties": {
+    "Name": "server.items.WraithBusters_Possessable_Hive.name"
+  },
+  "Categories": [
+    "WraithBusters.Blocks"
+  ],
+  "Set": "WraithBusters",
+  "PlayerAnimationsId": "Block",
+  "Interactions": {
+    "Primary": "Block_Primary",
+    "Secondary": "Block_Secondary"
+  },
+  "Icon": "Icons/ItemsGenerated/Deco_Hive.png",
+  "BlockType": {
+    "DrawType": "Model",
+    "CustomModel": "Blocks/Miscellaneous/Hive.blockymodel",
+    "CustomModelTexture": [
+      {
+        "Texture": "Blocks/Spooky_Hive_Texture.png",
+        "Weight": 1
+      }
+    ],
+    "Flags": {},
+    "Gathering": {
+      "Breaking": {
+        "GatherType": "Unbreakable"
+      }
+    },
+    "BlockParticleSetId": "Dust",
+    "BlockSoundSetId": "Bone",
+    "PhysicalMaterialId": "Stone",
+    "VariantRotation": "NESW",
+    "Material": "Solid",
+    "Opacity": "Semitransparent",
+    "Particles": [
+      {
+        "SystemId": "WraithBusters_Spooky_Bee_Swarm_Friendly",
+        "Color": "#ffffff"
+      }
+    ],
+    "RandomRotation": "YawStep1",
+    "Interactions": {
+      "Use": {
+        "Interactions": [
+          {
+            "Type": "WraithBusters_Possess"
+          }
+        ]
+      }
+    },
+    "ParticleColor": "#6B3D9E",
+    "TextureComputedColor": "#4A2868",
+    "InteractionHint": "server.wraithbusters.possess.hint"
+  },
+  "IconProperties": {
+    "Scale": 0.58823,
+    "Rotation": [
+      0,
+      316.7,
+      339.2
+    ],
+    "Translation": [
+      -5,
+      -14.1
+    ]
+  },
+  "Tags": {
+    "Type": [
+      "Deco"
+    ],
+    "Family": [
+      "WraithBusters"
+    ]
+  }
+}
