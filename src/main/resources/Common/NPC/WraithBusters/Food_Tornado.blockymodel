@@ -1,0 +1,109 @@
+{
+  "nodes": [
+    {
+      "id": "1",
+      "name": "TornadoCore",
+      "position": {"x": 0, "y": 0, "z": 0},
+      "orientation": {"x": 0, "y": 0, "z": 0, "w": 1},
+      "shape": {
+        "type": "box",
+        "offset": {"x": 0, "y": 0.5, "z": 0},
+        "stretch": {"x": 0.1, "y": 0.1, "z": 0.1},
+        "settings": {
+          "isPiece": false,
+          "size": {"x": 2, "y": 2, "z": 2}
+        },
+        "unwrapMode": "custom",
+        "visible": false,
+        "doubleSided": false,
+        "shadingMode": "flat"
+      },
+      "children": [
+        {
+          "id": "2",
+          "name": "CornOrbit",
+          "position": {"x": 0.45, "y": 0.3, "z": 0},
+          "orientation": {"x": 0, "y": 0, "z": 0, "w": 1},
+          "shape": {
+            "type": "box",
+            "offset": {"x": 0, "y": 0, "z": 0},
+            "stretch": {"x": 0.35, "y": 0.35, "z": 0.35},
+            "settings": {
+              "isPiece": false,
+              "size": {"x": 7, "y": 16, "z": 7}
+            },
+            "textureLayout": {
+              "back": {"offset": {"x": 37, "y": 0}, "mirror": {"x": false, "y": false}, "angle": 0},
+              "right": {"offset": {"x": 44, "y": 0}, "mirror": {"x": false, "y": false}, "angle": 0},
+              "front": {"offset": {"x": 37, "y": 0}, "mirror": {"x": false, "y": false}, "angle": 0},
+              "left": {"offset": {"x": 44, "y": 0}, "mirror": {"x": false, "y": false}, "angle": 0},
+              "top": {"offset": {"x": 51, "y": 0}, "mirror": {"x": false, "y": false}, "angle": 0},
+              "bottom": {"offset": {"x": 51, "y": 7}, "mirror": {"x": false, "y": false}, "angle": 0}
+            },
+            "unwrapMode": "custom",
+            "visible": true,
+            "doubleSided": false,
+            "shadingMode": "flat"
+          },
+          "children": []
+        },
+        {
+          "id": "3",
+          "name": "AppleOrbit",
+          "position": {"x": -0.4, "y": 0.85, "z": 0.25},
+          "orientation": {"x": 0, "y": 0.383, "z": 0, "w": 0.924},
+          "shape": {
+            "type": "box",
+            "offset": {"x": 0, "y": 0, "z": 0},
+            "stretch": {"x": 0.4, "y": 0.4, "z": 0.4},
+            "settings": {
+              "isPiece": false,
+              "size": {"x": 12, "y": 12, "z": 12}
+            },
+            "textureLayout": {
+              "back": {"offset": {"x": 0, "y": 0}, "mirror": {"x": false, "y": false}, "angle": 0},
+              "right": {"offset": {"x": 12, "y": 0}, "mirror": {"x": false, "y": false}, "angle": 0},
+              "front": {"offset": {"x": 0, "y": 0}, "mirror": {"x": false, "y": false}, "angle": 0},
+              "left": {"offset": {"x": 12, "y": 0}, "mirror": {"x": false, "y": false}, "angle": 0},
+              "top": {"offset": {"x": 0, "y": 12}, "mirror": {"x": false, "y": false}, "angle": 0},
+              "bottom": {"offset": {"x": 12, "y": 12}, "mirror": {"x": false, "y": false}, "angle": 0}
+            },
+            "unwrapMode": "custom",
+            "visible": true,
+            "doubleSided": false,
+            "shadingMode": "flat"
+          },
+          "children": []
+        },
+        {
+          "id": "4",
+          "name": "CauliflowerOrbit",
+          "position": {"x": 0.1, "y": 1.35, "z": -0.42},
+          "orientation": {"x": 0, "y": 0.707, "z": 0, "w": 0.707},
+          "shape": {
+            "type": "box",
+            "offset": {"x": 0, "y": 0, "z": 0},
+            "stretch": {"x": 0.45, "y": 0.45, "z": 0.45},
+            "settings": {
+              "isPiece": false,
+              "size": {"x": 14, "y": 10, "z": 14}
+            },
+            "textureLayout": {
+              "back": {"offset": {"x": 0, "y": 0}, "mirror": {"x": false, "y": false}, "angle": 0},
+              "right": {"offset": {"x": 14, "y": 0}, "mirror": {"x": false, "y": false}, "angle": 0},
+              "front": {"offset": {"x": 0, "y": 0}, "mirror": {"x": false, "y": false}, "angle": 0},
+              "left": {"offset": {"x": 14, "y": 0}, "mirror": {"x": false, "y": false}, "angle": 0},
+              "top": {"offset": {"x": 0, "y": 14}, "mirror": {"x": false, "y": false}, "angle": 0},
+              "bottom": {"offset": {"x": 14, "y": 14}, "mirror": {"x": false, "y": false}, "angle": 0}
+            },
+            "unwrapMode": "custom",
+            "visible": true,
+            "doubleSided": false,
+            "shadingMode": "flat"
+          },
+          "children": []
+        }
+      ]
+    }
+  ]
+}

@@ -9,6 +9,7 @@ import com.hexvane.wraithbusters.game.GamePhase;
 import com.hexvane.wraithbusters.game.GameSession;
 import com.hexvane.wraithbusters.puzzle.CheeseChaseService;
 import com.hexvane.wraithbusters.puzzle.KeySpawnService;
+import com.hexvane.wraithbusters.puzzle.LibraryBookService;
 import com.hexvane.wraithbusters.util.WraithBustersSoundUtil;
 import com.hypixel.hytale.logger.HytaleLogger;
 import com.hypixel.hytale.component.AddReason;
@@ -222,6 +223,7 @@ public final class OfferingPuzzleService {
         OfferingPlayerNotify.sessionPlayers(session, world, "server.wraithbusters.puzzle.offering.complete");
         playSuccessFeedback(world, store, feedbackPosition, feedback);
         CheeseChaseService.onCurrentRoomChanged(session, world);
+        LibraryBookService.onCurrentRoomChanged(session, world);
     }
 
     private static void playInsertFeedback(

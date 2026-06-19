@@ -1,0 +1,28 @@
+{
+  "TranslationProperties": {
+    "Name": "server.items.WraithBusters_Book_Blue.name"
+  },
+  "Categories": [
+    "WraithBusters.Items"
+  ],
+  "Set": "WraithBusters",
+  "Quality": "Uncommon",
+  "Icon": "Icons/ItemsGenerated/WraithBusters_Book_Blue.png",
+  "Model": "Blocks/Book_Pickup.blockymodel",
+  "Texture": "Blocks/Blue_Book_Texture.png",
+  "MaxStack": 1,
+  "Tool": {},
+  "PlayerAnimationsId": "Item",
+  "IconProperties": {
+    "Scale": 0.8,
+    "Rotation": [
+      22.5,
+      45,
+      22.5
+    ],
+    "Translation": [
+      0,
+      -4
+    ]
+  }
+}

@@ -1,0 +1,46 @@
+{
+  "RenderMode": "BlendLinear",
+  "EmitOffset": {
+    "X": { "Min": -0.2, "Max": 0.2 },
+    "Y": { "Min": 0, "Max": 0.1 },
+    "Z": { "Min": -0.2, "Max": 0.2 }
+  },
+  "ParticleRotationInfluence": "Billboard",
+  "LinearFiltering": true,
+  "LightInfluence": 0.6,
+  "ParticleRotateWithSpawner": true,
+  "MaxConcurrentParticles": 24,
+  "ParticleLifeSpan": { "Min": 1.2, "Max": 1.8 },
+  "SpawnRate": { "Min": 18, "Max": 24 },
+  "TotalParticles": { "Min": -1, "Max": -1 },
+  "InitialVelocity": {
+    "Yaw": { "Min": 0, "Max": 360 },
+    "Pitch": { "Min": 80, "Max": 100 },
+    "Speed": { "Min": 1.5, "Max": 2.5 }
+  },
+  "Attractors": [
+    {
+      "Position": { "X": 0, "Y": 0.3, "Z": 0 },
+      "RadialAxis": { "X": 0, "Y": 1, "Z": 0 },
+      "RadialAcceleration": -24,
+      "RadialTangentAcceleration": 5.5,
+      "DampingMultiplier": { "X": 1, "Y": 0.99, "Z": 1 }
+    }
+  ],
+  "Particle": {
+    "Texture": "Resources/Ingredients/Corn_Texture.png",
+    "FrameSize": { "Width": 64, "Height": 64 },
+    "ScaleRatioConstraint": "OneToOne",
+    "Animation": {
+      "0": {
+        "Scale": { "X": { "Min": 0.18, "Max": 0.22 }, "Y": { "Min": 0.18, "Max": 0.22 } },
+        "Opacity": 0.9
+      },
+      "100": { "Opacity": 0 }
+    },
+    "InitialAnimationFrame": {
+      "Rotation": { "Z": { "Min": 0, "Max": 360 } },
+      "Opacity": 0.85
+    }
+  }
+}

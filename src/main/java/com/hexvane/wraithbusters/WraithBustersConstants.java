@@ -16,7 +16,7 @@ public final class WraithBustersConstants {
     public static final String OFFERING_INSERT_SOUND_EVENT = "SFX_Player_Pickup_Item";
     public static final float OFFERING_DEFAULT_SOUND_VOLUME = 1.0f;
     public static final String PHASE_DOOR_SOUND_EVENT = "SFX_Portal_Neutral_Teleport_Local";
-    public static final String POSSESSABLE_SPARKLE_PARTICLE = "WraithBusters_Possessable_Sparkle";
+    public static final String POSSESSABLE_MARKER_ICON_NPC_ROLE = "WraithBusters_Possessable_Marker_Icon";
     public static final String PHASE_PORTAL_NPC_ROLE = "WraithBusters_Phase_Portal_1x2";
     public static final String PHASE_PORTAL_NPC_ROLE_1x2 = "WraithBusters_Phase_Portal_1x2";
     public static final String PHASE_PORTAL_NPC_ROLE_2x2 = "WraithBusters_Phase_Portal_2x2";
@@ -31,20 +31,44 @@ public final class WraithBustersConstants {
         "Dining_Room",
         "Garden",
         "Kitchen",
-        "Laboratory"
+        "Laboratory",
+        "Library"
     );
     public static final String EXORCISM_TABLE_BLOCK_ID = "WraithBusters_Exorcism_Table";
+    public static final String EXORCISM_TABLE_DORMANT_STATE = "default";
+    public static final String EXORCISM_TABLE_CHARGING_STATE = "Charging";
+    public static final String EXORCISM_TABLE_ACTIVATED_STATE = "Activated";
+    public static final String EXORCISM_BURST_PARTICLE = "WraithBusters_Exorcism_Burst";
+    public static final float EXORCISM_BURST_SCALE = 2.0f;
+    public static final float EXORCISM_BURST_DURATION_SEC = 2.0f;
+    public static final String EXORCISM_ACTIVATE_SOUND_EVENT = "SFX_Flame_Ignite";
+    public static final String ROUND_WIN_SOUND_EVENT = "SFX_Memories_Unlock_Local";
     public static final String POSSESSABLE_PLATE_BLOCK_ID = "WraithBusters_Possessable_Plate";
     public static final String POSSESSABLE_CANDLE_BLOCK_ID = "WraithBusters_Spooky_Temple_Dark_Candle";
     public static final String POSSESSABLE_STATUE_BLOCK_ID = "WraithBusters_Sword_Statue";
     public static final String POSSESSABLE_BUSH_BLOCK_ID = "WraithBusters_Possessable_Bush";
     public static final String POSSESSABLE_HIVE_BLOCK_ID = "WraithBusters_Possessable_Hive";
+    public static final String POSSESSABLE_SKULL_WALL_BLOCK_ID = "WraithBusters_Possessable_Skull_Wall";
+    public static final String POSSESSABLE_COCOON_BLOCK_ID = "WraithBusters_Possessable_Cocoon";
+    public static final String POSSESSABLE_BARREL_BLOCK_ID = "WraithBusters_Possessable_Barrel";
+    public static final String POSSESSABLE_WATCHER_STATUE_BLOCK_ID = "WraithBusters_Watcher_Statue";
+    public static final String WATCHER_FEATHER_PROJECTILE_CONFIG_ID = "WraithBusters_Feather_Projectile";
+    public static final String WATCHER_FEATHER_LAUNCH_SOUND_EVENT = "SFX_NPC_Unarmed_Swing";
     public static final String POSSESSABLE_BEE_NPC_ROLE = "WraithBusters_Possessable_Bee";
-    public static final String HIVE_POISON_EFFECT_ID = "Poison_T1";
+    public static final String POSSESSABLE_FLAMING_SKULL_NPC_ROLE = "WraithBusters_Possessable_Flaming_Skull";
+    public static final String HIVE_POISON_EFFECT_ID = "WraithBusters_Possessable_Poison";
+    public static final String SNAPDRAGON_POISON_EFFECT_ID = "WraithBusters_Possessable_Poison_Strong";
+    public static final String VANILLA_SNAPDRAGON_POISON_EFFECT_ID = "Poison_T3";
     public static final String HIVE_ACTIVATE_SOUND_EVENT = "SFX_Z1_Emit_Swamp_Day_Insects";
     public static final String POSSESSABLE_SNAPDRAGON_NPC_ROLE = "WraithBusters_Possessable_Snapdragon";
     public static final String POSSESSABLE_SNAPDRAGON_POOF_PARTICLE = "WraithBusters_Possessable_Snapdragon_Poof";
     public static final float POSSESSABLE_SNAPDRAGON_POOF_DURATION_SEC = 1.0f;
+    public static final String POSSESSABLE_FOOD_TORNADO_NPC_ROLE = "WraithBusters_Possessable_Food_Tornado";
+    public static final String POSSESSABLE_FOOD_TORNADO_POOF_PARTICLE = "WraithBusters_Food_Tornado_Poof";
+    public static final float POSSESSABLE_FOOD_TORNADO_POOF_DURATION_SEC = 1.0f;
+    public static final String BARREL_CORN_PROJECTILE_CONFIG_ID = "WraithBusters_Corn_Projectile";
+    public static final String BARREL_ACTIVATE_SOUND_EVENT = "SFX_Bush_Break";
+    public static final String BARREL_CORN_LAUNCH_SOUND_EVENT = "SFX_NPC_Unarmed_Swing";
     public static final String BUSH_ACTIVATE_SOUND_EVENT = "SFX_Bush_Break";
     public static final String STATUE_SWING_STATE = "Swing";
     public static final String STATUE_SWING_SOUND_EVENT = "SFX_Light_Melee_T2_Swing";
@@ -55,6 +79,10 @@ public final class WraithBustersConstants {
     public static final String CANDLE_FIRE_RING_PARTICLE = "WraithBusters_Candle_Fire_Ring";
     public static final String CANDLE_ACTIVATE_SOUND_EVENT = "SFX_Flame_Ignite";
     public static final float CANDLE_FIRE_RING_DURATION_SEC = 1.5f;
+    public static final String COCOON_BURST_PARTICLE = "WraithBusters_Cocoon_Burst";
+    public static final float COCOON_BURST_DURATION_SEC = 1.5f;
+    public static final String COCOON_SLOW_EFFECT_ID = "WraithBusters_Cocoon_Slow";
+    public static final String COCOON_ACTIVATE_SOUND_EVENT = "SFX_Cocoon_Hit";
     public static final String BURN_ENTITY_EFFECT_ID = "Burn";
     public static final String HUMAN_NO_SPRINT_EFFECT_ID = "WraithBusters_NoSprint";
 
@@ -66,6 +94,9 @@ public final class WraithBustersConstants {
     public static final String OUTLANDER_PORTRAIT_NPC_ROLE = "WraithBusters_Outlander_Portrait";
 
     public static final String CHEESE_CHASE_PUZZLE_ID = "cheese_chase";
+    public static final String LIBRARY_BOOKS_PUZZLE_ID = "library_books";
+    public static final String BOOKSHELF_MISSING_STATE = "MissingBook";
+    public static final String BOOKSHELF_COMPLETE_STATE = "default";
     public static final String CHEESE_ITEM_ID = "WraithBusters_Cheese";
     public static final String CHEESE_MOUSE_NPC_ROLE = "WraithBusters_Cheese_Mouse";
     public static final String CHUMBO_NPC_ROLE = "WraithBusters_Chumbo";
@@ -75,6 +106,11 @@ public final class WraithBustersConstants {
     public static final String CHEESE_CHASE_CATCH_MOUSE_SOUND_EVENT = "SFX_Mouse_Flee";
     public static final String CHEESE_CHASE_FEED_CHUMBO_SOUND_EVENT = "SFX_Consume_Bread";
     public static final String PLATE_LAUNCH_SOUND_EVENT = "SFX_NPC_Unarmed_Swing";
+    public static final String SKULL_SPAWN_SOUND_EVENT = "SFX_Staff_Flame_Fireball_Launch";
+    public static final String SKULL_HIT_SOUND_EVENT = "SFX_Staff_Flame_Fireball_Impact";
+    public static final String SKULL_HIT_PARTICLE = "WraithBusters_Exorcism_Burst";
+    public static final float SKULL_HIT_PARTICLE_SCALE = 1.25f;
+    public static final float SKULL_HIT_PARTICLE_DURATION_SEC = 1.0f;
 
     public static final String LOBBY_HUD_KEY = "WraithBusters_LobbyStatus";
     public static final String ROUND_TIMER_HUD_KEY = "WraithBusters_RoundTimer";

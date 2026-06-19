@@ -17,7 +17,12 @@ import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.modules.entity.damage.Damage;
 import com.hypixel.hytale.server.core.modules.entity.damage.DamageEventSystem;
 import com.hypixel.hytale.server.core.modules.entity.damage.DamageModule;
+import com.hexvane.wraithbusters.util.DeferredWorldTasks;
+import com.hypixel.hytale.server.core.asset.type.entityeffect.config.EntityEffect;
+import com.hypixel.hytale.server.core.asset.type.entityeffect.config.OverlapBehavior;
+import com.hypixel.hytale.server.core.entity.effect.EffectControllerComponent;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
+import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.hypixel.hytale.server.npc.entities.NPCEntity;
 import java.util.UUID;
@@ -78,6 +83,12 @@ public final class WraithBustersDamageFilterSystem extends DamageEventSystem {
             WraithBustersPlugin plugin = WraithBustersPlugin.get();
             float snapdragonDamage = plugin == null ? 12f : plugin.getPluginConfig().getBushSnapdragonDamage();
             damage.setAmount(Math.min(damage.getAmount(), snapdragonDamage));
+            World world = store.getExternalData().getWorld();
+            Ref<EntityStore> victimEntityRef = archetypeChunk.getReferenceTo(index);
+            int poisonDurationSeconds = plugin == null
+                ? 12
+                : plugin.getPluginConfig().getBushSnapdragonPoisonDurationSeconds();
+            DeferredWorldTasks.run(world, () -> applySnapdragonPoison(world, victimEntityRef, poisonDurationSeconds));
             return;
         }
         PlayerRef attackerPlayer = store.getComponent(attackerRef, PlayerRef.getComponentType());
@@ -91,9 +102,47 @@ public final class WraithBustersDamageFilterSystem extends DamageEventSystem {
         if (victimState != null && victimState.getRole() == PlayerRole.HUMAN && victimState.isAlive()) {
             WraithBustersPlugin plugin = WraithBustersPlugin.get();
             float plateDamage = plugin == null ? 25f : plugin.getPluginConfig().getPlateDamage();
-            if (damage.getAmount() < plateDamage * 0.75f) {
-                damage.setCancelled(true);
+            float featherDamage = plugin == null ? 6f : plugin.getPluginConfig().getWatcherFeatherDamage();
+            float cornDamage = plugin == null ? 3f : plugin.getPluginConfig().getBarrelCornDamage();
+            if (damage.getAmount() >= cornDamage * 0.75f && damage.getAmount() <= cornDamage * 1.25f) {
+                return;
             }
+            if (damage.getAmount() >= featherDamage * 0.75f && damage.getAmount() <= featherDamage * 1.25f) {
+                return;
+            }
+            if (damage.getAmount() >= plateDamage * 0.75f) {
+                return;
+            }
+            damage.setCancelled(true);
+        }
+    }
+
+    private static void applySnapdragonPoison(
+        @Nonnull World world,
+        @Nonnull Ref<EntityStore> humanRef,
+        int durationSeconds
+    ) {
+        if (!DeferredWorldTasks.isStoreOpen(world) || !humanRef.isValid()) {
+            return;
+        }
+        Store<EntityStore> store = world.getEntityStore().getStore();
+        if (store == null || store.isShutdown()) {
+            return;
+        }
+        EffectControllerComponent effectController = store.getComponent(humanRef, EffectControllerComponent.getComponentType());
+        if (effectController == null) {
+            return;
+        }
+        EntityEffect vanillaPoison = EntityEffect.getAssetMap().getAsset(WraithBustersConstants.VANILLA_SNAPDRAGON_POISON_EFFECT_ID);
+        if (vanillaPoison != null && effectController.hasEffect(vanillaPoison)) {
+            int vanillaIndex = EntityEffect.getAssetMap().getIndex(vanillaPoison.getId());
+            if (vanillaIndex != Integer.MIN_VALUE) {
+                effectController.removeEffect(humanRef, vanillaIndex, store);
+            }
+        }
+        EntityEffect possessablePoison = EntityEffect.getAssetMap().getAsset(WraithBustersConstants.SNAPDRAGON_POISON_EFFECT_ID);
+        if (possessablePoison != null) {
+            effectController.addEffect(humanRef, possessablePoison, durationSeconds, OverlapBehavior.OVERWRITE, store);
         }
     }
 }

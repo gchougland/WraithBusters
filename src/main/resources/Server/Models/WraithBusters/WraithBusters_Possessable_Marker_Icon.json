@@ -1,0 +1,19 @@
+{
+  "Model": "NPC/WraithBusters/IconBillboard.blockymodel",
+  "Texture": "NPC/WraithBusters/ghost.png",
+  "EyeHeight": 0.0,
+  "MinScale": 0.5,
+  "MaxScale": 0.5,
+  "HitBox": {
+    "Min": {
+      "X": -0.001,
+      "Y": -0.001,
+      "Z": -0.001
+    },
+    "Max": {
+      "X": 0.001,
+      "Y": 0.001,
+      "Z": 0.001
+    }
+  }
+}

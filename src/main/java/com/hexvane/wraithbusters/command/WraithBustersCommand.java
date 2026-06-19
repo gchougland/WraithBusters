@@ -648,6 +648,8 @@ public final class WraithBustersCommand extends AbstractCommandCollection {
             "setup.help.exorcism",
             "setup.help.smallMouse",
             "setup.help.largeMouse",
+            "setup.help.bookshelf",
+            "setup.help.bookSpawn",
             "setup.help.phaseDoor",
             "setup.help.phaseDoorTool",
             "setup.help.save",
@@ -712,7 +714,9 @@ public final class WraithBustersCommand extends AbstractCommandCollection {
                  "exorcism",
                  "phasedoor",
                  "small_mouse",
-                 "large_mouse" -> true;
+                 "large_mouse",
+                 "bookshelf",
+                 "book_spawn" -> true;
             default -> false;
         };
     }

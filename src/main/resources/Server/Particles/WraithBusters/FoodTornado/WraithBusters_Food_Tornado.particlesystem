@@ -1,0 +1,25 @@
+{
+  "Spawners": [
+    {
+      "SpawnerId": "WraithBusters_Food_Tornado_Corn",
+      "TargetNodeName": "CornOrbit",
+      "Scale": 1.0
+    },
+    {
+      "SpawnerId": "WraithBusters_Food_Tornado_Apple",
+      "TargetNodeName": "AppleOrbit",
+      "Scale": 1.0
+    },
+    {
+      "SpawnerId": "WraithBusters_Food_Tornado_Cauliflower",
+      "TargetNodeName": "CauliflowerOrbit",
+      "Scale": 1.0
+    },
+    {
+      "SpawnerId": "WraithBusters_Food_Tornado_Dust",
+      "TargetNodeName": "TornadoCore",
+      "Scale": 1.0
+    }
+  ],
+  "CullDistance": 48
+}

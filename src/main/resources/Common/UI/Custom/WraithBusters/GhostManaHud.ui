@@ -1,11 +1,71 @@
 $C = "../Common.ui";
 
+@SpiritBarWidth = 400;
+@SpiritBarHeight = 30;
+@SpiritBarInsetH = 5;
+@SpiritBarInsetV = 4;
+
+@SpiritBarBorderPatch = (TexturePath: "SpiritBarBorder@2x.png", Border: 8, Color: #ffffff);
+@SpiritBarFillPatch = (TexturePath: "SpiritBar@2x.png", Border: 0, Color: #66ccff);
+@SpiritBarTrackPatch = #121820(0.95);
+
 Group #GhostManaHudRoot {
   LayoutMode: Top;
-  Anchor: (Top: 72, Right: 24);
+  Anchor: (Top: 72);
 
-  Label #GhostMana {
-    Style: (...$C.@DefaultLabelStyle, FontSize: 14, TextColor: #66ccff, HorizontalAlignment: End);
-    Text: "";
+  Group {
+    LayoutMode: Left;
+
+    Group {
+      FlexWeight: 1;
+    }
+
+    Group #SpiritHudPanel {
+      LayoutMode: Top;
+      Anchor: (Width: @SpiritBarWidth);
+
+      Label #SpiritTitle {
+        Style: (...$C.@DefaultLabelStyle, FontSize: 18, TextColor: #66ccff, RenderBold: true, RenderUppercase: true, HorizontalAlignment: Center);
+        Anchor: (Bottom: 6);
+        Text: "";
+      }
+
+      Group #SpiritBarStack {
+        LayoutMode: Full;
+        Anchor: (Height: @SpiritBarHeight, Left: 0, Right: 0);
+
+        Group #SpiritBarFillTrack {
+          LayoutMode: Left;
+          Anchor: (Left: @SpiritBarInsetH, Right: @SpiritBarInsetH, Top: @SpiritBarInsetV, Bottom: @SpiritBarInsetV);
+          Background: @SpiritBarTrackPatch;
+
+          Group #SpiritBarFill {
+            FlexWeight: 1;
+            Anchor: (Top: 0, Bottom: 0);
+            Background: @SpiritBarFillPatch;
+          }
+
+          Group #SpiritBarFillRemainder {
+            FlexWeight: 999;
+          }
+        }
+
+        Group #SpiritBarBorder {
+          LayoutMode: Full;
+          Anchor: (Full: 0);
+          Background: @SpiritBarBorderPatch;
+        }
+
+        Label #SpiritBarText {
+          Style: (...$C.@DefaultLabelStyle, FontSize: 13, TextColor: #f0e8d8, RenderBold: true, HorizontalAlignment: Center, VerticalAlignment: Center);
+          Anchor: (Full: 0);
+          Text: "";
+        }
+      }
+    }
+
+    Group {
+      FlexWeight: 1;
+    }
   }
 }

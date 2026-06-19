@@ -1,0 +1,74 @@
+{
+  "TranslationProperties": {
+    "Name": "server.items.WraithBusters_Possessable_Cocoon.name"
+  },
+  "Categories": [
+    "WraithBusters.Blocks"
+  ],
+  "Set": "WraithBusters",
+  "PlayerAnimationsId": "Block",
+  "Interactions": {
+    "Primary": "Block_Primary",
+    "Secondary": "Block_Secondary"
+  },
+  "Icon": "Icons/ItemsGenerated/Container_Spider_Cocoon.png",
+  "BlockType": {
+    "DrawType": "Model",
+    "CustomModel": "Blocks/Dungeons/Spider_Cocoon.blockymodel",
+    "CustomModelTexture": [
+      {
+        "Texture": "Blocks/Dungeons/Spider_Cocoon_Texture.png",
+        "Weight": 1
+      }
+    ],
+    "Flags": {},
+    "Gathering": {
+      "Breaking": {
+        "GatherType": "Unbreakable"
+      }
+    },
+    "BlockParticleSetId": "Dust",
+    "CustomModelAnimation": "Blocks/Dungeons/Spider_Cocoon_Idle.blockyanim",
+    "HitboxType": "Cocoon",
+    "BlockSoundSetId": "Cocoon",
+    "PhysicalMaterialId": "Foliage",
+    "VariantRotation": "UpDown",
+    "Material": "Solid",
+    "Opacity": "Transparent",
+    "RandomRotation": "YawStep1",
+    "AmbientSoundEventId": "SFX_Cocoon_Active",
+    "Looping": true,
+    "Interactions": {
+      "Use": {
+        "Interactions": [
+          {
+            "Type": "WraithBusters_Possess"
+          }
+        ]
+      }
+    },
+    "ParticleColor": "#f7f7f7",
+    "TextureComputedColor": "#C2C0C0",
+    "InteractionHint": "server.wraithbusters.possess.hint"
+  },
+  "IconProperties": {
+    "Scale": 0.39,
+    "Translation": [
+      0,
+      -25.1
+    ],
+    "Rotation": [
+      22.5,
+      45,
+      22.5
+    ]
+  },
+  "Tags": {
+    "Type": [
+      "Deco"
+    ],
+    "Family": [
+      "WraithBusters"
+    ]
+  }
+}

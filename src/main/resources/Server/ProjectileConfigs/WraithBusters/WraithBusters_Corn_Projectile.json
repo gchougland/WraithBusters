@@ -1,0 +1,37 @@
+{
+  "Model": "WraithBusters_Corn_Projectile",
+  "Physics": {
+    "Type": "Standard",
+    "Gravity": 4,
+    "TerminalVelocityAir": 18,
+    "TerminalVelocityWater": 10,
+    "RotationMode": "VelocityDamped",
+    "SticksVertically": false
+  },
+  "LaunchForce": 14,
+  "SpawnOffset": {
+    "X": 0.0,
+    "Y": 0.0,
+    "Z": 0.0
+  },
+  "Interactions": {
+    "ProjectileHit": {
+      "Cooldown": { "Cooldown": 0 },
+      "Interactions": [
+        {
+          "Parent": "DamageEntityParent",
+          "DamageCalculator": {
+            "BaseDamage": { "Physical": 3 }
+          }
+        },
+        { "Type": "RemoveEntity", "Entity": "User" }
+      ]
+    },
+    "ProjectileMiss": {
+      "Cooldown": { "Cooldown": 0 },
+      "Interactions": [
+        { "Type": "RemoveEntity", "Entity": "User" }
+      ]
+    }
+  }
+}

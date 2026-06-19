@@ -1,0 +1,80 @@
+{
+  "TranslationProperties": {
+    "Name": "server.items.WraithBusters_Possessable_Barrel.name"
+  },
+  "Categories": [
+    "WraithBusters.Blocks"
+  ],
+  "Set": "WraithBusters",
+  "PlayerAnimationsId": "Block",
+  "Interactions": {
+    "Primary": "Block_Primary",
+    "Secondary": "Block_Secondary"
+  },
+  "Icon": "Icons/ItemsGenerated/Furniture_Tavern_Barrel.png",
+  "BlockType": {
+    "DrawType": "Model",
+    "CustomModel": "Blocks/Decorative_Sets/Village/Barrel.blockymodel",
+    "CustomModelTexture": [
+      {
+        "Texture": "Blocks/Decorative_Sets/Village/Barrel_Tavern.png",
+        "Weight": 1
+      }
+    ],
+    "Flags": {},
+    "Gathering": {
+      "Breaking": {
+        "GatherType": "Unbreakable"
+      }
+    },
+    "BlockParticleSetId": "Wood",
+    "BlockSoundSetId": "Wood",
+    "PhysicalMaterialId": "Wood",
+    "Material": "Solid",
+    "Opacity": "Transparent",
+    "HitboxType": "Chest_Small",
+    "RandomRotation": "YawStep1",
+    "Support": {
+      "Down": [
+        {
+          "FaceType": "Full"
+        },
+        {
+          "FaceType": "Barrel"
+        }
+      ]
+    },
+    "Interactions": {
+      "Use": {
+        "Interactions": [
+          {
+            "Type": "WraithBusters_Possess"
+          }
+        ]
+      }
+    },
+    "ParticleColor": "#543022",
+    "TextureComputedColor": "#3D2719",
+    "InteractionHint": "server.wraithbusters.possess.hint"
+  },
+  "IconProperties": {
+    "Scale": 0.58823,
+    "Rotation": [
+      22.5,
+      45,
+      22.5
+    ],
+    "Translation": [
+      0,
+      -14.1
+    ]
+  },
+  "Tags": {
+    "Type": [
+      "Furniture"
+    ],
+    "Family": [
+      "WraithBusters"
+    ]
+  }
+}

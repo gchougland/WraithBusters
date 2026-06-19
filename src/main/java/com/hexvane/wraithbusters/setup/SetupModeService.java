@@ -4,11 +4,14 @@ import com.hexvane.wraithbusters.WraithBustersMessages;
 import com.hexvane.wraithbusters.WraithBustersPlugin;
 import com.hexvane.wraithbusters.arena.ArenaLayout;
 import com.hexvane.wraithbusters.arena.ArenaLayoutStore;
+import com.hexvane.wraithbusters.arena.BookSpawnMarker;
+import com.hexvane.wraithbusters.arena.BookshelfMarker;
 import com.hexvane.wraithbusters.arena.CandleMarker;
 import com.hexvane.wraithbusters.arena.GhostPhaseDoorMarker;
 import com.hexvane.wraithbusters.arena.PossessableMarker;
 import com.hexvane.wraithbusters.arena.RoomDefinition;
 import com.hexvane.wraithbusters.ghost.PhasePortalMarkerService;
+import com.hexvane.wraithbusters.puzzle.BookColor;
 import com.hexvane.wraithbusters.util.StatueAnchorUtil;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
@@ -194,6 +197,14 @@ public final class SetupModeService {
             markExorcismAtLook(playerRef, session, ref, store);
             return;
         }
+        if ("bookshelf".equalsIgnoreCase(markerType)) {
+            markBookshelfAtLook(playerRef, session, ref, store, extra);
+            return;
+        }
+        if ("book_spawn".equalsIgnoreCase(markerType)) {
+            markBookSpawnAtLook(playerRef, session, ref, store, extra);
+            return;
+        }
         ArenaLayout layout = session.getLayout();
         Vector3i block = blockUnderFeet(transform);
         Transform feet = new Transform(transform.getTransform());
@@ -270,6 +281,63 @@ public final class SetupModeService {
         playerRef.sendMessage(
             WraithBustersMessages.translation("setup.marked")
                 .param("type", "exorcism")
+                .param("x", String.valueOf(block.x))
+                .param("y", String.valueOf(block.y))
+                .param("z", String.valueOf(block.z))
+        );
+    }
+
+    private static void markBookshelfAtLook(
+        @Nonnull PlayerRef playerRef,
+        @Nonnull SetupSession session,
+        @Nonnull Ref<EntityStore> ref,
+        @Nonnull Store<EntityStore> store,
+        @Nullable String extra
+    ) {
+        Vector3i block = SetupTargetUtil.resolveLookedAtBlock(ref, store);
+        if (block == null) {
+            playerRef.sendMessage(WraithBustersMessages.translation("setup.noTarget"));
+            return;
+        }
+        BookColor color = BookColor.fromSetupExtra(extra);
+        if (color == null) {
+            playerRef.sendMessage(WraithBustersMessages.translation("setup.unknownType"));
+            return;
+        }
+        BookshelfMarker marker = new BookshelfMarker();
+        marker.setColor(color);
+        marker.setBlockPos(block);
+        session.getLayout().getBookshelves().add(marker);
+        playerRef.sendMessage(
+            WraithBustersMessages.translation("setup.marked")
+                .param("type", "bookshelf")
+                .param("x", String.valueOf(block.x))
+                .param("y", String.valueOf(block.y))
+                .param("z", String.valueOf(block.z))
+        );
+    }
+
+    private static void markBookSpawnAtLook(
+        @Nonnull PlayerRef playerRef,
+        @Nonnull SetupSession session,
+        @Nonnull Ref<EntityStore> ref,
+        @Nonnull Store<EntityStore> store,
+        @Nullable String extra
+    ) {
+        Vector3i block = SetupTargetUtil.resolveLookedAtBlock(ref, store);
+        if (block == null) {
+            playerRef.sendMessage(WraithBustersMessages.translation("setup.noTarget"));
+            return;
+        }
+        BookSpawnMarker marker = new BookSpawnMarker();
+        if (extra != null && !extra.isBlank() && BookColor.fromSetupExtra(extra) == null) {
+            marker.setPuzzleId(extra);
+        }
+        marker.setBlockPos(block);
+        session.getLayout().getBookSpawns().add(marker);
+        playerRef.sendMessage(
+            WraithBustersMessages.translation("setup.marked")
+                .param("type", "book_spawn")
                 .param("x", String.valueOf(block.x))
                 .param("y", String.valueOf(block.y))
                 .param("z", String.valueOf(block.z))

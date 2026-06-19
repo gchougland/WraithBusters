@@ -1,0 +1,25 @@
+{
+  "Model": "NPC/WraithBusters/Food_Tornado.blockymodel",
+  "Texture": "Resources/Ingredients/Corn_Texture.png",
+  "EyeHeight": 0.9,
+  "HitBox": {
+    "Max": { "X": 0.5, "Y": 1.8, "Z": 0.5 },
+    "Min": { "X": -0.5, "Y": 0, "Z": -0.5 }
+  },
+  "Particles": [
+    {
+      "SystemId": "WraithBusters_Food_Tornado",
+      "TargetNodeName": "TornadoCore",
+      "Scale": 1.0
+    }
+  ],
+  "AnimationSets": {
+    "Idle": {
+      "Animations": [
+        {
+          "Animation": "Items/Animations/Spin_Yaw/Spin_Yaw_Left.blockyanim"
+        }
+      ]
+    }
+  }
+}

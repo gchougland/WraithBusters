@@ -979,7 +979,7 @@
         }
       ],
       "symbolId": "triangle",
-      "puzzleId": "candles",
+      "puzzleId": "library_books",
       "keySpawn": {
         "x": -18,
         "y": 137,
@@ -1833,5 +1833,7 @@
       "y": 0.154941,
       "z": 0.0
     }
-  }
+  },
+  "bookshelves": [],
+  "bookSpawns": []
 }

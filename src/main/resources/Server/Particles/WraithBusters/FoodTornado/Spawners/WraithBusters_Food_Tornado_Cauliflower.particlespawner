@@ -1,0 +1,46 @@
+{
+  "RenderMode": "BlendLinear",
+  "EmitOffset": {
+    "X": { "Min": -0.28, "Max": 0.28 },
+    "Y": { "Min": 0, "Max": 0.2 },
+    "Z": { "Min": -0.28, "Max": 0.28 }
+  },
+  "ParticleRotationInfluence": "Billboard",
+  "LinearFiltering": true,
+  "LightInfluence": 0.6,
+  "ParticleRotateWithSpawner": true,
+  "MaxConcurrentParticles": 20,
+  "ParticleLifeSpan": { "Min": 1.2, "Max": 1.8 },
+  "SpawnRate": { "Min": 14, "Max": 20 },
+  "TotalParticles": { "Min": -1, "Max": -1 },
+  "InitialVelocity": {
+    "Yaw": { "Min": 0, "Max": 360 },
+    "Pitch": { "Min": 80, "Max": 100 },
+    "Speed": { "Min": 2.0, "Max": 3.0 }
+  },
+  "Attractors": [
+    {
+      "Position": { "X": 0, "Y": 1.3, "Z": 0 },
+      "RadialAxis": { "X": 0, "Y": 1, "Z": 0 },
+      "RadialAcceleration": -20,
+      "RadialTangentAcceleration": 6.5,
+      "DampingMultiplier": { "X": 1, "Y": 0.99, "Z": 1 }
+    }
+  ],
+  "Particle": {
+    "Texture": "Resources/Ingredients/Cabbage_Cauliflower.png",
+    "FrameSize": { "Width": 64, "Height": 64 },
+    "ScaleRatioConstraint": "OneToOne",
+    "Animation": {
+      "0": {
+        "Scale": { "X": { "Min": 0.2, "Max": 0.26 }, "Y": { "Min": 0.2, "Max": 0.26 } },
+        "Opacity": 0.9
+      },
+      "100": { "Opacity": 0 }
+    },
+    "InitialAnimationFrame": {
+      "Rotation": { "Z": { "Min": 0, "Max": 360 } },
+      "Opacity": 0.85
+    }
+  }
+}

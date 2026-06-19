@@ -4,8 +4,26 @@ Group #LobbyStatusHudRoot {
   LayoutMode: Top;
   Anchor: (Top: 80);
 
-  Label #LobbyStatus {
-    Style: (...$C.@DefaultLabelStyle, FontSize: 16, TextColor: #d8e8ff, HorizontalAlignment: Center);
-    Text: "";
+  Group {
+    LayoutMode: Left;
+
+    Group {
+      FlexWeight: 1;
+    }
+
+    Group #LobbyStatusPanel {
+      LayoutMode: Middle;
+      Background: #121820(0.85);
+      Padding: (Horizontal: 20, Vertical: 10);
+
+      Label #LobbyStatus {
+        Style: (...$C.@DefaultLabelStyle, FontSize: 22, TextColor: #d8e8ff, RenderBold: true, HorizontalAlignment: Center);
+        Text: "";
+      }
+    }
+
+    Group {
+      FlexWeight: 1;
+    }
   }
 }

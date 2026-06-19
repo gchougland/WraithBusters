@@ -8,17 +8,25 @@ import com.hexvane.wraithbusters.game.GameSession;
 import com.hexvane.wraithbusters.player.PlayerRole;
 import com.hexvane.wraithbusters.player.PlayerSessionState;
 import com.hexvane.wraithbusters.ui.GhostManaHudSupport;
+import com.hexvane.wraithbusters.util.BlockSectionQueries;
 import com.hexvane.wraithbusters.util.DeferredWorldTasks;
+import com.hexvane.wraithbusters.util.FurnitureAnchorUtil;
 import com.hexvane.wraithbusters.util.StatueAnchorUtil;
 import com.hexvane.wraithbusters.util.WraithBustersSoundUtil;
+import com.hypixel.hytale.assetstore.map.IndexedLookupTableAssetMap;
+import com.hypixel.hytale.math.util.ChunkUtil;
 import com.hypixel.hytale.component.CommandBuffer;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.asset.type.blocktype.config.BlockType;
 import com.hypixel.hytale.server.core.asset.type.entityeffect.config.EntityEffect;
+import com.hypixel.hytale.server.core.asset.type.entityeffect.config.OverlapBehavior;
 import com.hypixel.hytale.server.core.entity.effect.EffectControllerComponent;
 import com.hypixel.hytale.server.core.entity.entities.Player;
+import com.hypixel.hytale.server.core.modules.entity.damage.Damage;
+import com.hypixel.hytale.server.core.modules.entity.damage.DamageCause;
+import com.hypixel.hytale.server.core.modules.entity.damage.DamageSystems;
 import com.hypixel.hytale.server.core.modules.projectile.config.ProjectileConfig;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.ParticleUtil;
@@ -117,6 +125,18 @@ public final class PossessableService {
         }
         if ("hive".equals(typeId)) {
             return activateHive(session, world, ghostRef, store, state, marker, config, pr);
+        }
+        if ("cocoon".equals(typeId)) {
+            return activateCocoon(session, world, ghostRef, store, state, marker, config, pr);
+        }
+        if ("skull".equals(typeId)) {
+            return activateSkull(session, world, ghostRef, store, state, marker, config, pr);
+        }
+        if ("watcher".equals(typeId)) {
+            return activateWatcher(session, world, ghostRef, store, state, marker, config, pr, targetBlock);
+        }
+        if ("barrel".equals(typeId)) {
+            return activateBarrel(session, world, ghostRef, store, state, marker, config, pr);
         }
         return ActivateResult.UNKNOWN_TYPE;
     }
@@ -219,6 +239,51 @@ public final class PossessableService {
     }
 
     @Nonnull
+    private static ActivateResult activateCocoon(
+        @Nonnull GameSession session,
+        @Nonnull World world,
+        @Nonnull Ref<EntityStore> ghostRef,
+        @Nonnull Store<EntityStore> store,
+        @Nonnull PlayerSessionState state,
+        @Nonnull PossessableMarker marker,
+        @Nonnull WraithBustersPluginConfig config,
+        @Nonnull PlayerRef ghostPlayer
+    ) {
+        if (state.getGhostMana() < config.getCocoonManaCost()) {
+            ghostPlayer.sendMessage(Message.translation("server.wraithbusters.mana.notEnough"));
+            return ActivateResult.NOT_ENOUGH_MANA;
+        }
+        state.setGhostMana(state.getGhostMana() - config.getCocoonManaCost());
+        Player player = store.getComponent(ghostRef, Player.getComponentType());
+        if (player != null) {
+            GhostManaHudSupport.refresh(player, ghostPlayer, state, config);
+        }
+        Vector3i pos = marker.getBlockPos();
+        Vector3d origin = new Vector3d(pos.x + 0.5, pos.y + 0.15, pos.z + 0.5);
+        Vector3d particleOrigin = new Vector3d(origin.x, origin.y - 1.0, origin.z);
+        ParticleUtil.spawnParticleEffect(
+            WraithBustersConstants.COCOON_BURST_PARTICLE,
+            particleOrigin,
+            0.0f,
+            0.0f,
+            0.0f,
+            1.0f,
+            WraithBustersConstants.COCOON_BURST_DURATION_SEC,
+            store
+        );
+        WraithBustersSoundUtil.play3dAtPosition(
+            world,
+            origin.x,
+            origin.y,
+            origin.z,
+            WraithBustersConstants.COCOON_ACTIVATE_SOUND_EVENT
+        );
+        applyCocoonBurstToHumansInRadius(session, world, store, origin, config);
+        ghostPlayer.sendMessage(Message.translation("server.wraithbusters.possess.cocoon"));
+        return ActivateResult.SUCCESS;
+    }
+
+    @Nonnull
     private static ActivateResult activateStatue(
         @Nonnull GameSession session,
         @Nonnull World world,
@@ -253,6 +318,75 @@ public final class PossessableService {
             WraithBustersConstants.STATUE_SWING_SOUND_EVENT
         );
         ghostPlayer.sendMessage(Message.translation("server.wraithbusters.possess.statue"));
+        return ActivateResult.SUCCESS;
+    }
+
+    @Nonnull
+    private static ActivateResult activateWatcher(
+        @Nonnull GameSession session,
+        @Nonnull World world,
+        @Nonnull Ref<EntityStore> ghostRef,
+        @Nonnull Store<EntityStore> store,
+        @Nonnull PlayerSessionState state,
+        @Nonnull PossessableMarker marker,
+        @Nonnull WraithBustersPluginConfig config,
+        @Nonnull PlayerRef ghostPlayer,
+        @Nonnull Vector3i targetBlock
+    ) {
+        if (state.getGhostMana() < config.getWatcherManaCost()) {
+            ghostPlayer.sendMessage(Message.translation("server.wraithbusters.mana.notEnough"));
+            return ActivateResult.NOT_ENOUGH_MANA;
+        }
+        Vector3i anchor = FurnitureAnchorUtil.resolveAnchor(world, targetBlock);
+        if (WatcherStatueBurstService.isBusy(world, anchor)) {
+            ghostPlayer.sendMessage(Message.translation("server.wraithbusters.possess.watcherBusy"));
+            return ActivateResult.BUSY;
+        }
+        state.setGhostMana(state.getGhostMana() - config.getWatcherManaCost());
+        Player player = store.getComponent(ghostRef, Player.getComponentType());
+        if (player != null) {
+            GhostManaHudSupport.refresh(player, ghostPlayer, state, config);
+        }
+        WatcherStatueBurstService.triggerBurst(world, anchor, ghostRef, config);
+        ghostPlayer.sendMessage(Message.translation("server.wraithbusters.possess.watcher"));
+        return ActivateResult.SUCCESS;
+    }
+
+    @Nonnull
+    private static ActivateResult activateBarrel(
+        @Nonnull GameSession session,
+        @Nonnull World world,
+        @Nonnull Ref<EntityStore> ghostRef,
+        @Nonnull Store<EntityStore> store,
+        @Nonnull PlayerSessionState state,
+        @Nonnull PossessableMarker marker,
+        @Nonnull WraithBustersPluginConfig config,
+        @Nonnull PlayerRef ghostPlayer
+    ) {
+        if (state.getGhostMana() < config.getBarrelManaCost()) {
+            ghostPlayer.sendMessage(Message.translation("server.wraithbusters.mana.notEnough"));
+            return ActivateResult.NOT_ENOUGH_MANA;
+        }
+        state.setGhostMana(state.getGhostMana() - config.getBarrelManaCost());
+        Player player = store.getComponent(ghostRef, Player.getComponentType());
+        if (player != null) {
+            GhostManaHudSupport.refresh(player, ghostPlayer, state, config);
+        }
+        Vector3i pos = marker.getBlockPos();
+        Vector3d origin = new Vector3d(pos.x + 0.5, pos.y + 1.0, pos.z + 0.5);
+        Ref<EntityStore> preferredHuman = findNearestHuman(session, world, marker);
+        WraithBustersSoundUtil.play3dAtPosition(
+            world,
+            origin.x,
+            origin.y,
+            origin.z,
+            WraithBustersConstants.BARREL_ACTIVATE_SOUND_EVENT
+        );
+        DeferredWorldTasks.run(
+            world,
+            () -> PossessableFoodTornadoService.spawn(session, world, origin, ghostRef, preferredHuman, config)
+        );
+        ghostPlayer.sendMessage(Message.translation("server.wraithbusters.possess.barrel"));
         return ActivateResult.SUCCESS;
     }
 
@@ -333,6 +467,41 @@ public final class PossessableService {
         return ActivateResult.SUCCESS;
     }
 
+    @Nonnull
+    private static ActivateResult activateSkull(
+        @Nonnull GameSession session,
+        @Nonnull World world,
+        @Nonnull Ref<EntityStore> ghostRef,
+        @Nonnull Store<EntityStore> store,
+        @Nonnull PlayerSessionState state,
+        @Nonnull PossessableMarker marker,
+        @Nonnull WraithBustersPluginConfig config,
+        @Nonnull PlayerRef ghostPlayer
+    ) {
+        if (state.getGhostMana() < config.getSkullManaCost()) {
+            ghostPlayer.sendMessage(Message.translation("server.wraithbusters.mana.notEnough"));
+            return ActivateResult.NOT_ENOUGH_MANA;
+        }
+        Ref<EntityStore> preferredHuman = findNearestHuman(session, world, marker);
+        if (preferredHuman == null) {
+            ghostPlayer.sendMessage(Message.translation("server.wraithbusters.possess.noTarget"));
+            return ActivateResult.NO_TARGET;
+        }
+        state.setGhostMana(state.getGhostMana() - config.getSkullManaCost());
+        Player player = store.getComponent(ghostRef, Player.getComponentType());
+        if (player != null) {
+            GhostManaHudSupport.refresh(player, ghostPlayer, state, config);
+        }
+        Vector3i pos = marker.getBlockPos();
+        Vector3d origin = new Vector3d(pos.x + 0.5, pos.y - 0.35, pos.z + 0.5);
+        DeferredWorldTasks.run(
+            world,
+            () -> PossessableFlamingSkullService.spawn(session, world, origin, preferredHuman, config)
+        );
+        ghostPlayer.sendMessage(Message.translation("server.wraithbusters.possess.skull"));
+        return ActivateResult.SUCCESS;
+    }
+
     private static void applyBurnToHumansInRadius(
         @Nonnull GameSession session,
         @Nonnull World world,
@@ -351,6 +520,52 @@ public final class PossessableService {
                 effectController.addEffect(humanRef, burnEffect, store);
             }
         }
+    }
+
+    private static void applyCocoonBurstToHumansInRadius(
+        @Nonnull GameSession session,
+        @Nonnull World world,
+        @Nonnull Store<EntityStore> store,
+        @Nonnull Vector3d origin,
+        @Nonnull WraithBustersPluginConfig config
+    ) {
+        DamageCause cause = resolveEnvironmentCause();
+        EntityEffect slowEffect = EntityEffect.getAssetMap().getAsset(WraithBustersConstants.COCOON_SLOW_EFFECT_ID);
+        double radiusSq = config.getCocoonBurstRadius() * config.getCocoonBurstRadius();
+        for (Ref<EntityStore> humanRef : findHumansInRadius(session, world, origin, radiusSq)) {
+            if (cause != null) {
+                DamageSystems.executeDamage(
+                    humanRef,
+                    store,
+                    new Damage(Damage.NULL_SOURCE, cause, config.getCocoonDamage())
+                );
+            }
+            if (slowEffect != null) {
+                EffectControllerComponent effectController = store.getComponent(
+                    humanRef,
+                    EffectControllerComponent.getComponentType()
+                );
+                if (effectController != null) {
+                    effectController.addEffect(
+                        humanRef,
+                        slowEffect,
+                        config.getCocoonSlowDurationSeconds(),
+                        OverlapBehavior.OVERWRITE,
+                        store
+                    );
+                }
+            }
+        }
+    }
+
+    @Nullable
+    private static DamageCause resolveEnvironmentCause() {
+        IndexedLookupTableAssetMap<String, DamageCause> map = DamageCause.getAssetMap();
+        DamageCause env = map.getAsset("Environment");
+        if (env != null) {
+            return env;
+        }
+        return map.getAsset("OutOfWorld");
     }
 
     @Nonnull
@@ -385,6 +600,89 @@ public final class PossessableService {
         return humans;
     }
 
+    /**
+     * Resolves the world block to attach ghost marker icons to. Returns null while the chunk is unloaded or
+     * the possessable block cannot be found near the arena marker (caller should retry later).
+     */
+    @Nullable
+    public static Vector3i resolveMarkerAnchor(@Nonnull World world, @Nonnull PossessableMarker marker) {
+        Vector3i markerPos = marker.getBlockPos();
+        if (world.getChunkIfInMemory(ChunkUtil.indexChunkFromBlock(markerPos.x, markerPos.z)) == null) {
+            return null;
+        }
+        String typeId = marker.getTypeId();
+        if ("statue".equals(typeId)) {
+            Vector3i anchor = StatueAnchorUtil.resolveStatueAnchor(world, markerPos);
+            if (!isLoadedPossessableAnchor(world, anchor, WraithBustersConstants.POSSESSABLE_STATUE_BLOCK_ID)) {
+                return null;
+            }
+            return anchor;
+        }
+        String expectedBlockId = expectedBlockIdForType(typeId);
+        Vector3i found = findLoadedPossessableNear(world, markerPos, expectedBlockId, MARKER_XZ_TOLERANCE, 3);
+        if (found != null) {
+            return found;
+        }
+        return findLoadedPossessableNear(world, markerPos, expectedBlockId, 4, 4);
+    }
+
+    @Nonnull
+    private static String expectedBlockIdForType(@Nonnull String typeId) {
+        return switch (typeId) {
+            case "candle" -> WraithBustersConstants.POSSESSABLE_CANDLE_BLOCK_ID;
+            case "bush" -> WraithBustersConstants.POSSESSABLE_BUSH_BLOCK_ID;
+            case "hive" -> WraithBustersConstants.POSSESSABLE_HIVE_BLOCK_ID;
+            case "cocoon" -> WraithBustersConstants.POSSESSABLE_COCOON_BLOCK_ID;
+            case "watcher" -> WraithBustersConstants.POSSESSABLE_WATCHER_STATUE_BLOCK_ID;
+            case "barrel" -> WraithBustersConstants.POSSESSABLE_BARREL_BLOCK_ID;
+            case "skull" -> WraithBustersConstants.POSSESSABLE_SKULL_WALL_BLOCK_ID;
+            default -> WraithBustersConstants.POSSESSABLE_PLATE_BLOCK_ID;
+        };
+    }
+
+    @Nullable
+    private static Vector3i findLoadedPossessableNear(
+        @Nonnull World world,
+        @Nonnull Vector3i markerPos,
+        @Nonnull String expectedBlockId,
+        int radiusXZ,
+        int radiusY
+    ) {
+        Vector3i best = null;
+        int bestScore = Integer.MAX_VALUE;
+        for (int dy = -radiusY; dy <= radiusY; dy++) {
+            for (int dx = -radiusXZ; dx <= radiusXZ; dx++) {
+                for (int dz = -radiusXZ; dz <= radiusXZ; dz++) {
+                    Vector3i probe = new Vector3i(markerPos.x + dx, markerPos.y + dy, markerPos.z + dz);
+                    Vector3i anchor = FurnitureAnchorUtil.resolveAnchor(world, probe);
+                    if (!isLoadedPossessableAnchor(world, anchor, expectedBlockId)) {
+                        continue;
+                    }
+                    int score = Math.abs(anchor.x - markerPos.x)
+                        + Math.abs(anchor.y - markerPos.y)
+                        + Math.abs(anchor.z - markerPos.z);
+                    if (score < bestScore) {
+                        bestScore = score;
+                        best = anchor;
+                    }
+                }
+            }
+        }
+        return best;
+    }
+
+    private static boolean isLoadedPossessableAnchor(
+        @Nonnull World world,
+        @Nonnull Vector3i anchor,
+        @Nonnull String expectedBlockId
+    ) {
+        if (BlockSectionQueries.getFiller(world, anchor.x, anchor.y, anchor.z) != 0) {
+            return false;
+        }
+        BlockType blockType = BlockSectionQueries.getBlockTypeIfLoaded(world, anchor.x, anchor.y, anchor.z);
+        return blockType != null && expectedBlockId.equals(blockType.getId());
+    }
+
     private static boolean isPossessableBlock(@Nonnull World world, @Nonnull Vector3i blockPos) {
         BlockType blockType = world.getBlockType(blockPos.x, blockPos.y, blockPos.z);
         if (blockType == null) {
@@ -395,7 +693,10 @@ public final class PossessableService {
             || WraithBustersConstants.POSSESSABLE_CANDLE_BLOCK_ID.equals(id)
             || WraithBustersConstants.POSSESSABLE_STATUE_BLOCK_ID.equals(id)
             || WraithBustersConstants.POSSESSABLE_BUSH_BLOCK_ID.equals(id)
-            || WraithBustersConstants.POSSESSABLE_HIVE_BLOCK_ID.equals(id);
+            || WraithBustersConstants.POSSESSABLE_HIVE_BLOCK_ID.equals(id)
+            || WraithBustersConstants.POSSESSABLE_COCOON_BLOCK_ID.equals(id)
+            || WraithBustersConstants.POSSESSABLE_WATCHER_STATUE_BLOCK_ID.equals(id)
+            || WraithBustersConstants.POSSESSABLE_SKULL_WALL_BLOCK_ID.equals(id);
     }
 
     @Nullable

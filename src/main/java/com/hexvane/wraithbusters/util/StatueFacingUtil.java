@@ -42,4 +42,10 @@ public final class StatueFacingUtil {
     public static float yawRadians(@Nonnull Vector3d forward) {
         return (float) Math.atan2(forward.x, forward.z);
     }
+
+    /** World-space vector for a particle-system local +X offset at the given yaw. */
+    @Nonnull
+    public static Vector3d localXWorld(float yawRadians, double localX) {
+        return new Vector3d(Math.cos(yawRadians), 0.0, -Math.sin(yawRadians)).mul(localX);
+    }
 }

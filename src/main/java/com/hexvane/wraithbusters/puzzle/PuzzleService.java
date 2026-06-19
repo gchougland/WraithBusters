@@ -172,6 +172,7 @@ public final class PuzzleService {
             KeySpawnService.spawnKeyForRoom(session, world, currentRoom);
             RoomProgressionService.advanceAfterPuzzle(session);
             CheeseChaseService.onCurrentRoomChanged(session, world);
+            LibraryBookService.onCurrentRoomChanged(session, world);
             return;
         }
 
@@ -299,9 +300,11 @@ public final class PuzzleService {
         COMPLETED_PUZZLES.put(puzzleKey, Boolean.TRUE);
         CANDLE_ON_SEQUENCE.remove(puzzleKey);
         CheeseChaseService.markRoomComplete(session, currentRoom, world);
+        LibraryBookService.markRoomComplete(session, currentRoom, world);
         boolean keySpawned = KeySpawnService.spawnKeyForRoom(session, world, currentRoom);
         RoomProgressionService.advanceAfterPuzzle(session);
         CheeseChaseService.onCurrentRoomChanged(session, world);
+        LibraryBookService.onCurrentRoomChanged(session, world);
         return keySpawned ? ForceCompleteResult.COMPLETED_WITH_KEY : ForceCompleteResult.COMPLETED_WITHOUT_KEY;
     }
 

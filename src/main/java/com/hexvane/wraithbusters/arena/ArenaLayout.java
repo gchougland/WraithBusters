@@ -32,6 +32,10 @@ public final class ArenaLayout {
     private List<Transform> cheeseChaseSmallMice = new ArrayList<>();
     @Nullable
     private Transform cheeseChaseChumbo;
+    @Nonnull
+    private List<BookshelfMarker> bookshelves = new ArrayList<>();
+    @Nonnull
+    private List<BookSpawnMarker> bookSpawns = new ArrayList<>();
 
     @Nonnull
     public String getArenaId() {
@@ -139,6 +143,24 @@ public final class ArenaLayout {
 
     public void setCheeseChaseChumbo(@Nullable Transform cheeseChaseChumbo) {
         this.cheeseChaseChumbo = cheeseChaseChumbo;
+    }
+
+    @Nonnull
+    public List<BookshelfMarker> getBookshelves() {
+        return bookshelves;
+    }
+
+    public void setBookshelves(@Nonnull List<BookshelfMarker> bookshelves) {
+        this.bookshelves = bookshelves;
+    }
+
+    @Nonnull
+    public List<BookSpawnMarker> getBookSpawns() {
+        return bookSpawns;
+    }
+
+    public void setBookSpawns(@Nonnull List<BookSpawnMarker> bookSpawns) {
+        this.bookSpawns = bookSpawns;
     }
 
     public void ensureDefaultSpawns() {

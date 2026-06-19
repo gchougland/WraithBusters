@@ -7,7 +7,9 @@ import com.hexvane.wraithbusters.game.GamePhase;
 import com.hexvane.wraithbusters.game.GameSession;
 import com.hexvane.wraithbusters.ghost.PhasePortalMarkerService;
 import com.hexvane.wraithbusters.pickup.ManaPickupService;
+import com.hexvane.wraithbusters.possessable.PossessableMarkerIconService;
 import com.hexvane.wraithbusters.possessable.PossessableSnapdragonService;
+import com.hexvane.wraithbusters.possessable.PossessableFoodTornadoService;
 import com.hexvane.wraithbusters.player.PlayerRole;
 import com.hexvane.wraithbusters.player.PlayerSessionState;
 import com.hexvane.wraithbusters.team.Team;
@@ -74,7 +76,7 @@ public final class GhostTestService {
         TeamSetupService.applyGhost(playerRef, store, config, session, world);
 
         if (session.getPhase() != GamePhase.ACTIVE) {
-            acquireTestMarkers(session, world);
+            acquireTestMarkers(session, world, config);
         }
 
         Player player = store.getComponent(playerRef, Player.getComponentType());
@@ -121,12 +123,17 @@ public final class GhostTestService {
         playerRefComponent.sendMessage(WraithBustersMessages.translation("testghost.disabled"));
     }
 
-    private static void acquireTestMarkers(@Nonnull GameSession session, @Nonnull World world) {
+    private static void acquireTestMarkers(
+        @Nonnull GameSession session,
+        @Nonnull World world,
+        @Nonnull WraithBustersPluginConfig config
+    ) {
         UUID sessionId = session.getSessionId();
         int count = TEST_MARKER_REF_COUNT.merge(sessionId, 1, Integer::sum);
         if (count == 1) {
             PhasePortalMarkerService.startRound(session, world);
             ManaPickupService.startRound(session, world);
+            PossessableMarkerIconService.startRound(session, world, config);
         }
     }
 
@@ -141,7 +148,9 @@ public final class GhostTestService {
             if (session.getPhase() != GamePhase.ACTIVE) {
                 PhasePortalMarkerService.clearForLobby(session, world);
                 ManaPickupService.clearForLobby(session, world);
+                PossessableMarkerIconService.clearForLobby(session, world);
                 PossessableSnapdragonService.clearForLobby(session, world);
+                PossessableFoodTornadoService.clearForLobby(session, world);
             }
         } else {
             TEST_MARKER_REF_COUNT.put(sessionId, count - 1);

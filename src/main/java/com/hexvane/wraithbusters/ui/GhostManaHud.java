@@ -22,11 +22,10 @@ public final class GhostManaHud extends CustomUIHud {
     public void refresh(@Nonnull PlayerSessionState state, @Nonnull WraithBustersPluginConfig config) {
         UICommandBuilder b = new UICommandBuilder();
         b.set(
-            "#GhostMana.TextSpans",
-            Message.translation("server.wraithbusters.ghost.mana")
-                .param("current", state.getGhostMana())
-                .param("max", config.getGhostMaxMana())
+            "#SpiritTitle.TextSpans",
+            Message.translation("server.wraithbusters.ghost.mana.title")
         );
+        SpiritBarUi.apply(b, state.getGhostMana(), config.getGhostMaxMana());
         this.update(false, b);
     }
 }

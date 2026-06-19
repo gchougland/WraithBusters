@@ -1,0 +1,45 @@
+{
+  "TranslationProperties": {
+    "Name": "server.items.WraithBusters_Book_Pickup_Red.name"
+  },
+  "PlayerAnimationsId": "Block",
+  "Set": "WraithBusters",
+  "BlockType": {
+    "Material": "Solid",
+    "DrawType": "Model",
+    "Opacity": "Transparent",
+    "CustomModel": "Blocks/Book_Pickup.blockymodel",
+    "CustomModelTexture": [
+      {
+        "Texture": "Blocks/Red_Book_Texture.png",
+        "Weight": 1
+      }
+    ],
+    "HitboxType": "Rubble",
+    "RandomRotation": "YawStep1",
+    "Gathering": {
+      "Harvest": {
+        "ItemId": "WraithBusters_Book_Red"
+      },
+      "UseDefaultDropWhenPlaced": true
+    },
+    "Support": {
+      "Down": [
+        {
+          "FaceType": "Full"
+        }
+      ]
+    },
+    "BlockSoundSetId": "Wood",
+    "Interactions": {
+      "Use": {
+        "Interactions": [
+          {
+            "Type": "WraithBusters_LibraryBookGather"
+          }
+        ]
+      }
+    }
+  },
+  "MaxStack": 64
+}

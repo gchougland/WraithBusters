@@ -12,6 +12,7 @@ import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.logger.HytaleLogger;
 import com.hypixel.hytale.math.vector.Rotation3f;
 import com.hypixel.hytale.server.core.asset.type.entityeffect.config.EntityEffect;
+import com.hypixel.hytale.server.core.asset.type.entityeffect.config.OverlapBehavior;
 import com.hypixel.hytale.server.core.entity.effect.EffectControllerComponent;
 import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
 import com.hypixel.hytale.server.core.modules.entity.damage.Damage;
@@ -198,8 +199,14 @@ public final class PossessableHiveSwarmService {
         EntityEffect poisonEffect = EntityEffect.getAssetMap().getAsset(WraithBustersConstants.HIVE_POISON_EFFECT_ID);
         if (poisonEffect != null) {
             EffectControllerComponent effectController = store.getComponent(humanRef, EffectControllerComponent.getComponentType());
-            if (effectController != null && !effectController.hasEffect(poisonEffect)) {
-                effectController.addEffect(humanRef, poisonEffect, store);
+            if (effectController != null) {
+                effectController.addEffect(
+                    humanRef,
+                    poisonEffect,
+                    config.getHivePoisonDurationSeconds(),
+                    OverlapBehavior.OVERWRITE,
+                    store
+                );
             }
         }
     }

@@ -11,6 +11,7 @@ import com.hexvane.wraithbusters.generated.HstatsBuildMetadata;
 import com.hexvane.wraithbusters.door.HumanLockedDoorVisibilitySystem;
 import com.hexvane.wraithbusters.ghost.PhasePortalVisibilitySystem;
 import com.hexvane.wraithbusters.pickup.ManaOrbVisibilitySystem;
+import com.hexvane.wraithbusters.possessable.PossessableMarkerIconVisibilitySystem;
 import com.hexvane.wraithbusters.team.GhostPlayerVisibilitySystem;
 import com.hexvane.wraithbusters.team.TeamChatListener;
 import com.hexvane.wraithbusters.puzzle.HumanKeyPickupSystem;
@@ -18,6 +19,8 @@ import com.hexvane.wraithbusters.portrait.SlothPortraitBreakSystem;
 import com.hexvane.wraithbusters.portrait.SlothPortraitEyeTickSystem;
 import com.hexvane.wraithbusters.portrait.SlothPortraitPlaceSystem;
 import com.hexvane.wraithbusters.interaction.CandlePuzzleInteraction;
+import com.hexvane.wraithbusters.interaction.LibraryBookGatherInteraction;
+import com.hexvane.wraithbusters.interaction.LibraryBookshelfInteraction;
 import com.hexvane.wraithbusters.interaction.ExorcismInteraction;
 import com.hexvane.wraithbusters.interaction.LockedDoorInteraction;
 import com.hexvane.wraithbusters.npc.BuilderActionWraithBustersCheeseChaseChumbo;
@@ -115,6 +118,7 @@ public final class WraithBustersPlugin extends JavaPlugin {
         getCommandRegistry().registerCommand(new WbCommand());
         getEntityStoreRegistry().registerSystem(new GameTickSystem(this));
         getEntityStoreRegistry().registerSystem(new ManaOrbVisibilitySystem());
+        getEntityStoreRegistry().registerSystem(new PossessableMarkerIconVisibilitySystem());
         getEntityStoreRegistry().registerSystem(new PhasePortalVisibilitySystem());
         getEntityStoreRegistry().registerSystem(new HumanLockedDoorVisibilitySystem());
         getEntityStoreRegistry().registerSystem(new GhostPlayerVisibilitySystem());
@@ -161,6 +165,16 @@ public final class WraithBustersPlugin extends JavaPlugin {
         getCodecRegistry(Interaction.CODEC).register("WraithBusters_Possess", PossessInteraction.class, PossessInteraction.CODEC);
         getCodecRegistry(Interaction.CODEC).register("WraithBusters_TempleCandle", TempleCandleInteraction.class, TempleCandleInteraction.CODEC);
         getCodecRegistry(Interaction.CODEC).register("WraithBusters_CandlePuzzle", CandlePuzzleInteraction.class, CandlePuzzleInteraction.CODEC);
+        getCodecRegistry(Interaction.CODEC).register(
+            "WraithBusters_LibraryBookGather",
+            LibraryBookGatherInteraction.class,
+            LibraryBookGatherInteraction.CODEC
+        );
+        getCodecRegistry(Interaction.CODEC).register(
+            "WraithBusters_LibraryBookshelf",
+            LibraryBookshelfInteraction.class,
+            LibraryBookshelfInteraction.CODEC
+        );
         getCodecRegistry(Interaction.CODEC).register(
             "WraithBusters_SetupPhaseDoorTool",
             SetupPhaseDoorToolInteraction.class,

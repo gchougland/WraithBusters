@@ -1,0 +1,77 @@
+{
+  "TranslationProperties": {
+    "Name": "server.items.WraithBusters_Possessable_Skull_Wall.name"
+  },
+  "Categories": [
+    "WraithBusters.Blocks"
+  ],
+  "Set": "WraithBusters",
+  "PlayerAnimationsId": "Block",
+  "Interactions": {
+    "Primary": "Block_Primary",
+    "Secondary": "Block_Secondary"
+  },
+  "Icon": "Icons/ItemsGenerated/Deco_Bone_Skulls_Wall.png",
+  "BlockType": {
+    "DrawType": "Model",
+    "CustomModel": "Blocks/Dungeons/Skull_Shelf.blockymodel",
+    "CustomModelTexture": [
+      {
+        "Texture": "Blocks/Dungeons/Skull_Shelf_Texture.png",
+        "Weight": 1
+      }
+    ],
+    "Flags": {},
+    "Gathering": {
+      "Breaking": {
+        "GatherType": "Unbreakable"
+      }
+    },
+    "BlockParticleSetId": "Stone",
+    "BlockSoundSetId": "Bone",
+    "PhysicalMaterialId": "Stone",
+    "HitboxType": "Block_Vertical_Five_Eighth",
+    "VariantRotation": "NESW",
+    "Material": "Solid",
+    "Opacity": "Semitransparent",
+    "ParticleColor": "#dccd97",
+    "TextureComputedColor": "#443F2E",
+    "Interactions": {
+      "Use": {
+        "Interactions": [
+          {
+            "Type": "WraithBusters_Possess"
+          }
+        ]
+      }
+    },
+    "Support": {
+      "Down": [
+        {
+          "FaceType": "Full"
+        }
+      ]
+    },
+    "InteractionHint": "server.wraithbusters.possess.hint"
+  },
+  "IconProperties": {
+    "Scale": 0.58823,
+    "Translation": [
+      -9.3,
+      -14.1
+    ],
+    "Rotation": [
+      0,
+      316.7,
+      339.2
+    ]
+  },
+  "Tags": {
+    "Type": [
+      "Deco"
+    ],
+    "Family": [
+      "WraithBusters"
+    ]
+  }
+}

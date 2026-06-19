@@ -43,6 +43,14 @@ public final class SwordStatueSwingService {
     private static final double SWING_ORIGIN_Y_OFFSET = 1.2;
     private static final double MIN_FORWARD_REACH = -0.5;
     private static final int ARC_SWING_STEPS = 5;
+    /** Half depth of Statue_Full hitbox — moves slash origin from block center to the front face. */
+    private static final double SLASH_FACE_FORWARD_OFFSET = 0.5;
+    /** Constant forward reach from the front face toward targets. */
+    private static final double SLASH_REACH_FROM_FACE = 1.1;
+    /** Half-width of the lateral slash arc in blocks. */
+    private static final double SLASH_LATERAL_HALF = 0.25;
+    /** Sword_Charged_Trail_Blade spawner PositionOffset.X is -0.3 along local +X. */
+    private static final double SLASH_TRAIL_ASSET_X_OFFSET = 0.3;
 
     private SwordStatueSwingService() {}
 
@@ -174,7 +182,7 @@ public final class SwordStatueSwingService {
         if (store == null || store.isShutdown()) {
             return;
         }
-        spawnArcParticles(store, axes, hitRadius);
+        spawnArcParticles(store, axes);
 
         float damageAmount = config.getStatueDamage();
 
@@ -219,21 +227,23 @@ public final class SwordStatueSwingService {
 
     private static void spawnArcParticles(
         @Nonnull Store<EntityStore> store,
-        @Nonnull SwingAxes axes,
-        float radius
+        @Nonnull SwingAxes axes
     ) {
-        double maxReach = Math.max(1.25, radius * 0.85);
+        // Trail blade extends along local X; statue swing sweeps laterally (right), not forward.
+        float slashYaw = StatueFacingUtil.yawRadians(axes.right);
+        Vector3d slashOrigin = new Vector3d(axes.origin).fma(SLASH_FACE_FORWARD_OFFSET, axes.forward);
+        Vector3d trailBias = StatueFacingUtil.localXWorld(slashYaw, SLASH_TRAIL_ASSET_X_OFFSET);
         for (int step = 0; step < ARC_SWING_STEPS; step++) {
             float sweepT = ARC_SWING_STEPS <= 1 ? 0.5f : step / (float) (ARC_SWING_STEPS - 1);
-            double reach = 0.9 + sweepT * (maxReach - 0.9);
-            float lateral = (sweepT - 0.5f) * 2.0f * Math.min(0.6f, radius * 0.3f);
-            Vector3d slashPos = new Vector3d(axes.origin)
-                .fma(reach, axes.forward)
-                .fma(lateral, axes.right);
+            double lateral = (sweepT - 0.5) * 2.0 * SLASH_LATERAL_HALF;
+            Vector3d slashPos = new Vector3d(slashOrigin)
+                .fma(SLASH_REACH_FROM_FACE, axes.forward)
+                .fma(lateral, axes.right)
+                .sub(trailBias);
             ParticleUtil.spawnParticleEffect(
                 WraithBustersConstants.STATUE_SWING_ARC_PARTICLE,
                 slashPos,
-                axes.yaw,
+                slashYaw,
                 -0.2f,
                 0.0f,
                 1.2f,

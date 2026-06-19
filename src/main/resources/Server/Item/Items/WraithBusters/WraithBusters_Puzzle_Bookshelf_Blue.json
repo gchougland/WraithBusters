@@ -1,0 +1,67 @@
+{
+  "TranslationProperties": {
+    "Name": "server.items.WraithBusters_Puzzle_Bookshelf_Blue.name"
+  },
+  "PlayerAnimationsId": "Block",
+  "Categories": [
+    "WraithBusters.Blocks"
+  ],
+  "Set": "WraithBusters",
+  "Icon": "Icons/ItemsGenerated/WraithBusters_Puzzle_Bookshelf_Blue.png",
+  "BlockType": {
+    "BlockParticleSetId": "Wood",
+    "BlockSoundSetId": "Wood",
+    "PhysicalMaterialId": "Wood",
+    "CustomModel": "Blocks/Puzzle_Bookshelf.blockymodel",
+    "CustomModelTexture": [
+      {
+        "Texture": "Blocks/Blue_Puzzle_Bookshelf.png",
+        "Weight": 1
+      }
+    ],
+    "DrawType": "Model",
+    "Looping": true,
+    "Gathering": {
+      "Breaking": {
+        "GatherType": "Unbreakable"
+      }
+    },
+    "HitboxType": "Block_Vertical_Seven_Eighth",
+    "Material": "Solid",
+    "Opacity": "Transparent",
+    "Support": {
+      "Down": [
+        {
+          "FaceType": "Full"
+        }
+      ]
+    },
+    "VariantRotation": "NESW",
+    "Interactions": {
+      "Use": {
+        "Interactions": [
+          {
+            "Type": "WraithBusters_LibraryBookshelf"
+          }
+        ]
+      }
+    },
+    "State": {
+      "Definitions": {
+        "MissingBook": {
+          "CustomModelAnimation": "NPC/WraithBusters/Animations/Bookshelf_Missing_Book.blockyanim"
+        }
+      }
+    }
+  },
+  "Tags": {
+    "Type": [
+      "Furniture"
+    ],
+    "Family": [
+      "WraithBusters"
+    ]
+  },
+  "ItemSoundSetId": "ISS_Blocks_Wood",
+  "MaxStack": 64
+}

@@ -14,21 +14,26 @@ import com.hypixel.hytale.builtin.instances.config.InstanceEntityConfig;
 import com.hexvane.wraithbusters.door.HumanLockedDoorMarkerService;
 import com.hexvane.wraithbusters.ghost.PhasePortalMarkerService;
 import com.hexvane.wraithbusters.portrait.SlothPortraitService;
+import com.hexvane.wraithbusters.possessable.PossessableFlamingSkullService;
+import com.hexvane.wraithbusters.possessable.PossessableFoodTornadoService;
 import com.hexvane.wraithbusters.possessable.PossessableHiveSwarmService;
 import com.hexvane.wraithbusters.possessable.PossessableSnapdragonService;
 import com.hexvane.wraithbusters.possessable.SwordStatueSwingService;
+import com.hexvane.wraithbusters.possessable.WatcherStatueBurstService;
 import com.hexvane.wraithbusters.pickup.ManaPickupService;
-import com.hexvane.wraithbusters.possessable.PossessableVisualEffects;
+import com.hexvane.wraithbusters.possessable.PossessableMarkerIconService;
 import com.hexvane.wraithbusters.player.PlayerRole;
 import com.hexvane.wraithbusters.player.PlayerSessionState;
 import com.hexvane.wraithbusters.team.Team;
 import com.hexvane.wraithbusters.team.TeamAssigner;
 import com.hexvane.wraithbusters.team.TeamSetupService;
 import com.hexvane.wraithbusters.puzzle.CheeseChaseService;
+import com.hexvane.wraithbusters.puzzle.LibraryBookService;
 import com.hexvane.wraithbusters.puzzle.KeySpawnService;
 import com.hexvane.wraithbusters.puzzle.PuzzleService;
 import com.hexvane.wraithbusters.setup.SetupModeService;
 import com.hexvane.wraithbusters.triggervolume.OfferingPuzzleService;
+import com.hexvane.wraithbusters.block.ExorcismTableEffectService;
 import com.hexvane.wraithbusters.block.ExorcismTableFillerRepairService;
 import com.hexvane.wraithbusters.block.StatueFillerRepairService;
 import com.hexvane.wraithbusters.triggervolume.OfferingVolumeRepairService;
@@ -390,7 +395,6 @@ public final class GameService {
     private void beginRound(@Nonnull GameSession session, @Nonnull World world) {
         WraithBustersPluginConfig config = plugin.getPluginConfig();
         session.clearDisabledPhaseDoors();
-        PossessableVisualEffects.clear();
         Map<UUID, Team> teams = TeamAssigner.assign(session.playerUuidList(), config);
         int humanCount = 0;
         for (Team team : teams.values()) {
@@ -403,6 +407,7 @@ public final class GameService {
         PuzzleService.resetCandlesForRound(session, world);
         OfferingVolumeRepairService.repairIfNeeded(world);
         ExorcismTableFillerRepairService.repairAt(world, session.getArenaLayout().getExorcismTable());
+        ExorcismTableEffectService.prepareForRound(session, world);
         StatueFillerRepairService.repairForLayout(world, session.getArenaLayout());
         OfferingPuzzleService.resetForSession(session);
         session.setPhase(GamePhase.ACTIVE);
@@ -457,8 +462,10 @@ public final class GameService {
         HumanLockedDoorMarkerService.prepareForRound(session, world);
         RoomDoorService.applyRoundStart(session, world);
         ManaPickupService.startRound(session, world);
+        PossessableMarkerIconService.startRound(session, world, config);
         KeySpawnService.startRound(session, world);
         CheeseChaseService.startRound(session, world);
+        LibraryBookService.startRound(session, world);
         SlothPortraitService.scanWorld(world);
     }
 
@@ -476,6 +483,7 @@ public final class GameService {
             endRound(session, world, Team.HUMAN, "server.wraithbusters.win.humans");
             return;
         }
+        ExorcismTableEffectService.tick(session, world);
         Store<EntityStore> store = world.getEntityStore().getStore();
         for (UUID playerUuid : session.playerUuidList()) {
             Ref<EntityStore> ref = findPlayerRef(world, playerUuid);
@@ -510,9 +518,13 @@ public final class GameService {
         HumanLockedDoorMarkerService.endRound(session, world);
         KeySpawnService.endRound(session, world);
         CheeseChaseService.endRound(session, world);
+        LibraryBookService.endRound(session, world);
         PossessableSnapdragonService.endRound(session, world);
         PossessableHiveSwarmService.endRound(session, world);
-        PossessableVisualEffects.clear();
+        PossessableFlamingSkullService.endRound(session, world);
+        PossessableFoodTornadoService.endRound(session, world);
+        PossessableMarkerIconService.endRound(session, world);
+        ExorcismTableEffectService.playRoundWinSound(session, world, this);
         session.setPhase(GamePhase.ENDING);
         session.setWinningTeam(winners);
         session.setLastPostRoundSecondAnnounced(-1);
@@ -995,16 +1007,21 @@ public final class GameService {
                 PhasePortalMarkerService.shutdownSession(session, instance);
                 KeySpawnService.endRound(session, instance);
                 CheeseChaseService.endRound(session, instance);
+                LibraryBookService.endRound(session, instance);
                 PossessableSnapdragonService.endRound(session, instance);
                 PossessableHiveSwarmService.endRound(session, instance);
+                PossessableFlamingSkullService.endRound(session, instance);
+                PossessableFoodTornadoService.endRound(session, instance);
                 SlothPortraitService.shutdownWorld(instance);
                 SwordStatueSwingService.clearWorld(instance.getWorldConfig().getUuid());
+                WatcherStatueBurstService.clearWorld(instance.getWorldConfig().getUuid());
             });
             WorldThreadTasks.drainQueue(instance);
         }
         PuzzleService.resetForSession(session);
         OfferingPuzzleService.resetForSession(session);
         CheeseChaseService.resetForSession(session);
+        LibraryBookService.resetForSession(session);
         GhostTestService.onRoundStarting(session);
         GameRegistry.get().unregister(session);
         GameInstanceService.safeRemoveWorld(instance);

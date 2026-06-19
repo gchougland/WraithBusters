@@ -44,6 +44,27 @@
           "FaceType": "Full"
         }
       ]
+    },
+    "State": {
+      "Definitions": {
+        "Charging": {
+          "Looping": true,
+          "Particles": [
+            {
+              "SystemId": "Fire_Blue",
+              "PositionOffset": {
+                "X": 1.0,
+                "Y": 1.0,
+                "Z": 1.0
+              },
+              "Scale": 2.5
+            }
+          ]
+        },
+        "Activated": {
+          "Particles": null
+        }
+      }
     }
   },
   "IconProperties": {
