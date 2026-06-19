@@ -12,6 +12,8 @@ import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.ParticleUtil;
 import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -23,13 +25,19 @@ import org.joml.Vector3i;
 /** Ghost-only continuous sparkle effects on possessable markers. Plate trails are model-attached particles. */
 public final class PossessableVisualEffects {
     /** Offset from block center (y + 0.5) per possessable type so sparkles sit above the object. */
-    private static final double PLATE_SPARKLE_Y_OFFSET = -0.42;
-    private static final double CANDLE_SPARKLE_Y_OFFSET = 0.35;
+    private static final double PLATE_SPARKLE_Y_OFFSET = -0.62;
+    private static final double CANDLE_SPARKLE_Y_OFFSET = 0.0;
     /** Statue_Full is three blocks tall from its anchor. */
-    private static final double STATUE_SPARKLE_Y_OFFSET = 2.35;
+    private static final double STATUE_SPARKLE_Y_OFFSET = 0.35;
     private static final double BUSH_SPARKLE_Y_OFFSET = 0.55;
     private static final double HIVE_SPARKLE_Y_OFFSET = -0.2;
     private static final float SPARKLE_SPAWN_SCALE = 0.81f;
+    /** Lower spawns first; combat possessables beat candles so a ~40-system client cap does not drop bushes/hives. */
+    private static final Comparator<PossessableMarker> SPARKLE_SPAWN_ORDER = Comparator
+        .comparingInt((PossessableMarker marker) -> sparkleSpawnPriority(marker.getTypeId()))
+        .thenComparingInt(marker -> marker.getBlockPos().x)
+        .thenComparingInt(marker -> marker.getBlockPos().y)
+        .thenComparingInt(marker -> marker.getBlockPos().z);
     private static final Set<String> ACTIVE_SPARKLES = new HashSet<>();
 
     private PossessableVisualEffects() {}
@@ -55,6 +63,8 @@ public final class PossessableVisualEffects {
         if (markers.isEmpty()) {
             return;
         }
+        List<PossessableMarker> spawnOrder = new ArrayList<>(markers);
+        spawnOrder.sort(SPARKLE_SPAWN_ORDER);
         for (PlayerRef viewer : world.getPlayerRefs()) {
             if (!canSeeSparkles(session, viewer)) {
                 continue;
@@ -65,9 +75,9 @@ public final class PossessableVisualEffects {
             }
             UUID viewerUuid = viewer.getUuid();
             List<Ref<EntityStore>> viewers = List.of(ref);
-            for (PossessableMarker marker : markers) {
+            for (PossessableMarker marker : spawnOrder) {
                 Vector3i blockPos = marker.getBlockPos();
-                String sparkleKey = sparkleKey(session.getSessionId(), blockPos, viewerUuid);
+                String sparkleKey = sparkleKey(session.getSessionId(), marker, viewerUuid);
                 if (ACTIVE_SPARKLES.contains(sparkleKey)) {
                     continue;
                 }
@@ -93,8 +103,23 @@ public final class PossessableVisualEffects {
     }
 
     @Nonnull
-    private static String sparkleKey(@Nonnull UUID sessionId, @Nonnull Vector3i blockPos, @Nonnull UUID viewerUuid) {
-        return sessionId + ":" + blockPos.x + "," + blockPos.y + "," + blockPos.z + ":" + viewerUuid;
+    private static String sparkleKey(
+        @Nonnull UUID sessionId,
+        @Nonnull PossessableMarker marker,
+        @Nonnull UUID viewerUuid
+    ) {
+        Vector3i blockPos = marker.getBlockPos();
+        return sessionId + ":" + marker.getTypeId() + ":" + blockPos.x + "," + blockPos.y + "," + blockPos.z + ":" + viewerUuid;
+    }
+
+    private static int sparkleSpawnPriority(@Nonnull String typeId) {
+        return switch (typeId) {
+            case "hive" -> 0;
+            case "bush" -> 1;
+            case "statue" -> 2;
+            case "plate" -> 3;
+            default -> 4;
+        };
     }
 
     private static double sparkleYOffsetFromBlockCenter(@Nonnull String typeId) {

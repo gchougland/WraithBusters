@@ -31,7 +31,7 @@ public final class WraithBustersOfferingEffect extends TriggerEffect {
         .append(new KeyedCodec<>("RoomId", Codec.STRING), (e, v) -> e.roomId = v, e -> e.roomId)
         .add()
         .append(
-            new KeyedCodec<>("Mode", new EnumCodec<>(OfferingMode.class), false),
+            new KeyedCodec<>("Mode", new EnumCodec<>(OfferingMode.class, EnumCodec.EnumStyle.LEGACY), false),
             (e, v) -> e.mode = v,
             e -> e.mode
         )
