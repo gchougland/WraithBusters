@@ -24,11 +24,11 @@ public final class StatueFacingUtil {
         return center;
     }
 
-    /** Unit vector pointing out of the statue face (+Z in model space, rotated by placement). */
+    /** Unit vector pointing out of the statue face (+Z in model space, rotated by placement yaw). */
     @Nonnull
     public static Vector3d forward(@Nonnull RotationTuple rotationTuple) {
         Vector3d forward = new Vector3d(0.0, 0.0, 1.0);
-        rotationTuple.rotatedVector(forward);
+        rotationTuple.yaw().rotateY(forward, forward);
         return forward.normalize();
     }
 

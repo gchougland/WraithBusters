@@ -1,0 +1,116 @@
+{
+  "Type": "Component",
+  "Class": "Instruction",
+  "Interface": "Hytale.Instruction",
+  "$Comment": "Food tornado ranged combat: maintain bow distance, seek with LOS, launch corn.",
+  "Parameters": {
+    "ViewRange": {
+      "Value": 24,
+      "Description": "Combat awareness range"
+    },
+    "AttackDistance": {
+      "Value": 15,
+      "Description": "Maximum corn shot range"
+    },
+    "CombatFleeIfTooCloseDistance": {
+      "Value": 4,
+      "Description": "Retreat when target stays inside this range"
+    },
+    "DesiredRangedDistance": {
+      "Value": [5, 14.5],
+      "Description": "Preferred engagement band"
+    },
+    "RangedAttack": {
+      "Value": "WraithBusters_Food_Tornado_Corn_Shoot",
+      "Description": "Corn launch interaction"
+    },
+    "AttackPauseRange": {
+      "Value": [0.8, 1.4],
+      "Description": "Pause between shots"
+    },
+    "CombatAttackPreDelay": {
+      "Value": [0.2, 0.45],
+      "Description": "Wind-up before releasing corn"
+    },
+    "CombatBehaviorDistance": {
+      "Value": 15,
+      "Description": "Distance within which positioning logic runs"
+    }
+  },
+  "Content": {
+    "Instructions": [
+      {
+        "Reference": "Component_Instruction_Combat_Retreat",
+        "Modify": {
+          "CombatFleeIfTooCloseDistance": { "Compute": "CombatFleeIfTooCloseDistance" },
+          "AttackDistance": { "Compute": "AttackDistance" }
+        }
+      },
+      {
+        "Continue": true,
+        "Sensor": {
+          "Type": "Target",
+          "Range": { "Compute": "CombatBehaviorDistance" },
+          "Filters": [{ "Type": "LineOfSight" }]
+        },
+        "HeadMotion": { "Type": "Aim", "RelativeTurnSpeed": 1.5, "HitProbability": 1.0 }
+      },
+      {
+        "Continue": true,
+        "Sensor": {
+          "Type": "And",
+          "Sensors": [
+            {
+              "Type": "Target",
+              "Range": { "Compute": "AttackDistance" },
+              "Filters": [{ "Type": "LineOfSight" }]
+            },
+            {
+              "Type": "Not",
+              "Sensor": {
+                "Type": "Target",
+                "Range": { "Compute": "CombatFleeIfTooCloseDistance" }
+              }
+            }
+          ]
+        },
+        "ActionsBlocking": true,
+        "HeadMotion": { "Type": "Aim", "RelativeTurnSpeed": 1.5, "HitProbability": 1.0 },
+        "Actions": [
+          { "Type": "Timeout", "Delay": { "Compute": "CombatAttackPreDelay" } },
+          {
+            "Type": "Attack",
+            "Attack": { "Compute": "RangedAttack" },
+            "BallisticMode": "Short",
+            "AvoidFriendlyFire": true,
+            "AttackPauseRange": { "Compute": "AttackPauseRange" }
+          }
+        ]
+      },
+      {
+        "Continue": true,
+        "Sensor": {
+          "Type": "Target",
+          "Range": { "Compute": "CombatBehaviorDistance" },
+          "Filters": [{ "Type": "LineOfSight" }]
+        },
+        "BodyMotion": {
+          "Type": "MaintainDistance",
+          "DesiredDistanceRange": { "Compute": "DesiredRangedDistance" },
+          "MoveThreshold": 0.35,
+          "RelativeForwardsSpeed": 0.45,
+          "RelativeBackwardsSpeed": 0.55
+        }
+      },
+      {
+        "Sensor": { "Type": "Target", "Range": { "Compute": "ViewRange" } },
+        "BodyMotion": {
+          "Type": "Seek",
+          "SlowDownDistance": 12,
+          "StopDistance": 6,
+          "RelativeSpeed": 0.55
+        }
+      }
+    ]
+  }
+}

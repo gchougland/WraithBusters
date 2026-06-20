@@ -16,8 +16,14 @@ public final class TeamAssigner {
         if (playerCount <= 0) {
             return 0;
         }
-        int ghosts = 1 + (playerCount - 1) / config.getHumansPerExtraGhost();
-        return Math.max(config.getMinGhosts(), ghosts);
+        int humansPerGhost = Math.max(1, config.getHumansPerExtraGhost());
+        int maxGhosts = playerCount > 1 ? playerCount - 1 : playerCount;
+        int ghosts = Math.min(Math.max(config.getMinGhosts(), 1), maxGhosts);
+        // One ghost per N humans (not total players): scale up until humanCount / N <= ghosts.
+        while (ghosts < maxGhosts && (playerCount - ghosts) / humansPerGhost > ghosts) {
+            ghosts++;
+        }
+        return ghosts;
     }
 
     @Nonnull

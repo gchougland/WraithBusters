@@ -1,0 +1,15 @@
+{
+  "Type": "Simple",
+  "RunTime": 0.15,
+  "Next": {
+    "Type": "LaunchProjectile",
+    "RunTime": 0.1,
+    "ProjectileId": "WraithBusters_Corn_NPC",
+    "Effects": {
+      "WorldSoundEventId": "SFX_Bow_T1_Shoot"
+    },
+    "Tags": {
+      "AimingReference": []
+    }
+  }
+}

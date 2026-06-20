@@ -1,10 +1,9 @@
 package com.hexvane.wraithbusters.ui;
 
-import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.ui.builder.UICommandBuilder;
 import javax.annotation.Nonnull;
 
-/** Layered spirit power bar: cyan fill, border frame, and center text. */
+/** Layered spirit power bar: cyan fill and border frame. */
 public final class SpiritBarUi {
     private static final String STACK = "#SpiritHudPanel #SpiritBarStack";
     private static final int FLEX_SCALE = 1000;
@@ -15,7 +14,6 @@ public final class SpiritBarUi {
         int cap = Math.max(1, max);
         int value = Math.max(0, Math.min(current, cap));
         applyFill(cmd, value, cap);
-        cmd.set(STACK + " #SpiritBarText.TextSpans", Message.raw(value + "/" + cap));
     }
 
     private static void applyFill(@Nonnull UICommandBuilder cmd, int value, int cap) {

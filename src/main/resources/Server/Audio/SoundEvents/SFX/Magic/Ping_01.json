@@ -4,15 +4,9 @@
       "Files": [
         "Sounds/Magic/Ping_01.ogg"
       ],
-      "RandomSettings": {
-        "MinPitch": 0,
-        "MaxPitch": 0,
-        "MinVolume": 0,
-        "MaxVolume": 0
-      },
       "StartDelay": 0,
       "Looping": false,
-      "Volume": 0
+      "Volume": 4.0
     }
   ],
   "Volume": 0,

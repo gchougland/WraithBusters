@@ -1,0 +1,17 @@
+{
+  "Appearance": "WraithBusters_Corn_Projectile",
+  "SticksVertically": false,
+  "MuzzleVelocity": 28,
+  "TerminalVelocity": 18,
+  "Gravity": 4,
+  "Bounciness": 0,
+  "ImpactSlowdown": 0,
+  "TimeToLive": 12,
+  "Damage": 3,
+  "DeadTime": 0.1,
+  "HorizontalCenterShot": 0.1,
+  "VerticalCenterShot": 0.4,
+  "DepthShot": 0.5,
+  "PitchAdjustShot": true,
+  "MissSoundEventId": "SFX_Bow_T1_Shoot"
+}

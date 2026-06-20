@@ -9,6 +9,7 @@
     "SticksVertically": false
   },
   "LaunchForce": 14,
+  "LaunchWorldSoundEventId": "SFX_Bow_T1_Shoot",
   "SpawnOffset": {
     "X": 0.0,
     "Y": 0.0,

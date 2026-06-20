@@ -2,16 +2,16 @@ $C = "../Common.ui";
 
 @SpiritBarWidth = 400;
 @SpiritBarHeight = 30;
-@SpiritBarInsetH = 5;
+@SpiritBarInsetH = 2;
 @SpiritBarInsetV = 4;
 
-@SpiritBarBorderPatch = (TexturePath: "SpiritBarBorder@2x.png", Border: 8, Color: #ffffff);
-@SpiritBarFillPatch = (TexturePath: "SpiritBar@2x.png", Border: 0, Color: #66ccff);
+@SpiritBarBorderPatch = (TexturePath: "../SpiritBarBorder.png", Border: 8, Color: #ffffff);
+@SpiritBarFillPatch = (TexturePath: "../SpiritBar.png", Border: 0, Color: #66ccff);
 @SpiritBarTrackPatch = #121820(0.95);
 
 Group #GhostManaHudRoot {
   LayoutMode: Top;
-  Anchor: (Top: 72);
+  Anchor: (Top: 92);
 
   Group {
     LayoutMode: Left;
@@ -23,12 +23,6 @@ Group #GhostManaHudRoot {
     Group #SpiritHudPanel {
       LayoutMode: Top;
       Anchor: (Width: @SpiritBarWidth);
-
-      Label #SpiritTitle {
-        Style: (...$C.@DefaultLabelStyle, FontSize: 18, TextColor: #66ccff, RenderBold: true, RenderUppercase: true, HorizontalAlignment: Center);
-        Anchor: (Bottom: 6);
-        Text: "";
-      }
 
       Group #SpiritBarStack {
         LayoutMode: Full;
@@ -57,7 +51,7 @@ Group #GhostManaHudRoot {
         }
 
         Label #SpiritBarText {
-          Style: (...$C.@DefaultLabelStyle, FontSize: 13, TextColor: #f0e8d8, RenderBold: true, HorizontalAlignment: Center, VerticalAlignment: Center);
+          Style: (...$C.@DefaultLabelStyle, FontSize: 13, TextColor: #ffffff, RenderBold: true, HorizontalAlignment: Center, VerticalAlignment: Center);
           Anchor: (Full: 0);
           Text: "";
         }

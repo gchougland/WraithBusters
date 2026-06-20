@@ -52,16 +52,3 @@ The included mansion is a full adventure map with many rooms to discover, includ
 ## After the Round
 
 When a round ends, everyone sees who won and can jump straight into another match or head home. Win or lose, the mansion is ready for the next hunt.
-
-## Library Puzzle Setup (Builders)
-
-The library room uses the `library_books` puzzle. Before it can run in a round, place and mark the arena once in setup mode:
-
-1. `/wb setup enter mansion_v1`
-2. Mark the library room door: `/wb setup mark Library`
-3. Place four puzzle bookshelves (Blue, Green, Orange, Red) from the WraithBusters creative category
-4. Look at each shelf and run `/wb setup mark bookshelf --extra blue` (or green, orange, red)
-5. Mark four floor spots where book pickups should spawn: `/wb setup mark book_spawn` (repeat four times)
-6. Save: `/wb setup save mansion_v1`
-
-During a round, when the library is the active puzzle room, colored book pickups spawn at the marked spots (shuffled each time). Humans gather the books and return each one to the matching-color shelf.

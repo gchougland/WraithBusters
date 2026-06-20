@@ -63,5 +63,17 @@
     ]
   },
   "ItemSoundSetId": "ISS_Blocks_Wood",
-  "MaxStack": 64
+  "MaxStack": 64,
+  "IconProperties": {
+    "Scale": 0.5,
+    "Rotation": [
+      22.5,
+      45,
+      22.5
+    ],
+    "Translation": [
+      -1,
+      -13
+    ]
+  }
 }

@@ -7,6 +7,10 @@ import com.hexvane.wraithbusters.player.PlayerRole;
 import com.hexvane.wraithbusters.player.PlayerSessionState;
 import com.hexvane.wraithbusters.util.WraithBustersSoundUtil;
 import com.hypixel.hytale.assetstore.map.IndexedLookupTableAssetMap;
+import com.hypixel.hytale.math.shape.Box;
+import com.hypixel.hytale.server.core.modules.collision.BlockCollisionData;
+import com.hypixel.hytale.server.core.modules.collision.CollisionModule;
+import com.hypixel.hytale.server.core.modules.collision.CollisionResult;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.RemoveReason;
 import com.hypixel.hytale.component.Store;
@@ -35,6 +39,8 @@ public final class PossessableFlamingSkullService {
     private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
     private static final ConcurrentHashMap<UUID, SessionSkulls> SESSIONS = new ConcurrentHashMap<>();
     private static final float TICK_DT_SEC = 0.05f;
+    private static final Box SKULL_COLLIDER = new Box(-0.2, 0.0, -0.2, 0.2, 0.35, 0.2);
+    private static final CollisionResult BLOCK_COLLISION_RESULT = new CollisionResult(false, false);
 
     private PossessableFlamingSkullService() {}
 
@@ -142,9 +148,15 @@ public final class PossessableFlamingSkullService {
             } else {
                 delta.set(0, 0, 1);
             }
-            skullPos.x += delta.x * speed * TICK_DT_SEC;
-            skullPos.y += delta.y * speed * TICK_DT_SEC;
-            skullPos.z += delta.z * speed * TICK_DT_SEC;
+            Vector3d movement = new Vector3d(delta).mul(speed * TICK_DT_SEC);
+            Vector3d blockHitPos = findBlockCollisionPoint(world, skullPos, movement);
+            if (blockHitPos != null) {
+                applyExplosion(world, store, blockHitPos);
+                despawnSkull(store, ref);
+                toRemove.add(spawn);
+                continue;
+            }
+            skullPos.add(movement);
             skullTransform.setPosition(skullPos);
         }
 
@@ -193,6 +205,14 @@ public final class PossessableFlamingSkullService {
         if (cause != null) {
             DamageSystems.executeDamage(humanRef, store, new Damage(Damage.NULL_SOURCE, cause, config.getSkullDamage()));
         }
+        applyExplosion(world, store, hitPos);
+    }
+
+    private static void applyExplosion(
+        @Nonnull World world,
+        @Nonnull Store<EntityStore> store,
+        @Nonnull Vector3d hitPos
+    ) {
         ParticleUtil.spawnParticleEffect(
             WraithBustersConstants.SKULL_HIT_PARTICLE,
             hitPos,
@@ -210,6 +230,27 @@ public final class PossessableFlamingSkullService {
             hitPos.z,
             WraithBustersConstants.SKULL_HIT_SOUND_EVENT
         );
+    }
+
+    @Nullable
+    private static Vector3d findBlockCollisionPoint(
+        @Nonnull World world,
+        @Nonnull Vector3d skullPos,
+        @Nonnull Vector3d movement
+    ) {
+        if (movement.lengthSquared() <= 0.0000001) {
+            return null;
+        }
+        CollisionModule.findBlockCollisionsShortDistance(world, SKULL_COLLIDER, skullPos, movement, BLOCK_COLLISION_RESULT);
+        BLOCK_COLLISION_RESULT.process();
+        if (BLOCK_COLLISION_RESULT.getBlockCollisionCount() <= 0) {
+            return null;
+        }
+        BlockCollisionData hit = BLOCK_COLLISION_RESULT.getFirstBlockCollision();
+        if (hit == null) {
+            return null;
+        }
+        return new Vector3d(hit.collisionPoint);
     }
 
     private static void despawnSkull(@Nonnull Store<EntityStore> store, @Nonnull Ref<EntityStore> entityRef) {

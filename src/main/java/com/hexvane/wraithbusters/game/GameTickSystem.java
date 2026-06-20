@@ -9,6 +9,7 @@ import com.hexvane.wraithbusters.possessable.PossessableHiveSwarmService;
 import com.hexvane.wraithbusters.possessable.PossessableSnapdragonService;
 import com.hexvane.wraithbusters.possessable.PossessableMarkerIconService;
 import com.hexvane.wraithbusters.puzzle.KeySpawnService;
+import com.hexvane.wraithbusters.puzzle.CheeseChaseService;
 import com.hexvane.wraithbusters.util.DeferredWorldTasks;
 import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.component.dependency.Dependency;
@@ -58,6 +59,7 @@ public final class GameTickSystem extends TickingSystem<EntityStore> {
                 PossessableHiveSwarmService.tick(session, world, plugin.getPluginConfig());
                 PossessableFlamingSkullService.tick(session, world, plugin.getPluginConfig());
                 PossessableFoodTornadoService.tick(session, world, plugin.getPluginConfig());
+                CheeseChaseService.tick(session, world);
             }
         });
     }

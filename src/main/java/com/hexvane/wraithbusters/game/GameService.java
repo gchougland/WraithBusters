@@ -1,6 +1,8 @@
 package com.hexvane.wraithbusters.game;
 
+import com.hexvane.wraithbusters.WraithBustersConstants;
 import com.hexvane.wraithbusters.WraithBustersPlugin;
+import com.hexvane.wraithbusters.util.WraithBustersSoundUtil;
 import com.hexvane.wraithbusters.arena.ArenaLayout;
 import com.hexvane.wraithbusters.arena.ArenaLayoutStore;
 import com.hexvane.wraithbusters.config.WraithBustersPluginConfig;
@@ -22,6 +24,7 @@ import com.hexvane.wraithbusters.possessable.SwordStatueSwingService;
 import com.hexvane.wraithbusters.possessable.WatcherStatueBurstService;
 import com.hexvane.wraithbusters.pickup.ManaPickupService;
 import com.hexvane.wraithbusters.possessable.PossessableMarkerIconService;
+import com.hexvane.wraithbusters.player.PlayerModelService;
 import com.hexvane.wraithbusters.player.PlayerRole;
 import com.hexvane.wraithbusters.player.PlayerSessionState;
 import com.hexvane.wraithbusters.team.Team;
@@ -39,6 +42,7 @@ import com.hexvane.wraithbusters.block.StatueFillerRepairService;
 import com.hexvane.wraithbusters.triggervolume.OfferingVolumeRepairService;
 import com.hexvane.wraithbusters.ui.GhostManaHudSupport;
 import com.hexvane.wraithbusters.ui.LobbyStatusHudSupport;
+import com.hexvane.wraithbusters.ui.ObjectiveHudSupport;
 import com.hexvane.wraithbusters.ui.RoundEndPage;
 import com.hexvane.wraithbusters.ui.RoundTimerHudSupport;
 import com.hexvane.wraithbusters.util.DeferredWorldTasks;
@@ -277,13 +281,18 @@ public final class GameService {
         }
         state.setReady(!state.isReady());
         PlayerRef pr = store.getComponent(playerRef, PlayerRef.getComponentType());
-        if (pr != null) {
-            if (state.isReady()) {
+        if (state.isReady()) {
+            if (pr != null) {
                 pr.sendMessage(Message.translation("server.wraithbusters.ready.on"));
-            } else {
+            }
+            WraithBustersSoundUtil.play2d(playerRef, store, WraithBustersConstants.READY_ON_SOUND_EVENT);
+        } else {
+            if (pr != null) {
                 pr.sendMessage(Message.translation("server.wraithbusters.ready.off"));
             }
+            WraithBustersSoundUtil.play2d(playerRef, store, WraithBustersConstants.READY_OFF_SOUND_EVENT);
         }
+        cancelCountdownIfInvalid(session);
         Player player = store.getComponent(playerRef, Player.getComponentType());
         if (player != null && pr != null) {
             LobbyStatusHudSupport.refreshAll(session, store.getExternalData().getWorld());
@@ -377,6 +386,11 @@ public final class GameService {
     }
 
     private void tickCountdown(@Nonnull GameSession session, @Nonnull World world) {
+        if (!session.allReady()) {
+            cancelCountdownIfInvalid(session);
+            LobbyStatusHudSupport.refreshAll(session, world);
+            return;
+        }
         int remaining = session.getCountdownTicksRemaining();
         if (remaining <= 0) {
             beginRound(session, world);
@@ -453,6 +467,7 @@ public final class GameService {
                     GhostManaHudSupport.refresh(player, pr, state, config);
                 }
                 RoundTimerHudSupport.refresh(player, pr, session, config);
+                ObjectiveHudSupport.refresh(player, pr, session, state);
             }
         }
         TeamSetupService.refreshVisibility(session, world);
@@ -495,6 +510,7 @@ public final class GameService {
             if (player != null && pr != null) {
                 RoundTimerHudSupport.refresh(player, pr, session, config);
                 PlayerSessionState state = session.getOrCreatePlayer(playerUuid);
+                ObjectiveHudSupport.refresh(player, pr, session, state);
                 if (state.getRole() == PlayerRole.GHOST) {
                     GhostManaHudSupport.refresh(player, pr, state, config);
                 }
@@ -537,6 +553,7 @@ public final class GameService {
         }
         WraithBustersVoiceUtil.unsilenceSession(session);
         TeamSetupService.refreshVisibility(session, world);
+        PlayerModelService.resetSessionModels(session, world);
         Store<EntityStore> store = world.getEntityStore().getStore();
         for (UUID playerUuid : session.playerUuidList()) {
             Ref<EntityStore> ref = findPlayerRef(world, playerUuid);
@@ -555,6 +572,7 @@ public final class GameService {
             if (player != null && pr != null) {
                 RoundTimerHudSupport.removeHud(player, pr);
                 GhostManaHudSupport.removeHud(player, pr);
+                ObjectiveHudSupport.removeHud(player, pr);
                 player.getPageManager().openCustomPage(ref, store, new RoundEndPage(pr, session));
             }
         }
@@ -602,6 +620,7 @@ public final class GameService {
             player.getPageManager().setPage(ref, store, Page.None);
             RoundTimerHudSupport.removeHud(player, pr);
             GhostManaHudSupport.removeHud(player, pr);
+            ObjectiveHudSupport.removeHud(player, pr);
         }
 
         Transform returnPoint = state != null
@@ -909,12 +928,16 @@ public final class GameService {
                 LobbyStatusHudSupport.removeHud(player, pr);
                 RoundTimerHudSupport.removeHud(player, pr);
                 GhostManaHudSupport.removeHud(player, pr);
+                ObjectiveHudSupport.removeHud(player, pr);
                 if (session.getPhase() == GamePhase.ENDING) {
                     player.getPageManager().setPage(playerRef, store, Page.None);
                 }
             }
             if (exitInstance && GameInstanceService.isInManagedInstance(playerRef, store)) {
                 MinigameInventoryService.restoreOverworldInventory(departingState, playerRef, store);
+                if (returnWorldUuid != null && returnTransform != null) {
+                    GameInstanceService.repairReturnPoint(playerRef, store, returnWorldUuid, returnTransform);
+                }
                 GameInstanceService.exitToOriginSafe(playerRef, store, returnWorldUuid, returnTransform);
             }
             if (session.getPhase() == GamePhase.ENDING && !session.getPlayers().isEmpty()) {
@@ -977,21 +1000,11 @@ public final class GameService {
     }
 
     /**
-     * Players removed from the session map during play-again can still be inside the old instance
-     * while teleporting to their new lobby. Wait until they leave before tearing the instance down.
+     * Wait until the instance world is physically empty before teardown. Players removed from the
+     * session map (play-again, return home) can still be inside while their teleport finishes.
      */
     private boolean hasBlockingPlayersInInstance(@Nonnull World instance, @Nonnull GameSession session) {
-        for (PlayerRef playerRef : instance.getPlayerRefs()) {
-            UUID playerUuid = playerRef.getUuid();
-            if (session.getPlayers().containsKey(playerUuid)) {
-                return true;
-            }
-            GameSession linkedSession = GameRegistry.get().getSessionForPlayer(playerUuid);
-            if (linkedSession != null && !linkedSession.getSessionId().equals(session.getSessionId())) {
-                return true;
-            }
-        }
-        return false;
+        return !instance.getPlayerRefs().isEmpty();
     }
 
     public void shutdownSession(@Nonnull GameSession session) {

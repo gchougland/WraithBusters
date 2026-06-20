@@ -8,10 +8,10 @@ import com.hexvane.wraithbusters.game.GameRegistry;
 import com.hexvane.wraithbusters.game.GameSession;
 import com.hexvane.wraithbusters.player.PlayerRole;
 import com.hexvane.wraithbusters.player.PlayerSessionState;
-import com.hexvane.wraithbusters.util.BlockSectionQueries;
 import com.hexvane.wraithbusters.util.DeferredWorldTasks;
 import com.hexvane.wraithbusters.util.StatueAnchorUtil;
 import com.hexvane.wraithbusters.util.StatueFacingUtil;
+import com.hexvane.wraithbusters.util.StatueRotationUtil;
 import com.hexvane.wraithbusters.util.WraithBustersSoundUtil;
 import com.hypixel.hytale.assetstore.map.IndexedLookupTableAssetMap;
 import com.hypixel.hytale.math.util.ChunkUtil;
@@ -84,10 +84,7 @@ public final class SwordStatueSwingService {
             return;
         }
 
-        RotationTuple rotationTuple = resolveRotation(world, anchor);
-        if (rotationTuple == null) {
-            return;
-        }
+        RotationTuple rotationTuple = StatueRotationUtil.resolve(world, blockPos, anchor, blockType);
         SwingAxes axes = resolveSwingAxes(anchor, blockType, rotationTuple);
 
         long durationMs = config.getStatueSwingDurationTicks() * 50L;
@@ -165,16 +162,12 @@ public final class SwordStatueSwingService {
             return;
         }
 
-        RotationTuple rotationTuple = resolveRotation(world, anchor);
-        if (rotationTuple == null) {
-            return;
-        }
-
         BlockType blockType = world.getBlockType(anchor.x, anchor.y, anchor.z);
         if (blockType == null) {
             return;
         }
 
+        RotationTuple rotationTuple = StatueRotationUtil.resolve(world, anchor, blockType);
         SwingAxes axes = resolveSwingAxes(anchor, blockType, rotationTuple);
         float hitRadius = config.getStatueSwingHitRadius();
 
@@ -283,12 +276,6 @@ public final class SwordStatueSwingService {
         }
         double lateral = Math.abs(delta.dot(axes.right));
         return lateral <= radius;
-    }
-
-    @Nullable
-    private static RotationTuple resolveRotation(@Nonnull World world, @Nonnull Vector3i anchor) {
-        int rotationIndex = BlockSectionQueries.getRotationIndex(world, anchor.x, anchor.y, anchor.z);
-        return RotationTuple.get(rotationIndex);
     }
 
     @Nullable

@@ -1,46 +1,53 @@
 {
-  "RenderMode": "BlendLinear",
+  "RenderMode": "Erosion",
   "EmitOffset": {
-    "X": { "Min": -0.25, "Max": 0.25 },
+    "X": { "Min": -0.28, "Max": 0.28 },
     "Y": { "Min": 0, "Max": 0.15 },
-    "Z": { "Min": -0.25, "Max": 0.25 }
+    "Z": { "Min": -0.28, "Max": 0.28 }
   },
   "ParticleRotationInfluence": "Billboard",
   "LinearFiltering": true,
-  "LightInfluence": 0.6,
-  "ParticleRotateWithSpawner": true,
-  "MaxConcurrentParticles": 20,
-  "ParticleLifeSpan": { "Min": 1.2, "Max": 1.8 },
-  "SpawnRate": { "Min": 16, "Max": 22 },
+  "LightInfluence": 0.8,
+  "ParticleRotateWithSpawner": false,
+  "TrailSpawnerPositionMultiplier": 0.35,
+  "MaxConcurrentParticles": 14,
+  "ParticleLifeSpan": { "Min": 1.4, "Max": 2.0 },
+  "SpawnRate": { "Min": 9, "Max": 14 },
   "TotalParticles": { "Min": -1, "Max": -1 },
   "InitialVelocity": {
-    "Yaw": { "Min": 0, "Max": 360 },
-    "Pitch": { "Min": 80, "Max": 100 },
-    "Speed": { "Min": 1.8, "Max": 2.8 }
+    "Yaw": { "Min": -180, "Max": 180 },
+    "Pitch": { "Min": 75, "Max": 105 },
+    "Speed": { "Min": 2.2, "Max": 3.8 }
   },
   "Attractors": [
     {
-      "Position": { "X": 0, "Y": 0.8, "Z": 0 },
-      "RadialAxis": { "X": 0, "Y": 1, "Z": 0 },
-      "RadialAcceleration": -22,
-      "RadialTangentAcceleration": 6.0,
-      "DampingMultiplier": { "X": 1, "Y": 0.99, "Z": 1 }
+      "Radius": 0.6,
+      "RadialAcceleration": -26,
+      "RadialTangentAcceleration": 9.0
+    },
+    {
+      "Radius": 0.38,
+      "RadialTangentAcceleration": -14,
+      "RadialAcceleration": -5
     }
   ],
   "Particle": {
-    "Texture": "Resources/Ingredients/Apple_Red.png",
+    "Texture": "Particles/Textures/WraithBusters/Food/Apple.png",
     "FrameSize": { "Width": 64, "Height": 64 },
     "ScaleRatioConstraint": "OneToOne",
     "Animation": {
       "0": {
-        "Scale": { "X": { "Min": 0.2, "Max": 0.25 }, "Y": { "Min": 0.2, "Max": 0.25 } },
-        "Opacity": 0.9
+        "FrameIndex": { "Min": 0, "Max": 0 },
+        "Opacity": 1.0,
+        "Scale": { "X": { "Min": 0.45, "Max": 0.55 }, "Y": { "Min": 0.45, "Max": 0.55 } }
       },
       "100": { "Opacity": 0 }
     },
     "InitialAnimationFrame": {
+      "FrameIndex": { "Min": 0, "Max": 0 },
       "Rotation": { "Z": { "Min": 0, "Max": 360 } },
-      "Opacity": 0.85
+      "Scale": { "X": { "Min": 0.4, "Max": 0.5 }, "Y": { "Min": 0.4, "Max": 0.5 } },
+      "Opacity": 0.95
     }
   }
 }

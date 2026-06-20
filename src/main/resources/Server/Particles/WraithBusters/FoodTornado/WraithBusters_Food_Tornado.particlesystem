@@ -2,23 +2,27 @@
   "Spawners": [
     {
       "SpawnerId": "WraithBusters_Food_Tornado_Corn",
-      "TargetNodeName": "CornOrbit",
-      "Scale": 1.0
+      "PositionOffset": {
+        "Y": 0.25
+      }
     },
     {
       "SpawnerId": "WraithBusters_Food_Tornado_Apple",
-      "TargetNodeName": "AppleOrbit",
-      "Scale": 1.0
+      "PositionOffset": {
+        "Y": 0.75
+      }
     },
     {
       "SpawnerId": "WraithBusters_Food_Tornado_Cauliflower",
-      "TargetNodeName": "CauliflowerOrbit",
-      "Scale": 1.0
+      "PositionOffset": {
+        "Y": 1.25
+      }
     },
     {
       "SpawnerId": "WraithBusters_Food_Tornado_Dust",
-      "TargetNodeName": "TornadoCore",
-      "Scale": 1.0
+      "PositionOffset": {
+        "Y": 0.5
+      }
     }
   ],
   "CullDistance": 48

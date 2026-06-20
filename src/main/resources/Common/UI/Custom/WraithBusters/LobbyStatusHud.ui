@@ -1,5 +1,7 @@
 $C = "../Common.ui";
 
+@LobbyPanelPatch = (TexturePath: "../Common/ContainerFullPatch.png", Border: 20);
+
 Group #LobbyStatusHudRoot {
   LayoutMode: Top;
   Anchor: (Top: 80);
@@ -13,7 +15,7 @@ Group #LobbyStatusHudRoot {
 
     Group #LobbyStatusPanel {
       LayoutMode: Middle;
-      Background: #121820(0.85);
+      Background: @LobbyPanelPatch;
       Padding: (Horizontal: 20, Vertical: 10);
 
       Label #LobbyStatus {

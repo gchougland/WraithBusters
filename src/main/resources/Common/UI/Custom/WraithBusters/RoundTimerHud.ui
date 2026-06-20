@@ -5,7 +5,7 @@ $C = "../Common.ui";
 @TimerInsetH = 5;
 @TimerInsetV = 4;
 
-@TimerBorderPatch = (TexturePath: "SpiritBarBorder@2x.png", Border: 8, Color: #ffffff);
+@TimerBorderPatch = (TexturePath: "../SpiritBarBorder.png", Border: 8, Color: #ffffff);
 @TimerTrackPatch = #121820(0.95);
 
 Group #RoundTimerHudRoot {

@@ -1,0 +1,11 @@
+{
+  "Parent": "Wraith",
+  "EyeHeight": 1.75,
+  "Camera": {
+    "PositionOffset": {
+      "X": 0,
+      "Y": 0.2,
+      "Z": 0
+    }
+  }
+}

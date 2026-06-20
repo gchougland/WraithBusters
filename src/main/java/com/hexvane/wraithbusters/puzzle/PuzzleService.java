@@ -167,7 +167,11 @@ public final class PuzzleService {
             PlayerRef pr = store.getComponent(playerRef, PlayerRef.getComponentType());
             if (pr != null) {
                 pr.sendMessage(Message.translation("server.wraithbusters.puzzle.candle.complete"));
-                WraithBustersSoundUtil.play2d(playerRef, store, WraithBustersConstants.PUZZLE_SUCCESS_SOUND_EVENT);
+                WraithBustersSoundUtil.play2dForSessionHumans(
+                    session,
+                    world,
+                    WraithBustersConstants.PUZZLE_SUCCESS_SOUND_EVENT
+                );
             }
             KeySpawnService.spawnKeyForRoom(session, world, currentRoom);
             RoomProgressionService.advanceAfterPuzzle(session);

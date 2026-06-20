@@ -43,7 +43,8 @@ public final class PlayerSessionListener {
             return;
         }
         DeferredWorldTasks.run(world, () -> {
-            if (session.getPhase() == GamePhase.LOBBY) {
+            GamePhase phase = session.getPhase();
+            if (phase == GamePhase.LOBBY || phase == GamePhase.COUNTDOWN) {
                 plugin.getGameService().finishLobbyArrival(session, world, playerUuid);
             }
         });

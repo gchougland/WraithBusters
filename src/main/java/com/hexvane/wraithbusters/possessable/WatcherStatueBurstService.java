@@ -1,10 +1,13 @@
 package com.hexvane.wraithbusters.possessable;
 
 import com.hexvane.wraithbusters.WraithBustersConstants;
+import com.hexvane.wraithbusters.arena.PossessableMarker;
+import com.hexvane.wraithbusters.block.StatueFillerRepairService;
 import com.hexvane.wraithbusters.config.WraithBustersPluginConfig;
-import com.hexvane.wraithbusters.util.BlockSectionQueries;
 import com.hexvane.wraithbusters.util.DeferredWorldTasks;
 import com.hexvane.wraithbusters.util.StatueFacingUtil;
+import com.hexvane.wraithbusters.util.StatueRotationUtil;
+import com.hexvane.wraithbusters.util.WatcherStatueAnchorUtil;
 import com.hexvane.wraithbusters.util.WraithBustersSoundUtil;
 import com.hypixel.hytale.component.AddReason;
 import com.hypixel.hytale.component.Holder;
@@ -15,7 +18,6 @@ import com.hypixel.hytale.protocol.Direction;
 import com.hypixel.hytale.server.core.HytaleServer;
 import com.hypixel.hytale.server.core.asset.type.blocktype.config.BlockType;
 import com.hypixel.hytale.server.core.asset.type.blocktype.config.RotationTuple;
-import com.hypixel.hytale.server.core.entity.UUIDComponent;
 import com.hypixel.hytale.server.core.modules.entity.DespawnComponent;
 import com.hypixel.hytale.server.core.modules.entity.component.BoundingBox;
 import com.hypixel.hytale.server.core.modules.entity.component.HeadRotation;
@@ -27,7 +29,6 @@ import com.hypixel.hytale.server.core.modules.interaction.Interactions;
 import com.hypixel.hytale.server.core.modules.physics.component.Velocity;
 import com.hypixel.hytale.server.core.modules.physics.util.PhysicsMath;
 import com.hypixel.hytale.server.core.modules.projectile.ProjectileModule;
-import com.hypixel.hytale.server.core.modules.projectile.component.Projectile;
 import com.hypixel.hytale.server.core.modules.projectile.config.ProjectileConfig;
 import com.hypixel.hytale.server.core.modules.time.TimeResource;
 import com.hypixel.hytale.server.core.universe.world.World;
@@ -45,22 +46,25 @@ import org.joml.Vector3i;
 /** Fires a burst of forward-facing feather projectiles from a watcher statue face. */
 public final class WatcherStatueBurstService {
     private static final ConcurrentHashMap<UUID, ConcurrentHashMap<Long, Long>> BUSY_BY_WORLD = new ConcurrentHashMap<>();
-    private static final double FACE_Y_OFFSET = 0.85;
-    private static final double FACE_FORWARD_OFFSET = 0.35;
+    /** Statue_Small spans two blocks tall; owl face sits on the upper block. */
+    private static final double FACE_Y_OFFSET = 1.5;
+    /** Offset from block center to the front face of the 1x1 hitbox. */
+    private static final double FACE_FORWARD_OFFSET = 0.5;
 
     private WatcherStatueBurstService() {}
 
     public static boolean isBusy(@Nonnull World world, @Nonnull Vector3i blockPos) {
+        Vector3i anchor = WatcherStatueAnchorUtil.resolveWatcherAnchor(world, blockPos);
         ConcurrentHashMap<Long, Long> busy = BUSY_BY_WORLD.get(world.getWorldConfig().getUuid());
         if (busy == null) {
             return false;
         }
-        Long expiry = busy.get(packBlockPos(blockPos));
+        Long expiry = busy.get(packBlockPos(anchor));
         if (expiry == null) {
             return false;
         }
         if (System.currentTimeMillis() >= expiry) {
-            busy.remove(packBlockPos(blockPos));
+            busy.remove(packBlockPos(anchor));
             return false;
         }
         return true;
@@ -68,19 +72,18 @@ public final class WatcherStatueBurstService {
 
     public static void triggerBurst(
         @Nonnull World world,
-        @Nonnull Vector3i anchor,
+        @Nonnull Vector3i blockPos,
+        @Nullable PossessableMarker marker,
         @Nonnull Ref<EntityStore> ghostRef,
         @Nonnull WraithBustersPluginConfig config
     ) {
+        Vector3i anchor = WatcherStatueAnchorUtil.resolveWatcherAnchor(world, blockPos);
+        StatueFillerRepairService.repairWatcherAt(world, anchor);
+
         BlockType blockType = world.getBlockType(anchor.x, anchor.y, anchor.z);
-        if (blockType == null || !WraithBustersConstants.POSSESSABLE_WATCHER_STATUE_BLOCK_ID.equals(blockType.getId())) {
+        if (blockType == null || !isWatcherStatue(blockType)) {
             return;
         }
-        RotationTuple rotationTuple = resolveRotation(world, anchor);
-        if (rotationTuple == null) {
-            return;
-        }
-        BurstAxes axes = resolveBurstAxes(anchor, blockType, rotationTuple);
 
         long cooldownMs = config.getWatcherBurstCooldownTicks() * 50L;
         registerBusy(world, anchor, System.currentTimeMillis() + cooldownMs);
@@ -90,7 +93,10 @@ public final class WatcherStatueBurstService {
         for (int shot = 0; shot < shotCount; shot++) {
             long delayMs = shot * shotDelayMs;
             HytaleServer.SCHEDULED_EXECUTOR.schedule(
-                () -> DeferredWorldTasks.run(world, () -> fireShot(world, ghostRef, axes)),
+                () -> DeferredWorldTasks.run(
+                    world,
+                    () -> fireShot(world, blockPos, anchor, marker, ghostRef)
+                ),
                 delayMs,
                 TimeUnit.MILLISECONDS
             );
@@ -103,8 +109,10 @@ public final class WatcherStatueBurstService {
 
     private static void fireShot(
         @Nonnull World world,
-        @Nonnull Ref<EntityStore> ghostRef,
-        @Nonnull BurstAxes axes
+        @Nonnull Vector3i columnRef,
+        @Nonnull Vector3i anchor,
+        @Nullable PossessableMarker marker,
+        @Nonnull Ref<EntityStore> ghostRef
     ) {
         if (!DeferredWorldTasks.isStoreOpen(world) || !ghostRef.isValid()) {
             return;
@@ -113,6 +121,14 @@ public final class WatcherStatueBurstService {
         if (store == null || store.isShutdown()) {
             return;
         }
+
+        BlockType blockType = world.getBlockType(anchor.x, anchor.y, anchor.z);
+        if (blockType == null) {
+            return;
+        }
+
+        RotationTuple rotationTuple = resolveWatcherRotation(world, columnRef, anchor, blockType, marker);
+        BurstAxes axes = resolveBurstAxes(anchor, blockType, rotationTuple);
         spawnFeatherFromStore(store, ghostRef, axes.origin, axes.forward);
         WraithBustersSoundUtil.play3dAtPosition(
             world,
@@ -135,13 +151,17 @@ public final class WatcherStatueBurstService {
         }
 
         Holder<EntityStore> holder = EntityStore.REGISTRY.newHolder();
-        Vector3d dir = new Vector3d(direction);
+        Vector3d launchDir = new Vector3d(direction);
+        if (launchDir.lengthSquared() <= 0.0001) {
+            launchDir.set(0.0, 0.0, 1.0);
+        } else {
+            launchDir.normalize();
+        }
         Rotation3f rotation = new Rotation3f();
         Direction rotationOffset = config.getSpawnRotationOffset();
-        rotation.setYaw(PhysicsMath.normalizeTurnAngle(PhysicsMath.headingFromDirection(dir.x, dir.z)));
-        rotation.setPitch(PhysicsMath.pitchFromDirection(dir.x, dir.y, dir.z));
+        rotation.setYaw(PhysicsMath.normalizeTurnAngle(PhysicsMath.headingFromDirection(launchDir.x, launchDir.z)));
+        rotation.setPitch(PhysicsMath.pitchFromDirection(launchDir.x, launchDir.y, launchDir.z));
         rotation.add(rotationOffset.pitch, rotationOffset.yaw, rotationOffset.roll);
-        PhysicsMath.vectorFromAngles(rotation.yaw(), rotation.pitch(), dir);
         Vector3d spawnPos = new Vector3d(position);
         spawnPos.add(config.getCalculatedOffset(rotation.pitch(), rotation.yaw()));
 
@@ -158,7 +178,13 @@ public final class WatcherStatueBurstService {
         );
         holder.ensureComponent(ProjectileModule.get().getProjectileComponentType());
         holder.addComponent(Velocity.getComponentType(), new Velocity());
-        config.getPhysicsConfig().apply(holder, ghostRef, new Vector3d(dir).mul(config.getLaunchForce()), store, false);
+        config.getPhysicsConfig().apply(
+            holder,
+            ghostRef,
+            new Vector3d(launchDir).mul(config.getLaunchForce()),
+            store,
+            false
+        );
         holder.ensureComponent(EntityStore.REGISTRY.getNonSerializedComponentType());
         holder.addComponent(
             DespawnComponent.getComponentType(),
@@ -179,10 +205,30 @@ public final class WatcherStatueBurstService {
         return new BurstAxes(origin, forward);
     }
 
-    @Nullable
-    private static RotationTuple resolveRotation(@Nonnull World world, @Nonnull Vector3i anchor) {
-        int rotationIndex = BlockSectionQueries.getRotationIndex(world, anchor.x, anchor.y, anchor.z);
-        return RotationTuple.get(rotationIndex);
+    @Nonnull
+    private static RotationTuple resolveWatcherRotation(
+        @Nonnull World world,
+        @Nonnull Vector3i columnRef,
+        @Nonnull Vector3i anchor,
+        @Nonnull BlockType blockType,
+        @Nullable PossessableMarker marker
+    ) {
+        Vector3i rotationRef = marker != null ? marker.getBlockPos() : columnRef;
+        RotationTuple rotationTuple = StatueRotationUtil.resolve(world, rotationRef, anchor, blockType);
+        if (marker == null) {
+            return rotationTuple;
+        }
+        Integer saved = marker.getRotationIndex();
+        if (saved != null && rotationTuple.index() == 0 && saved != 0) {
+            return RotationTuple.get(saved);
+        }
+        return rotationTuple;
+    }
+
+    private static boolean isWatcherStatue(@Nonnull BlockType blockType) {
+        String id = blockType.getId();
+        String base = WraithBustersConstants.POSSESSABLE_WATCHER_STATUE_BLOCK_ID;
+        return id.equals(base) || id.startsWith(base + "|");
     }
 
     private static void registerBusy(@Nonnull World world, @Nonnull Vector3i anchor, long expiryMs) {
@@ -191,8 +237,8 @@ public final class WatcherStatueBurstService {
             .put(packBlockPos(anchor), expiryMs);
     }
 
-    private static long packBlockPos(@Nonnull Vector3i pos) {
-        return ((long) pos.x << 42) | ((long) pos.y << 21) | (pos.z & 0x1FFFFFL);
+    private static long packBlockPos(@Nonnull Vector3i blockPos) {
+        return ((long) blockPos.x << 40) | ((long) blockPos.y << 20) | (blockPos.z & 0xFFFFFL);
     }
 
     private record BurstAxes(@Nonnull Vector3d origin, @Nonnull Vector3d forward) {}

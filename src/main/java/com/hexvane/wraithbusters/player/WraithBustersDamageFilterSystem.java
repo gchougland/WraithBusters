@@ -91,6 +91,16 @@ public final class WraithBustersDamageFilterSystem extends DamageEventSystem {
             DeferredWorldTasks.run(world, () -> applySnapdragonPoison(world, victimEntityRef, poisonDurationSeconds));
             return;
         }
+        if (attackerNpc != null
+            && WraithBustersConstants.POSSESSABLE_FOOD_TORNADO_NPC_ROLE.equals(attackerNpc.getRoleName())
+            && victimState != null
+            && victimState.getRole() == PlayerRole.HUMAN
+            && victimState.isAlive()) {
+            WraithBustersPlugin plugin = WraithBustersPlugin.get();
+            float cornDamage = plugin == null ? 3f : plugin.getPluginConfig().getBarrelCornDamage();
+            damage.setAmount(Math.min(damage.getAmount(), cornDamage));
+            return;
+        }
         PlayerRef attackerPlayer = store.getComponent(attackerRef, PlayerRef.getComponentType());
         if (attackerPlayer == null) {
             return;
@@ -100,21 +110,54 @@ public final class WraithBustersDamageFilterSystem extends DamageEventSystem {
             return;
         }
         if (victimState != null && victimState.getRole() == PlayerRole.HUMAN && victimState.isAlive()) {
-            WraithBustersPlugin plugin = WraithBustersPlugin.get();
-            float plateDamage = plugin == null ? 25f : plugin.getPluginConfig().getPlateDamage();
-            float featherDamage = plugin == null ? 6f : plugin.getPluginConfig().getWatcherFeatherDamage();
-            float cornDamage = plugin == null ? 3f : plugin.getPluginConfig().getBarrelCornDamage();
-            if (damage.getAmount() >= cornDamage * 0.75f && damage.getAmount() <= cornDamage * 1.25f) {
-                return;
-            }
-            if (damage.getAmount() >= featherDamage * 0.75f && damage.getAmount() <= featherDamage * 1.25f) {
-                return;
-            }
-            if (damage.getAmount() >= plateDamage * 0.75f) {
+            if (allowGhostPossessableProjectileDamage(damage, WraithBustersPlugin.get())) {
                 return;
             }
             damage.setCancelled(true);
         }
+    }
+
+    /**
+     * Ghost melee is blocked; possessable projectile hits are allowed and clamped to config.
+     * Match on {@link Damage#getInitialAmount()} so armor reduction does not fail the filter.
+     */
+    private static boolean allowGhostPossessableProjectileDamage(@Nonnull Damage damage, @Nullable WraithBustersPlugin plugin) {
+        float amount = damage.getInitialAmount();
+        float plateDamage = plugin == null ? WraithBustersConstants.PLATE_PROJECTILE_ASSET_DAMAGE : plugin.getPluginConfig().getPlateDamage();
+        float featherDamage = plugin == null ? WraithBustersConstants.FEATHER_PROJECTILE_ASSET_DAMAGE : plugin.getPluginConfig().getWatcherFeatherDamage();
+        float cornDamage = plugin == null ? WraithBustersConstants.CORN_PROJECTILE_ASSET_DAMAGE : plugin.getPluginConfig().getBarrelCornDamage();
+
+        if (isPlateProjectileHit(amount, plateDamage)) {
+            damage.setAmount(Math.min(damage.getAmount(), plateDamage));
+            return true;
+        }
+        if (isFeatherProjectileHit(amount, featherDamage)) {
+            damage.setAmount(Math.min(damage.getAmount(), featherDamage));
+            return true;
+        }
+        if (isCornProjectileHit(amount, cornDamage)) {
+            damage.setAmount(Math.min(damage.getAmount(), cornDamage));
+            return true;
+        }
+        return false;
+    }
+
+    private static boolean isPlateProjectileHit(float amount, float configDamage) {
+        return amount >= configDamage * 0.75f || amount >= WraithBustersConstants.PLATE_PROJECTILE_ASSET_DAMAGE * 0.75f;
+    }
+
+    private static boolean isFeatherProjectileHit(float amount, float configDamage) {
+        return withinDamageBand(amount, configDamage)
+            || withinDamageBand(amount, WraithBustersConstants.FEATHER_PROJECTILE_ASSET_DAMAGE);
+    }
+
+    private static boolean isCornProjectileHit(float amount, float configDamage) {
+        return withinDamageBand(amount, configDamage)
+            || withinDamageBand(amount, WraithBustersConstants.CORN_PROJECTILE_ASSET_DAMAGE);
+    }
+
+    private static boolean withinDamageBand(float amount, float expected) {
+        return amount >= expected * 0.75f && amount <= expected * 1.25f;
     }
 
     private static void applySnapdragonPoison(

@@ -3,6 +3,7 @@ package com.hexvane.wraithbusters.triggervolume;
 import com.hypixel.hytale.builtin.triggervolumes.manager.VolumeEntry;
 import com.hypixel.hytale.builtin.triggervolumes.shape.BoxShape;
 import com.hypixel.hytale.builtin.triggervolumes.shape.TriggerVolumeShape;
+import com.hexvane.wraithbusters.WraithBustersConstants;
 import com.hexvane.wraithbusters.arena.RoomDefinition;
 import com.hexvane.wraithbusters.door.RoomProgressionService;
 import com.hexvane.wraithbusters.game.GamePhase;
@@ -222,6 +223,11 @@ public final class OfferingPuzzleService {
         KeySpawnService.spawnKeyForRoom(session, world, room);
         OfferingPlayerNotify.sessionPlayers(session, world, "server.wraithbusters.puzzle.offering.complete");
         playSuccessFeedback(world, store, feedbackPosition, feedback);
+        WraithBustersSoundUtil.play2dForSessionHumans(
+            session,
+            world,
+            WraithBustersConstants.PUZZLE_SUCCESS_SOUND_EVENT
+        );
         CheeseChaseService.onCurrentRoomChanged(session, world);
         LibraryBookService.onCurrentRoomChanged(session, world);
     }

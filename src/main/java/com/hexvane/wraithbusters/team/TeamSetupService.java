@@ -6,6 +6,7 @@ import com.hexvane.wraithbusters.game.GameSession;
 import com.hexvane.wraithbusters.player.PlayerRole;
 import com.hexvane.wraithbusters.player.PlayerSessionState;
 import com.hexvane.wraithbusters.player.HumanSprintService;
+import com.hexvane.wraithbusters.player.PlayerModelService;
 import com.hexvane.wraithbusters.setup.SetupModeService;
 import com.hypixel.hytale.component.ComponentAccessor;
 import com.hypixel.hytale.component.Ref;
@@ -32,14 +33,23 @@ public final class TeamSetupService {
         @Nonnull ComponentAccessor<EntityStore> accessor,
         @Nonnull WraithBustersPluginConfig config
     ) {
+        accessor.tryRemoveComponent(playerRef, Intangible.getComponentType());
+        accessor.ensureAndGetComponent(playerRef, Invulnerable.getComponentType());
+        // Model change triggers PlayerUpdateMovementManager, which resets canFly — apply model first.
+        PlayerModelService.applyGhostModel(playerRef, accessor);
+        applyGhostMovement(playerRef, accessor);
+    }
+
+    private static void applyGhostMovement(
+        @Nonnull Ref<EntityStore> playerRef,
+        @Nonnull ComponentAccessor<EntityStore> accessor
+    ) {
         MovementManager movement = accessor.getComponent(playerRef, MovementManager.getComponentType());
         if (movement != null) {
             movement.getSettings().canFly = true;
             movement.getSettings().collisionExpulsionForce = 0.02f;
             sendMovementUpdate(accessor, playerRef, movement);
         }
-        accessor.tryRemoveComponent(playerRef, Intangible.getComponentType());
-        accessor.ensureAndGetComponent(playerRef, Invulnerable.getComponentType());
     }
 
     public static void applyGhost(
@@ -50,6 +60,12 @@ public final class TeamSetupService {
         @Nonnull World world
     ) {
         applyGhost(playerRef, accessor, config);
+        DeferredWorldTasks.run(world, () -> {
+            if (!playerRef.isValid() || !DeferredWorldTasks.isStoreOpen(world)) {
+                return;
+            }
+            applyGhostMovement(playerRef, world.getEntityStore().getStore());
+        });
         refreshVisibility(session, world);
     }
 
@@ -74,6 +90,7 @@ public final class TeamSetupService {
         if (pr != null) {
             pr.getHiddenPlayersManager().showPlayer(humanUuid);
         }
+        PlayerModelService.resetToPlayerSkin(playerRef, accessor);
     }
 
     public static void applySpectator(
@@ -90,6 +107,7 @@ public final class TeamSetupService {
         accessor.ensureAndGetComponent(playerRef, HiddenFromAdventurePlayers.getComponentType());
         accessor.tryRemoveComponent(playerRef, Invulnerable.getComponentType());
         HumanSprintService.remove(playerRef, accessor);
+        PlayerModelService.resetToPlayerSkin(playerRef, accessor);
     }
 
     public static void clearModes(
@@ -99,6 +117,7 @@ public final class TeamSetupService {
     ) {
         HumanSprintService.remove(playerRef, accessor);
         resetMovement(playerRef, accessor);
+        PlayerModelService.resetToPlayerSkin(playerRef, accessor);
         PlayerRef pr = accessor.getComponent(playerRef, PlayerRef.getComponentType());
         if (pr != null) {
             revealPlayerGlobally(pr.getUuid());

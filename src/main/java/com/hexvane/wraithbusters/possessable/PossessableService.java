@@ -12,6 +12,7 @@ import com.hexvane.wraithbusters.util.BlockSectionQueries;
 import com.hexvane.wraithbusters.util.DeferredWorldTasks;
 import com.hexvane.wraithbusters.util.FurnitureAnchorUtil;
 import com.hexvane.wraithbusters.util.StatueAnchorUtil;
+import com.hexvane.wraithbusters.util.WatcherStatueAnchorUtil;
 import com.hexvane.wraithbusters.util.WraithBustersSoundUtil;
 import com.hypixel.hytale.assetstore.map.IndexedLookupTableAssetMap;
 import com.hypixel.hytale.math.util.ChunkUtil;
@@ -43,6 +44,8 @@ public final class PossessableService {
     private static final int MARKER_XZ_TOLERANCE = 1;
     /** Statue_Full is three blocks tall; arena markers may be a few blocks off on Y. */
     private static final int STATUE_MARKER_Y_TOLERANCE = 3;
+    /** Watcher statues span two blocks tall; arena markers may be on either block. */
+    private static final int WATCHER_MARKER_Y_TOLERANCE = 1;
 
     private PossessableService() {}
 
@@ -65,7 +68,11 @@ public final class PossessableService {
         }
         for (PossessableMarker marker : session.getArenaLayout().getPossessables()) {
             Vector3i pos = marker.getBlockPos();
-            int yTolerance = "statue".equals(marker.getTypeId()) ? STATUE_MARKER_Y_TOLERANCE : 0;
+            int yTolerance = switch (marker.getTypeId()) {
+                case "statue" -> STATUE_MARKER_Y_TOLERANCE;
+                case "watcher" -> WATCHER_MARKER_Y_TOLERANCE;
+                default -> 0;
+            };
             if (Math.abs(pos.y - blockPos.y) <= yTolerance
                 && Math.abs(pos.x - blockPos.x) <= MARKER_XZ_TOLERANCE
                 && Math.abs(pos.z - blockPos.z) <= MARKER_XZ_TOLERANCE) {
@@ -337,8 +344,8 @@ public final class PossessableService {
             ghostPlayer.sendMessage(Message.translation("server.wraithbusters.mana.notEnough"));
             return ActivateResult.NOT_ENOUGH_MANA;
         }
-        Vector3i anchor = FurnitureAnchorUtil.resolveAnchor(world, targetBlock);
-        if (WatcherStatueBurstService.isBusy(world, anchor)) {
+        Vector3i anchor = WatcherStatueAnchorUtil.resolveWatcherAnchor(world, targetBlock);
+        if (WatcherStatueBurstService.isBusy(world, targetBlock)) {
             ghostPlayer.sendMessage(Message.translation("server.wraithbusters.possess.watcherBusy"));
             return ActivateResult.BUSY;
         }
@@ -347,7 +354,7 @@ public final class PossessableService {
         if (player != null) {
             GhostManaHudSupport.refresh(player, ghostPlayer, state, config);
         }
-        WatcherStatueBurstService.triggerBurst(world, anchor, ghostRef, config);
+        WatcherStatueBurstService.triggerBurst(world, targetBlock, marker, ghostRef, config);
         ghostPlayer.sendMessage(Message.translation("server.wraithbusters.possess.watcher"));
         return ActivateResult.SUCCESS;
     }
@@ -614,6 +621,13 @@ public final class PossessableService {
         if ("statue".equals(typeId)) {
             Vector3i anchor = StatueAnchorUtil.resolveStatueAnchor(world, markerPos);
             if (!isLoadedPossessableAnchor(world, anchor, WraithBustersConstants.POSSESSABLE_STATUE_BLOCK_ID)) {
+                return null;
+            }
+            return anchor;
+        }
+        if ("watcher".equals(typeId)) {
+            Vector3i anchor = WatcherStatueAnchorUtil.resolveWatcherAnchor(world, markerPos);
+            if (!isLoadedPossessableAnchor(world, anchor, WraithBustersConstants.POSSESSABLE_WATCHER_STATUE_BLOCK_ID)) {
                 return null;
             }
             return anchor;

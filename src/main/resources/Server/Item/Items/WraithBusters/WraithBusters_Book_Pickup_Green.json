@@ -30,16 +30,20 @@
         }
       ]
     },
-    "BlockSoundSetId": "Wood",
-    "Interactions": {
-      "Use": {
-        "Interactions": [
-          {
-            "Type": "WraithBusters_LibraryBookGather"
-          }
-        ]
-      }
-    }
+    "BlockSoundSetId": "Wood"
   },
-  "MaxStack": 64
+  "MaxStack": 64,
+  "Icon": "Icons/ItemsGenerated/WraithBusters_Book_Pickup_Green.png",
+  "IconProperties": {
+    "Scale": 0.8,
+    "Rotation": [
+      22.5,
+      45,
+      22.5
+    ],
+    "Translation": [
+      0,
+      -4
+    ]
+  }
 }

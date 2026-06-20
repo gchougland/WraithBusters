@@ -78,13 +78,17 @@ public final class CheeseChaseService {
             return;
         }
         COMPLETED.put(puzzleKey(session, room), Boolean.TRUE);
+        SessionMice mice = SESSIONS.get(session.getSessionId());
+        if (mice != null) {
+            cleanupSession(session.getSessionId(), world, mice);
+        }
         stripCheeseFromHumans(session, world);
     }
 
     public static void startRound(@Nonnull GameSession session, @Nonnull World world) {
         resetForSession(session);
         clearSession(session.getSessionId(), world);
-        onCurrentRoomChanged(session, world);
+        DeferredWorldTasks.run(world, () -> refreshForCurrentRoom(session, world));
     }
 
     public static void endRound(@Nonnull GameSession session, @Nonnull World world) {
@@ -114,6 +118,28 @@ public final class CheeseChaseService {
         DeferredWorldTasks.run(world, () -> refreshForCurrentRoom(session, world));
     }
 
+    /** Retries cheese-chase activation while the garden puzzle is current but mice failed to spawn. */
+    public static void tick(@Nonnull GameSession session, @Nonnull World world) {
+        if (session.getPhase() != GamePhase.ACTIVE) {
+            return;
+        }
+        RoomDefinition currentRoom = RoomProgressionService.currentRoom(session);
+        if (!isCheeseChaseRoom(currentRoom) || isCompleted(session, currentRoom)) {
+            return;
+        }
+        SessionMice mice = SESSIONS.get(session.getSessionId());
+        if (mice != null && mice.active && hasLiveMice(mice)) {
+            return;
+        }
+        SessionMice tracked = SESSIONS.computeIfAbsent(session.getSessionId(), ignored -> new SessionMice());
+        long now = System.currentTimeMillis();
+        if (now - tracked.lastSpawnAttemptMs < 2_000L) {
+            return;
+        }
+        tracked.lastSpawnAttemptMs = now;
+        refreshForCurrentRoom(session, world);
+    }
+
     public static boolean tryCatchMouse(
         @Nonnull GameSession session,
         @Nonnull World world,
@@ -139,7 +165,7 @@ public final class CheeseChaseService {
             return false;
         }
         SessionMice mice = SESSIONS.get(session.getSessionId());
-        if (mice == null || !mice.activeRefs.contains(mouseRef)) {
+        if (mice == null || !mice.active || !mice.activeRefs.contains(mouseRef)) {
             return false;
         }
 
@@ -191,7 +217,7 @@ public final class CheeseChaseService {
             return false;
         }
         SessionMice mice = SESSIONS.get(session.getSessionId());
-        if (mice == null || !mice.activeRefs.contains(chumboRef)) {
+        if (mice == null || !mice.active || !mice.activeRefs.contains(chumboRef)) {
             return false;
         }
         if (heldItem == null
@@ -238,20 +264,33 @@ public final class CheeseChaseService {
             return;
         }
         RoomDefinition currentRoom = RoomProgressionService.currentRoom(session);
-        if (!WraithBustersConstants.CHEESE_CHASE_PUZZLE_ID.equals(currentRoom.getPuzzleId())) {
-            return;
+        SessionMice mice = SESSIONS.get(session.getSessionId());
+        if (mice != null && mice.active) {
+            if (!isCheeseChaseRoom(currentRoom) || isCompleted(session, currentRoom)) {
+                cleanupSession(session.getSessionId(), world, mice);
+            } else if (!hasLiveMice(mice)) {
+                cleanupSession(session.getSessionId(), world, mice);
+            }
         }
-        if (isCompleted(session, currentRoom)) {
-            return;
+        if (isCheeseChaseRoom(currentRoom) && !isCompleted(session, currentRoom)) {
+            activatePuzzle(session, world);
         }
-        spawnForRoom(session, world);
     }
 
-    private static void spawnForRoom(@Nonnull GameSession session, @Nonnull World world) {
+    private static boolean isCheeseChaseRoom(@Nonnull RoomDefinition room) {
+        return WraithBustersConstants.CHEESE_CHASE_PUZZLE_ID.equals(room.getPuzzleId());
+    }
+
+    private static void activatePuzzle(@Nonnull GameSession session, @Nonnull World world) {
         SessionMice mice = SESSIONS.computeIfAbsent(session.getSessionId(), ignored -> new SessionMice());
-        if (mice.spawned) {
+        if (mice.active && hasLiveMice(mice)) {
             return;
         }
+        if (mice.active) {
+            cleanupSession(session.getSessionId(), world, mice);
+            mice = SESSIONS.computeIfAbsent(session.getSessionId(), ignored -> new SessionMice());
+        }
+
         Store<EntityStore> store = world.getEntityStore().getStore();
         if (store == null || store.isShutdown()) {
             return;
@@ -266,19 +305,41 @@ public final class CheeseChaseService {
                 WraithBustersConstants.CHEESE_REQUIRED
             );
         }
+        int spawnedCount = 0;
         for (Transform spawn : smallSpawns) {
-            spawnMouse(store, mice, spawn, WraithBustersConstants.CHEESE_MOUSE_NPC_ROLE, MouseKind.SMALL);
+            if (spawnMouse(store, mice, spawn, WraithBustersConstants.CHEESE_MOUSE_NPC_ROLE, MouseKind.SMALL)) {
+                spawnedCount++;
+            }
         }
         Transform chumboSpawn = layout.getCheeseChaseChumbo();
         if (chumboSpawn != null) {
-            spawnMouse(store, mice, chumboSpawn, WraithBustersConstants.CHUMBO_NPC_ROLE, MouseKind.CHUMBO);
+            if (spawnMouse(store, mice, chumboSpawn, WraithBustersConstants.CHUMBO_NPC_ROLE, MouseKind.CHUMBO)) {
+                spawnedCount++;
+            }
         } else {
             LOGGER.atWarning().log("Cheese chase has no large_mouse mark for Chumbo");
         }
-        mice.spawned = true;
+        if (spawnedCount == 0) {
+            LOGGER.atWarning().log(
+                "Cheese chase failed to spawn any mice for session %s in room %s",
+                session.getSessionId(),
+                RoomProgressionService.currentRoom(session).getRoomId()
+            );
+            return;
+        }
+        mice.feedCount = 0;
+        mice.active = true;
     }
 
-    private static void spawnMouse(
+    private static boolean hasLiveMice(@Nonnull SessionMice mice) {
+        for (Ref<EntityStore> ref : mice.activeRefs) {
+            if (ref != null && ref.isValid()) {
+                return true;
+            }
+        }
+        return false;
+    }
+    private static boolean spawnMouse(
         @Nonnull Store<EntityStore> store,
         @Nonnull SessionMice mice,
         @Nonnull Transform transform,
@@ -288,15 +349,15 @@ public final class CheeseChaseService {
         NPCPlugin npc = NPCPlugin.get();
         if (npc == null) {
             LOGGER.atWarning().log("NPCPlugin unavailable; cannot spawn cheese chase mouse");
-            return;
+            return false;
         }
         Vector3d pos = transform.getPosition();
         Vector3d spawnPos = new Vector3d(pos.x, pos.y, pos.z);
         Rotation3f rotation = new Rotation3f(transform.getRotation());
         var pair = npc.spawnNPC(store, roleId, null, spawnPos, rotation);
         if (pair == null) {
-            LOGGER.atWarning().log("Failed to spawn cheese chase NPC at %s", spawnPos);
-            return;
+            LOGGER.atWarning().log("Failed to spawn cheese chase NPC %s at %s", roleId, spawnPos);
+            return false;
         }
         Ref<EntityStore> entityRef = pair.first();
         mice.lastSpawnedRef = entityRef;
@@ -305,6 +366,7 @@ public final class CheeseChaseService {
             mice.chumboRef = entityRef;
         }
         bindEntity(entityRef, store, kind);
+        return true;
     }
 
     private static void bindEntity(
@@ -372,11 +434,19 @@ public final class CheeseChaseService {
             return;
         }
         COMPLETED.put(puzzleKey(session, room), Boolean.TRUE);
+        SessionMice mice = SESSIONS.get(session.getSessionId());
+        if (mice != null) {
+            cleanupSession(session.getSessionId(), world, mice);
+        }
         stripCheeseFromHumans(session, world);
         RoomProgressionService.advanceAfterPuzzle(session);
         KeySpawnService.spawnKeyForRoom(session, world, room);
         send(store, playerRef, "server.wraithbusters.puzzle.cheeseChase.complete");
-        WraithBustersSoundUtil.play2d(playerRef, store, WraithBustersConstants.PUZZLE_SUCCESS_SOUND_EVENT);
+        WraithBustersSoundUtil.play2dForSessionHumans(
+            session,
+            world,
+            WraithBustersConstants.PUZZLE_SUCCESS_SOUND_EVENT
+        );
         onCurrentRoomChanged(session, world);
     }
 
@@ -433,18 +503,30 @@ public final class CheeseChaseService {
         }
     }
 
+    private static void cleanupSession(
+        @Nonnull UUID sessionId,
+        @Nonnull World world,
+        @Nonnull SessionMice mice
+    ) {
+        Store<EntityStore> store = world.getEntityStore().getStore();
+        if (store != null && !store.isShutdown()) {
+            for (Ref<EntityStore> ref : new ArrayList<>(mice.activeRefs)) {
+                removeEntity(store, mice, ref);
+            }
+        } else {
+            mice.activeRefs.clear();
+            mice.chumboRef = null;
+        }
+        mice.feedCount = 0;
+        mice.active = false;
+    }
+
     private static void clearSession(@Nonnull UUID sessionId, @Nonnull World world) {
         SessionMice mice = SESSIONS.remove(sessionId);
         if (mice == null) {
             return;
         }
-        Store<EntityStore> store = world.getEntityStore().getStore();
-        if (store == null || store.isShutdown()) {
-            return;
-        }
-        for (Ref<EntityStore> ref : new ArrayList<>(mice.activeRefs)) {
-            removeEntity(store, mice, ref);
-        }
+        cleanupSession(sessionId, world, mice);
     }
 
     private static boolean isCompleted(@Nonnull GameSession session, @Nonnull RoomDefinition room) {
@@ -500,6 +582,7 @@ public final class CheeseChaseService {
         @Nullable
         private Ref<EntityStore> lastSpawnedRef;
         private int feedCount;
-        private boolean spawned;
+        private boolean active;
+        private long lastSpawnAttemptMs;
     }
 }

@@ -287,7 +287,7 @@
     {
       "blockPos": {
         "x": -26,
-        "y": 140,
+        "y": 137,
         "z": -16
       },
       "typeId": "candle"
@@ -295,14 +295,14 @@
     {
       "blockPos": {
         "x": -18,
-        "y": 139,
+        "y": 137,
         "z": -19
       },
       "typeId": "candle"
     },
     {
       "blockPos": {
-        "x": -16,
+        "x": -14,
         "y": 137,
         "z": -2
       },
@@ -311,14 +311,6 @@
     {
       "blockPos": {
         "x": -14,
-        "y": 139,
-        "z": 2
-      },
-      "typeId": "candle"
-    },
-    {
-      "blockPos": {
-        "x": -24,
         "y": 137,
         "z": 2
       },
@@ -326,23 +318,31 @@
     },
     {
       "blockPos": {
-        "x": -22,
-        "y": 139,
+        "x": -23,
+        "y": 137,
+        "z": 2
+      },
+      "typeId": "candle"
+    },
+    {
+      "blockPos": {
+        "x": -23,
+        "y": 137,
         "z": -2
       },
       "typeId": "candle"
     },
     {
       "blockPos": {
-        "x": -22,
-        "y": 138,
-        "z": -4
+        "x": -23,
+        "y": 137,
+        "z": -5
       },
       "typeId": "candle"
     },
     {
       "blockPos": {
-        "x": -12,
+        "x": -14,
         "y": 137,
         "z": -5
       },
@@ -423,31 +423,39 @@
     {
       "blockPos": {
         "x": -17,
-        "y": 133,
+        "y": 131,
         "z": -9
       },
       "typeId": "statue"
     },
     {
       "blockPos": {
-        "x": -15,
-        "y": 133,
-        "z": -17
+        "x": -17,
+        "y": 131,
+        "z": -10
       },
       "typeId": "statue"
     },
     {
       "blockPos": {
-        "x": -19,
-        "y": 133,
+        "x": -15,
+        "y": 131,
+        "z": -18
+      },
+      "typeId": "statue"
+    },
+    {
+      "blockPos": {
+        "x": -20,
+        "y": 131,
         "z": -22
       },
       "typeId": "statue"
     },
     {
       "blockPos": {
-        "x": -17,
-        "y": 133,
+        "x": -15,
+        "y": 131,
         "z": 1
       },
       "typeId": "statue"
@@ -523,6 +531,206 @@
         "z": 17
       },
       "typeId": "hive"
+    },
+    {
+      "blockPos": {
+        "x": -12,
+        "y": 132,
+        "z": -6
+      },
+      "typeId": "watcher"
+    },
+    {
+      "blockPos": {
+        "x": -19,
+        "y": 132,
+        "z": -6
+      },
+      "typeId": "watcher"
+    },
+    {
+      "blockPos": {
+        "x": -8,
+        "y": 132,
+        "z": 0
+      },
+      "typeId": "watcher"
+    },
+    {
+      "blockPos": {
+        "x": -21,
+        "y": 131,
+        "z": 10
+      },
+      "typeId": "watcher"
+    },
+    {
+      "blockPos": {
+        "x": -26,
+        "y": 132,
+        "z": 2
+      },
+      "typeId": "watcher"
+    },
+    {
+      "blockPos": {
+        "x": -23,
+        "y": 132,
+        "z": -2
+      },
+      "typeId": "watcher"
+    },
+    {
+      "blockPos": {
+        "x": -21,
+        "y": 132,
+        "z": -19
+      },
+      "typeId": "watcher"
+    },
+    {
+      "blockPos": {
+        "x": -21,
+        "y": 133,
+        "z": -9
+      },
+      "typeId": "watcher"
+    },
+    {
+      "blockPos": {
+        "x": -7,
+        "y": 132,
+        "z": -13
+      },
+      "typeId": "watcher"
+    },
+    {
+      "blockPos": {
+        "x": -14,
+        "y": 125,
+        "z": -8
+      },
+      "typeId": "watcher"
+    },
+    {
+      "blockPos": {
+        "x": -6,
+        "y": 125,
+        "z": -19
+      },
+      "typeId": "watcher"
+    },
+    {
+      "blockPos": {
+        "x": -20,
+        "y": 137,
+        "z": -9
+      },
+      "typeId": "watcher"
+    },
+    {
+      "blockPos": {
+        "x": -7,
+        "y": 131,
+        "z": -17
+      },
+      "typeId": "barrel"
+    },
+    {
+      "blockPos": {
+        "x": -7,
+        "y": 131,
+        "z": 10
+      },
+      "typeId": "barrel"
+    },
+    {
+      "blockPos": {
+        "x": -18,
+        "y": 144,
+        "z": -1
+      },
+      "typeId": "cocoon"
+    },
+    {
+      "blockPos": {
+        "x": -14,
+        "y": 144,
+        "z": -8
+      },
+      "typeId": "cocoon"
+    },
+    {
+      "blockPos": {
+        "x": -19,
+        "y": 144,
+        "z": -12
+      },
+      "typeId": "cocoon"
+    },
+    {
+      "blockPos": {
+        "x": -14,
+        "y": 147,
+        "z": 8
+      },
+      "typeId": "skull"
+    },
+    {
+      "blockPos": {
+        "x": -18,
+        "y": 146,
+        "z": 5
+      },
+      "typeId": "skull"
+    },
+    {
+      "blockPos": {
+        "x": -20,
+        "y": 147,
+        "z": -3
+      },
+      "typeId": "skull"
+    },
+    {
+      "blockPos": {
+        "x": -13,
+        "y": 146,
+        "z": -1
+      },
+      "typeId": "skull"
+    },
+    {
+      "blockPos": {
+        "x": -13,
+        "y": 146,
+        "z": -10
+      },
+      "typeId": "skull"
+    },
+    {
+      "blockPos": {
+        "x": -19,
+        "y": 147,
+        "z": -14
+      },
+      "typeId": "skull"
+    },
+    {
+      "blockPos": {
+        "x": -25,
+        "y": 137,
+        "z": -6
+      },
+      "typeId": "watcher"
+    },
+    {
+      "blockPos": {
+        "x": -12,
+        "y": 137,
+        "z": 3
+      },
+      "typeId": "watcher"
     }
   ],
   "rooms": [
@@ -1834,6 +2042,100 @@
       "z": 0.0
     }
   },
-  "bookshelves": [],
-  "bookSpawns": []
+  "bookshelves": [
+    {
+      "puzzleId": "library_books",
+      "color": "BLUE",
+      "blockPos": {
+        "x": -16,
+        "y": 138,
+        "z": 4
+      }
+    },
+    {
+      "puzzleId": "library_books",
+      "color": "RED",
+      "blockPos": {
+        "x": -16,
+        "y": 140,
+        "z": -3
+      }
+    },
+    {
+      "puzzleId": "library_books",
+      "color": "ORANGE",
+      "blockPos": {
+        "x": -26,
+        "y": 138,
+        "z": 0
+      }
+    },
+    {
+      "puzzleId": "library_books",
+      "color": "GREEN",
+      "blockPos": {
+        "x": -21,
+        "y": 139,
+        "z": -7
+      }
+    }
+  ],
+  "bookSpawns": [
+    {
+      "puzzleId": "library_books",
+      "blockPos": {
+        "x": -19,
+        "y": 137,
+        "z": 1
+      }
+    },
+    {
+      "puzzleId": "library_books",
+      "blockPos": {
+        "x": -17,
+        "y": 137,
+        "z": -5
+      }
+    },
+    {
+      "puzzleId": "library_books",
+      "blockPos": {
+        "x": -13,
+        "y": 137,
+        "z": -9
+      }
+    },
+    {
+      "puzzleId": "library_books",
+      "blockPos": {
+        "x": -26,
+        "y": 138,
+        "z": -4
+      }
+    },
+    {
+      "puzzleId": "library_books",
+      "blockPos": {
+        "x": -22,
+        "y": 137,
+        "z": 2
+      }
+    },
+    {
+      "puzzleId": "library_books",
+      "blockPos": {
+        "x": -13,
+        "y": 137,
+        "z": 3
+      }
+    },
+    {
+      "puzzleId": "library_books",
+      "blockPos": {
+        "x": -26,
+        "y": 138,
+        "z": 2
+      }
+    }
+  ]
 }

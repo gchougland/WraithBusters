@@ -16,6 +16,7 @@ import com.hypixel.hytale.logger.HytaleLogger;
 import com.hypixel.hytale.math.vector.Rotation3f;
 import com.hypixel.hytale.protocol.GameMode;
 import com.hypixel.hytale.server.core.entity.entities.Player;
+import com.hypixel.hytale.server.core.modules.entity.component.EntityScaleComponent;
 import com.hypixel.hytale.server.core.modules.entity.component.HeadRotation;
 import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
 import com.hypixel.hytale.server.core.modules.physics.component.Velocity;
@@ -174,7 +175,27 @@ public final class PossessableMarkerIconService {
         spawn.entityRef = pair.first();
         spawn.basePosition = basePosition;
         spawn.bobPhase = bobPhaseForMarker(spawn.marker);
+        applyIconScale(store, spawn.entityRef, config);
         icons.activeRefs.add(spawn.entityRef);
+    }
+
+    private static void applyIconScale(
+        @Nonnull Store<EntityStore> store,
+        @Nonnull Ref<EntityStore> iconRef,
+        @Nonnull WraithBustersPluginConfig config
+    ) {
+        float scale = config.getPossessableIconScale();
+        if (scale <= 0.0f) {
+            scale = 1.0f;
+        }
+        EntityScaleComponent scaleComponent = store.getComponent(iconRef, EntityScaleComponent.getComponentType());
+        if (scaleComponent == null) {
+            store.addComponent(iconRef, EntityScaleComponent.getComponentType(), new EntityScaleComponent(scale));
+            return;
+        }
+        if (Math.abs(scaleComponent.getScale() - scale) > 0.001f) {
+            scaleComponent.setScale(scale);
+        }
     }
 
     private static double bobPhaseForMarker(@Nonnull PossessableMarker marker) {
@@ -210,6 +231,7 @@ public final class PossessableMarkerIconService {
         if (iconTransform == null) {
             return;
         }
+        applyIconScale(store, iconRef, config);
 
         Vector3d lockedPosition = new Vector3d(spawn.basePosition);
         lockedPosition.y += bobOffset(config, spawn.bobPhase, nowMs);

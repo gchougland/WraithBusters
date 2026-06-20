@@ -1,14 +1,19 @@
 package com.hexvane.wraithbusters.util;
 
+import com.hexvane.wraithbusters.game.GameSession;
+import com.hexvane.wraithbusters.player.PlayerRole;
+import com.hexvane.wraithbusters.team.Team;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.protocol.SoundCategory;
 import com.hypixel.hytale.server.core.asset.type.blocktype.config.BlockType;
 import com.hypixel.hytale.server.core.asset.type.soundevent.config.SoundEvent;
 import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
+import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.SoundUtil;
 import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
+import java.util.UUID;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import org.joml.Vector3d;
@@ -27,6 +32,31 @@ public final class WraithBustersSoundUtil {
             return;
         }
         SoundUtil.playSoundEvent2d(playerRef, soundIndex, SoundCategory.SFX, store);
+    }
+
+    public static void play2dForSessionHumans(
+        @Nonnull GameSession session,
+        @Nonnull World world,
+        @Nonnull String soundEventId
+    ) {
+        Store<EntityStore> store = world.getEntityStore().getStore();
+        if (store == null || store.isShutdown()) {
+            return;
+        }
+        for (PlayerRef playerRef : world.getPlayerRefs()) {
+            UUID playerUuid = playerRef.getUuid();
+            if (!session.getPlayers().containsKey(playerUuid)) {
+                continue;
+            }
+            var playerState = session.getOrCreatePlayer(playerUuid);
+            if (playerState.getTeam() != Team.HUMAN || playerState.getRole() != PlayerRole.HUMAN || !playerState.isAlive()) {
+                continue;
+            }
+            Ref<EntityStore> ref = playerRef.getReference();
+            if (ref != null && ref.isValid()) {
+                play2d(ref, store, soundEventId);
+            }
+        }
     }
 
     public static void play3dAtBlock(@Nonnull World world, @Nonnull Vector3i blockPos, @Nonnull String soundEventId) {

@@ -7,7 +7,9 @@ public final class WraithBustersConstants {
     public static final String DEFAULT_ARENA_ID = "mansion_v1";
     public static final String MANA_ORB_NPC_ROLE = "WraithBusters_Mana_Orb";
     public static final String MANA_PICKUP_SOUND_EVENT = "Ping_01";
-    public static final String PUZZLE_SUCCESS_SOUND_EVENT = "Ping_01";
+    public static final String PUZZLE_SUCCESS_SOUND_EVENT = "SFX_WraithBusters_Puzzle_Complete";
+    public static final String READY_ON_SOUND_EVENT = "SFX_WraithBusters_Ready_On";
+    public static final String READY_OFF_SOUND_EVENT = "SFX_WraithBusters_Ready_Off";
     public static final String PUZZLE_FAIL_SOUND_EVENT = "SFX_Candle_Off";
     public static final String OFFERING_REJECT_PARTICLE = "WraithBusters_Smoke_Black";
     public static final String OFFERING_SUCCESS_PARTICLE = "WraithBusters_Smoke_Tall_Round";
@@ -34,6 +36,7 @@ public final class WraithBustersConstants {
         "Laboratory",
         "Library"
     );
+    public static final String LIBRARY_ROOM_ID = "Library";
     public static final String EXORCISM_TABLE_BLOCK_ID = "WraithBusters_Exorcism_Table";
     public static final String EXORCISM_TABLE_DORMANT_STATE = "default";
     public static final String EXORCISM_TABLE_CHARGING_STATE = "Charging";
@@ -41,6 +44,10 @@ public final class WraithBustersConstants {
     public static final String EXORCISM_BURST_PARTICLE = "WraithBusters_Exorcism_Burst";
     public static final float EXORCISM_BURST_SCALE = 2.0f;
     public static final float EXORCISM_BURST_DURATION_SEC = 2.0f;
+    public static final String EXORCISM_IDLE_PARTICLE = "Fire_Blue";
+    public static final float EXORCISM_IDLE_PARTICLE_SCALE = 2.5f;
+    public static final float EXORCISM_IDLE_PARTICLE_DURATION_SEC = 2.5f;
+    public static final long EXORCISM_IDLE_PARTICLE_RESPAWN_MS = 2200L;
     public static final String EXORCISM_ACTIVATE_SOUND_EVENT = "SFX_Flame_Ignite";
     public static final String ROUND_WIN_SOUND_EVENT = "SFX_Memories_Unlock_Local";
     public static final String POSSESSABLE_PLATE_BLOCK_ID = "WraithBusters_Possessable_Plate";
@@ -53,6 +60,12 @@ public final class WraithBustersConstants {
     public static final String POSSESSABLE_BARREL_BLOCK_ID = "WraithBusters_Possessable_Barrel";
     public static final String POSSESSABLE_WATCHER_STATUE_BLOCK_ID = "WraithBusters_Watcher_Statue";
     public static final String WATCHER_FEATHER_PROJECTILE_CONFIG_ID = "WraithBusters_Feather_Projectile";
+    /** Base damage in {@code WraithBusters_Plate_Projectile.json}; config may override applied amount. */
+    public static final float PLATE_PROJECTILE_ASSET_DAMAGE = 25f;
+    /** Base damage in {@code WraithBusters_Feather_Projectile.json}; config may override applied amount. */
+    public static final float FEATHER_PROJECTILE_ASSET_DAMAGE = 10f;
+    /** Base damage in {@code WraithBusters_Corn_Projectile.json}; config may override applied amount. */
+    public static final float CORN_PROJECTILE_ASSET_DAMAGE = 3f;
     public static final String WATCHER_FEATHER_LAUNCH_SOUND_EVENT = "SFX_NPC_Unarmed_Swing";
     public static final String POSSESSABLE_BEE_NPC_ROLE = "WraithBusters_Possessable_Bee";
     public static final String POSSESSABLE_FLAMING_SKULL_NPC_ROLE = "WraithBusters_Possessable_Flaming_Skull";
@@ -68,7 +81,9 @@ public final class WraithBustersConstants {
     public static final float POSSESSABLE_FOOD_TORNADO_POOF_DURATION_SEC = 1.0f;
     public static final String BARREL_CORN_PROJECTILE_CONFIG_ID = "WraithBusters_Corn_Projectile";
     public static final String BARREL_ACTIVATE_SOUND_EVENT = "SFX_Bush_Break";
-    public static final String BARREL_CORN_LAUNCH_SOUND_EVENT = "SFX_NPC_Unarmed_Swing";
+    public static final String BARREL_TORNADO_SPAWN_SOUND_EVENT = "SFX_Skeleton_Spawn_1";
+    public static final String BARREL_TORNADO_MOVE_SOUND_EVENT = "SFX_Skeleton_Walk";
+    public static final String BARREL_CORN_LAUNCH_SOUND_EVENT = "SFX_Bow_T1_Shoot";
     public static final String BUSH_ACTIVATE_SOUND_EVENT = "SFX_Bush_Break";
     public static final String STATUE_SWING_STATE = "Swing";
     public static final String STATUE_SWING_SOUND_EVENT = "SFX_Light_Melee_T2_Swing";
@@ -112,9 +127,13 @@ public final class WraithBustersConstants {
     public static final float SKULL_HIT_PARTICLE_SCALE = 1.25f;
     public static final float SKULL_HIT_PARTICLE_DURATION_SEC = 1.0f;
 
+    public static final String GHOST_PLAYER_MODEL_ID = "WraithBusters_Ghost_Player";
+    public static final float GHOST_PLAYER_MODEL_SCALE = 0.8f;
+
     public static final String LOBBY_HUD_KEY = "WraithBusters_LobbyStatus";
     public static final String ROUND_TIMER_HUD_KEY = "WraithBusters_RoundTimer";
     public static final String GHOST_MANA_HUD_KEY = "WraithBusters_GhostMana";
+    public static final String OBJECTIVE_HUD_KEY = "WraithBusters_Objective";
 
     public static final String PERMISSION_ADMIN = "wraithbusters.admin";
     public static final String PERMISSION_SETUP = "wraithbusters.setup";

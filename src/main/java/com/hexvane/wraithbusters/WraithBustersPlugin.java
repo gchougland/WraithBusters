@@ -19,7 +19,7 @@ import com.hexvane.wraithbusters.portrait.SlothPortraitBreakSystem;
 import com.hexvane.wraithbusters.portrait.SlothPortraitEyeTickSystem;
 import com.hexvane.wraithbusters.portrait.SlothPortraitPlaceSystem;
 import com.hexvane.wraithbusters.interaction.CandlePuzzleInteraction;
-import com.hexvane.wraithbusters.interaction.LibraryBookGatherInteraction;
+import com.hexvane.wraithbusters.puzzle.LibraryBookPickupHarvestSystem;
 import com.hexvane.wraithbusters.interaction.LibraryBookshelfInteraction;
 import com.hexvane.wraithbusters.interaction.ExorcismInteraction;
 import com.hexvane.wraithbusters.interaction.LockedDoorInteraction;
@@ -128,6 +128,7 @@ public final class WraithBustersPlugin extends JavaPlugin {
         getEntityStoreRegistry().registerSystem(new WraithBustersDamageFilterSystem());
         getEntityStoreRegistry().registerSystem(new SlothPortraitPlaceSystem());
         getEntityStoreRegistry().registerSystem(new SlothPortraitBreakSystem());
+        getEntityStoreRegistry().registerSystem(new LibraryBookPickupHarvestSystem());
         getEntityStoreRegistry().registerSystem(new SlothPortraitEyeTickSystem(this));
         getEntityStoreRegistry().registerSystem(new ExorcismTablePlaceSystem());
         getEntityStoreRegistry().registerSystem(new OfferingItemDropTickSystem());
@@ -165,11 +166,6 @@ public final class WraithBustersPlugin extends JavaPlugin {
         getCodecRegistry(Interaction.CODEC).register("WraithBusters_Possess", PossessInteraction.class, PossessInteraction.CODEC);
         getCodecRegistry(Interaction.CODEC).register("WraithBusters_TempleCandle", TempleCandleInteraction.class, TempleCandleInteraction.CODEC);
         getCodecRegistry(Interaction.CODEC).register("WraithBusters_CandlePuzzle", CandlePuzzleInteraction.class, CandlePuzzleInteraction.CODEC);
-        getCodecRegistry(Interaction.CODEC).register(
-            "WraithBusters_LibraryBookGather",
-            LibraryBookGatherInteraction.class,
-            LibraryBookGatherInteraction.CODEC
-        );
         getCodecRegistry(Interaction.CODEC).register(
             "WraithBusters_LibraryBookshelf",
             LibraryBookshelfInteraction.class,

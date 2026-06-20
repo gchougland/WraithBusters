@@ -1,5 +1,7 @@
 package com.hexvane.wraithbusters.interaction;
 
+import com.hexvane.wraithbusters.arena.RoomDefinition;
+import com.hexvane.wraithbusters.door.RoomProgressionService;
 import com.hexvane.wraithbusters.game.GameRegistry;
 import com.hexvane.wraithbusters.game.GamePhase;
 import com.hexvane.wraithbusters.game.GameSession;
@@ -64,6 +66,12 @@ public final class LibraryBookshelfInteraction extends WraithBustersBlockInterac
         }
         if (LibraryBookService.findBookshelf(session, targetBlock) == null) {
             send(player, "server.wraithbusters.puzzle.libraryBooks.notMarked");
+            context.getState().state = InteractionState.Failed;
+            return;
+        }
+        RoomDefinition currentRoom = RoomProgressionService.currentRoom(session);
+        if (!LibraryBookService.isLibraryBooksRoom(currentRoom)) {
+            send(player, "server.wraithbusters.puzzle.libraryBooks.notReady");
             context.getState().state = InteractionState.Failed;
             return;
         }

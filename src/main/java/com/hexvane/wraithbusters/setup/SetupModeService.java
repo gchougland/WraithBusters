@@ -13,9 +13,12 @@ import com.hexvane.wraithbusters.arena.RoomDefinition;
 import com.hexvane.wraithbusters.ghost.PhasePortalMarkerService;
 import com.hexvane.wraithbusters.puzzle.BookColor;
 import com.hexvane.wraithbusters.util.StatueAnchorUtil;
+import com.hexvane.wraithbusters.util.WatcherStatueAnchorUtil;
+import com.hexvane.wraithbusters.util.StatueRotationUtil;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.math.vector.Transform;
+import com.hypixel.hytale.server.core.asset.type.blocktype.config.BlockType;
 import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.World;
@@ -357,14 +360,23 @@ public final class SetupModeService {
             playerRef.sendMessage(WraithBustersMessages.translation("setup.noTarget"));
             return;
         }
+        Vector3i lookBlock = block;
         String typeId = extra == null || extra.isBlank() ? "plate" : extra;
         if ("statue".equalsIgnoreCase(typeId)) {
             block = StatueAnchorUtil.resolveStatueAnchor(world, block);
+        } else if ("watcher".equalsIgnoreCase(typeId)) {
+            block = WatcherStatueAnchorUtil.resolveWatcherAnchor(world, block);
         }
         ArenaLayout layout = session.getLayout();
         PossessableMarker marker = new PossessableMarker();
         marker.setBlockPos(block);
         marker.setTypeId(typeId);
+        if ("statue".equalsIgnoreCase(typeId) || "watcher".equalsIgnoreCase(typeId)) {
+            BlockType blockType = world.getBlockType(block.x, block.y, block.z);
+            if (blockType != null) {
+                marker.setRotationIndex(StatueRotationUtil.resolve(world, lookBlock, block, blockType).index());
+            }
+        }
         layout.getPossessables().add(marker);
         playerRef.sendMessage(
             WraithBustersMessages.translation("setup.marked")

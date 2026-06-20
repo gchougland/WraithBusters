@@ -1,6 +1,6 @@
 {
   "Model": "NPC/WraithBusters/Feather_Projectile.blockymodel",
-  "Texture": "Resources/Materials/Feather_Textures/Black.png",
+  "Texture": "NPC/WraithBusters/Feather_Black_Texture.png",
   "HitBox": {
     "Max": {
       "X": 0.15,

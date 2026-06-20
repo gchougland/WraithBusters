@@ -1,6 +1,7 @@
 {
   "Type": "Generic",
   "Appearance": "WraithBusters_Food_Tornado_Carrier",
+  "StartState": "Combat",
   "Invulnerable": true,
   "KnockbackScale": 0,
   "DropList": "Empty",
@@ -9,25 +10,37 @@
   "DefaultPlayerAttitude": "Ignore",
   "ApplySeparation": false,
   "ApplyAvoidance": false,
+  "OverrideHeadPitchAngle": true,
+  "HeadPitchAngleRange": [-89, 89],
   "MotionControllerList": [
     {
-      "Type": "Fly"
+      "Type": "Walk",
+      "MaxWalkSpeed": 5,
+      "Gravity": 10,
+      "RunThreshold": 0.3,
+      "MaxFallSpeed": 15,
+      "MaxRotationSpeed": 360,
+      "Acceleration": 10
     }
   ],
   "MaxHealth": 1,
+  "Parameters": {
+    "ViewRange": { "Value": 24, "Description": "Combat detection range" },
+    "AttackDistance": { "Value": 15, "Description": "Maximum corn shot range" },
+    "CombatFleeIfTooCloseDistance": { "Value": 4, "Description": "Retreat when target is too close" },
+    "DesiredRangedDistance": { "Value": [5, 14.5], "Description": "Preferred engagement band" }
+  },
   "Instructions": [
     {
-      "Continue": true,
+      "Sensor": { "Type": "State", "State": "Combat" },
       "Instructions": [
         {
-          "Sensor": {
-            "Type": "Any"
-          },
-          "BodyMotion": {
-            "Type": "Nothing"
-          },
-          "HeadMotion": {
-            "Type": "Nothing"
+          "Reference": "Component_Instruction_WraithBusters_Food_Tornado_Ranged_Combat",
+          "Modify": {
+            "ViewRange": { "Compute": "ViewRange" },
+            "AttackDistance": { "Compute": "AttackDistance" },
+            "CombatFleeIfTooCloseDistance": { "Compute": "CombatFleeIfTooCloseDistance" },
+            "DesiredRangedDistance": { "Compute": "DesiredRangedDistance" }
           }
         }
       ]

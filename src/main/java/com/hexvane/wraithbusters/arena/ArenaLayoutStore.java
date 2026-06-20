@@ -9,6 +9,7 @@ import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -53,6 +54,7 @@ public final class ArenaLayoutStore {
                 ArenaLayout layout = ArenaLayoutJson.fromJson(text);
                 if (layout != null) {
                     layout.ensureDefaultSpawns();
+                    mergeMissingCheeseChaseSpawns(layout, arenaId);
                     return layout;
                 }
             } catch (IOException e) {
@@ -133,6 +135,25 @@ public final class ArenaLayoutStore {
 
         layout.getManaPickups().add(new org.joml.Vector3i(-1, 101, 1));
         return layout;
+    }
+
+    /** Fills cheese-chase spawn marks from the bundled arena when an older saved layout omits them. */
+    private static void mergeMissingCheeseChaseSpawns(@Nonnull ArenaLayout layout, @Nonnull String arenaId) {
+        if (!layout.getCheeseChaseSmallMice().isEmpty() && layout.getCheeseChaseChumbo() != null) {
+            return;
+        }
+        ArenaLayout bundled = loadBundled(arenaId);
+        if (bundled == null) {
+            return;
+        }
+        if (layout.getCheeseChaseSmallMice().isEmpty() && !bundled.getCheeseChaseSmallMice().isEmpty()) {
+            layout.setCheeseChaseSmallMice(new ArrayList<>(bundled.getCheeseChaseSmallMice()));
+            LOGGER.atInfo().log("Merged bundled cheese-chase small mouse spawns into arena %s", arenaId);
+        }
+        if (layout.getCheeseChaseChumbo() == null && bundled.getCheeseChaseChumbo() != null) {
+            layout.setCheeseChaseChumbo(bundled.getCheeseChaseChumbo());
+            LOGGER.atInfo().log("Merged bundled Chumbo spawn into arena %s", arenaId);
+        }
     }
 
     @Nonnull

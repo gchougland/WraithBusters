@@ -9,7 +9,6 @@ import com.hypixel.hytale.builtin.triggervolumes.effect.TriggerEffect;
 import com.hypixel.hytale.codec.Codec;
 import com.hypixel.hytale.codec.KeyedCodec;
 import com.hypixel.hytale.codec.builder.BuilderCodec;
-import com.hypixel.hytale.codec.codecs.EnumCodec;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.math.vector.Vector3dUtil;
@@ -31,7 +30,7 @@ public final class WraithBustersOfferingEffect extends TriggerEffect {
         .append(new KeyedCodec<>("RoomId", Codec.STRING), (e, v) -> e.roomId = v, e -> e.roomId)
         .add()
         .append(
-            new KeyedCodec<>("Mode", new EnumCodec<>(OfferingMode.class, EnumCodec.EnumStyle.LEGACY), false),
+            new KeyedCodec<>("Mode", OfferingMode.CODEC, false),
             (e, v) -> e.mode = v,
             e -> e.mode
         )

@@ -172,6 +172,24 @@ public final class WraithBustersPluginConfig {
             )
             .add()
             .append(
+                new KeyedCodec<>("BarrelFoodTornadoMinAttackDistance", Codec.FLOAT),
+                (o, v) -> o.barrelFoodTornadoMinAttackDistance = v,
+                o -> o.barrelFoodTornadoMinAttackDistance
+            )
+            .add()
+            .append(
+                new KeyedCodec<>("BarrelFoodTornadoMaxAttackDistance", Codec.FLOAT),
+                (o, v) -> o.barrelFoodTornadoMaxAttackDistance = v,
+                o -> o.barrelFoodTornadoMaxAttackDistance
+            )
+            .add()
+            .append(
+                new KeyedCodec<>("BarrelFoodTornadoTooCloseDistance", Codec.FLOAT),
+                (o, v) -> o.barrelFoodTornadoTooCloseDistance = v,
+                o -> o.barrelFoodTornadoTooCloseDistance
+            )
+            .add()
+            .append(
                 new KeyedCodec<>("SkullPossessableIconHeight", Codec.DOUBLE),
                 (o, v) -> o.skullPossessableIconHeight = v,
                 o -> o.skullPossessableIconHeight
@@ -321,12 +339,12 @@ public final class WraithBustersPluginConfig {
 
     private int minPlayers = 2;
     private int minGhosts = 1;
-    private int humansPerExtraGhost = 4;
+    private int humansPerExtraGhost = 2;
     private int roomsPerHuman = 1;
     private int roundDurationSeconds = 480;
     private int ghostMaxMana = 100;
-    private int plateManaCost = 25;
-    private int candleManaCost = 20;
+    private int plateManaCost = 35;
+    private int candleManaCost = 25;
     private int statueManaCost = 15;
     private int bushManaCost = 40;
     private int bushSnapdragonDurationSeconds = 10;
@@ -344,21 +362,24 @@ public final class WraithBustersPluginConfig {
     private float cocoonDamage = 12f;
     private int cocoonSlowDurationSeconds = 4;
     private float cocoonSlowSpeedMultiplier = 0.5f;
-    private int skullManaCost = 30;
+    private int skullManaCost = 35;
     private int watcherManaCost = 20;
-    private float watcherFeatherDamage = 6f;
+    private float watcherFeatherDamage = 10f;
     private int watcherFeatherCount = 3;
     private int watcherFeatherShotDelayTicks = 8;
     private int watcherBurstCooldownTicks = 24;
-    private float skullDamage = 20f;
+    private float skullDamage = 15f;
     private float skullSpeed = 6.0f;
     private float skullHitRadius = 1.0f;
     private int skullMaxDurationSeconds = 10;
     private int barrelManaCost = 50;
     private int barrelFoodTornadoDurationSeconds = 10;
-    private float barrelFoodTornadoSpeed = 5.0f;
-    private float barrelCornDamage = 3.0f;
+    private float barrelFoodTornadoSpeed = 2.5f;
+    private float barrelCornDamage = 10.0f;
     private int barrelCornShotIntervalTicks = 20;
+    private float barrelFoodTornadoMinAttackDistance = 5.0f;
+    private float barrelFoodTornadoMaxAttackDistance = 14.5f;
+    private float barrelFoodTornadoTooCloseDistance = 4.0f;
     private float statueDamage = 30f;
     private int statueSwingDamageDelayTicks = 18;
     private int statueSwingDurationTicks = 40;
@@ -366,7 +387,7 @@ public final class WraithBustersPluginConfig {
     private float candleFireRadius = 4.5f;
     private int manaPickupAmount = 25;
     private int manaPickupRespawnSeconds = 30;
-    private float plateDamage = 25f;
+    private float plateDamage = 10f;
     private int countdownSeconds = 5;
     @Nonnull
     private String defaultArenaId = "mansion_v1";
@@ -378,14 +399,14 @@ public final class WraithBustersPluginConfig {
     private String[] debugForceRoomChain = new String[0];
     private int postRoundSeconds = 15;
     private double platePossessableIconHeight = 0.35;
-    private double candlePossessableIconHeight = 0.85;
-    private double statuePossessableIconHeight = 2.85;
+    private double candlePossessableIconHeight = 1.85;
+    private double statuePossessableIconHeight = 3.25;
     private double bushPossessableIconHeight = 1.05;
-    private double hivePossessableIconHeight = 0.55;
-    private double cocoonPossessableIconHeight = 0.75;
-    private double watcherPossessableIconHeight = 1.1;
+    private double hivePossessableIconHeight = -0.55;
+    private double cocoonPossessableIconHeight = 2.2;
+    private double watcherPossessableIconHeight = 2.5;
     private double barrelPossessableIconHeight = 1.2;
-    private double skullPossessableIconHeight = 0.18;
+    private double skullPossessableIconHeight = -0.5;
     private float possessableIconScale = 1.0f;
     private double possessableIconBobAmplitude = 0.06;
     private double possessableIconBobPeriodSeconds = 2.8;
@@ -548,6 +569,18 @@ public final class WraithBustersPluginConfig {
 
     public int getBarrelCornShotIntervalTicks() {
         return barrelCornShotIntervalTicks;
+    }
+
+    public float getBarrelFoodTornadoMinAttackDistance() {
+        return barrelFoodTornadoMinAttackDistance;
+    }
+
+    public float getBarrelFoodTornadoMaxAttackDistance() {
+        return barrelFoodTornadoMaxAttackDistance;
+    }
+
+    public float getBarrelFoodTornadoTooCloseDistance() {
+        return barrelFoodTornadoTooCloseDistance;
     }
 
     public float getStatueDamage() {

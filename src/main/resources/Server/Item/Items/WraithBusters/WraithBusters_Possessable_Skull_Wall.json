@@ -6,7 +6,7 @@
     "WraithBusters.Blocks"
   ],
   "Set": "WraithBusters",
-  "PlayerAnimationsId": "Block",
+  "PlayerAnimationsId": "Item",
   "Interactions": {
     "Primary": "Block_Primary",
     "Secondary": "Block_Secondary"
@@ -30,12 +30,13 @@
     "BlockParticleSetId": "Stone",
     "BlockSoundSetId": "Bone",
     "PhysicalMaterialId": "Stone",
-    "HitboxType": "Block_Vertical_Five_Eighth",
-    "VariantRotation": "NESW",
+    "VariantRotation": "UpDownNESW",
     "Material": "Solid",
     "Opacity": "Semitransparent",
     "ParticleColor": "#dccd97",
     "TextureComputedColor": "#443F2E",
+    "RandomRotation": "YawStep1",
+    "IgnoreSupportWhenPlaced": true,
     "Interactions": {
       "Use": {
         "Interactions": [
@@ -44,13 +45,6 @@
           }
         ]
       }
-    },
-    "Support": {
-      "Down": [
-        {
-          "FaceType": "Full"
-        }
-      ]
     },
     "InteractionHint": "server.wraithbusters.possess.hint"
   },

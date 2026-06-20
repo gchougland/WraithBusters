@@ -21,7 +21,7 @@
         {
           "Parent": "DamageEntityParent",
           "DamageCalculator": {
-            "BaseDamage": { "Physical": 6 }
+            "BaseDamage": { "Physical": 10 }
           }
         },
         { "Type": "RemoveEntity", "Entity": "User" }
