@@ -3,6 +3,7 @@ package com.hexvane.wraithbusters.portrait;
 import com.hexvane.wraithbusters.WraithBustersPlugin;
 import com.hexvane.wraithbusters.config.WraithBustersPluginConfig;
 import com.hexvane.wraithbusters.util.BlockSectionQueries;
+import com.hexvane.wraithbusters.util.ChunkSectionBlockUtil;
 import com.hexvane.wraithbusters.util.DeferredWorldTasks;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.RemoveReason;
@@ -477,7 +478,7 @@ public final class SlothPortraitService {
         @Nonnull Vector3i pos,
         @Nonnull PortraitVariant variant
     ) {
-        BlockType blockType = world.getBlockType(pos.x, pos.y, pos.z);
+        BlockType blockType = ChunkSectionBlockUtil.blockType(world, pos.x, pos.y, pos.z);
         return blockType != null && variant.blockId().equals(blockType.getId());
     }
 

@@ -9,6 +9,7 @@ import com.hypixel.hytale.codec.KeyedCodec;
 import com.hypixel.hytale.component.CommandBuffer;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
+import com.hypixel.hytale.protocol.FlyMode;
 import com.hypixel.hytale.protocol.GameMode;
 import com.hypixel.hytale.protocol.InteractionState;
 import com.hypixel.hytale.protocol.InteractionType;
@@ -99,6 +100,6 @@ public final class LockedDoorInteraction extends WraithBustersBlockInteractionBa
             return false;
         }
         MovementManager movement = store.getComponent(playerRef, MovementManager.getComponentType());
-        return movement != null && movement.getSettings().canFly;
+        return movement != null && movement.getSettings().fly != FlyMode.Disabled;
     }
 }

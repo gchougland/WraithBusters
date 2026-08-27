@@ -5,18 +5,16 @@ import com.hexvane.wraithbusters.door.RoomProgressionService;
 import com.hexvane.wraithbusters.game.GameService;
 import com.hexvane.wraithbusters.game.GameSession;
 import com.hexvane.wraithbusters.util.BlockSectionQueries;
+import com.hexvane.wraithbusters.util.ChunkSectionBlockUtil;
 import com.hexvane.wraithbusters.util.DeferredWorldTasks;
 import com.hexvane.wraithbusters.util.StatueFacingUtil;
 import com.hexvane.wraithbusters.util.WraithBustersSoundUtil;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
-import com.hypixel.hytale.math.util.ChunkUtil;
 import com.hypixel.hytale.server.core.asset.type.blocktype.config.BlockType;
 import com.hypixel.hytale.server.core.asset.type.blocktype.config.RotationTuple;
 import com.hypixel.hytale.server.core.universe.world.ParticleUtil;
 import com.hypixel.hytale.server.core.universe.world.World;
-import com.hypixel.hytale.server.core.universe.world.accessor.BlockAccessor;
-import com.hypixel.hytale.server.core.universe.world.chunk.WorldChunk;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
@@ -46,11 +44,11 @@ public final class ExorcismTableEffectService {
             return;
         }
         Vector3i anchor = session.getArenaLayout().getExorcismTable();
-        BlockType blockType = world.getBlockType(anchor.x, anchor.y, anchor.z);
+        BlockType blockType = ChunkSectionBlockUtil.blockType(world, anchor);
         if (!isExorcismTable(blockType)) {
             return;
         }
-        String currentState = BlockAccessor.getCurrentInteractionState(blockType);
+        String currentState = blockType.getCurrentInteractionState();
         if (WraithBustersConstants.EXORCISM_TABLE_ACTIVATED_STATE.equals(currentState)) {
             return;
         }
@@ -117,8 +115,7 @@ public final class ExorcismTableEffectService {
         if (!DeferredWorldTasks.isStoreOpen(world)) {
             return;
         }
-        WorldChunk chunk = world.getChunkIfInMemory(ChunkUtil.indexChunkFromBlock(anchor.x, anchor.z));
-        if (chunk == null) {
+        if (!ChunkSectionBlockUtil.isChunkInMemory(world, anchor.x, anchor.z)) {
             return;
         }
         Vector3d center = resolveEffectCenter(world, anchor);
@@ -144,15 +141,19 @@ public final class ExorcismTableEffectService {
 
     private static void setTableState(@Nonnull World world, @Nonnull Vector3i blockPos, @Nonnull String state) {
         Vector3i anchor = ExorcismTableFillerRepairService.resolveAnchor(world, blockPos);
-        BlockType blockType = world.getBlockType(anchor.x, anchor.y, anchor.z);
+        BlockType blockType = ChunkSectionBlockUtil.blockType(world, anchor);
         if (!isExorcismTable(blockType)) {
             return;
         }
-        WorldChunk chunk = world.getChunk(ChunkUtil.indexChunkFromBlock(anchor.x, anchor.z));
-        if (chunk == null) {
-            return;
-        }
-        chunk.setBlockInteractionState(anchor.x, anchor.y, anchor.z, blockType, state, true);
+        ChunkSectionBlockUtil.setBlockInteractionState(
+            world,
+            anchor.x,
+            anchor.y,
+            anchor.z,
+            blockType,
+            state,
+            true
+        );
     }
 
     private static boolean isExorcismTable(@Nullable BlockType blockType) {
@@ -176,7 +177,7 @@ public final class ExorcismTableEffectService {
 
     @Nullable
     private static Vector3d resolveEffectCenter(@Nonnull World world, @Nonnull Vector3i anchor) {
-        BlockType blockType = world.getBlockType(anchor.x, anchor.y, anchor.z);
+        BlockType blockType = ChunkSectionBlockUtil.blockType(world, anchor);
         if (blockType == null) {
             return null;
         }

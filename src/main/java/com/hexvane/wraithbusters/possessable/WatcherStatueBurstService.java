@@ -4,6 +4,7 @@ import com.hexvane.wraithbusters.WraithBustersConstants;
 import com.hexvane.wraithbusters.arena.PossessableMarker;
 import com.hexvane.wraithbusters.block.StatueFillerRepairService;
 import com.hexvane.wraithbusters.config.WraithBustersPluginConfig;
+import com.hexvane.wraithbusters.util.ChunkSectionBlockUtil;
 import com.hexvane.wraithbusters.util.DeferredWorldTasks;
 import com.hexvane.wraithbusters.util.StatueFacingUtil;
 import com.hexvane.wraithbusters.util.StatueRotationUtil;
@@ -79,7 +80,7 @@ public final class WatcherStatueBurstService {
     ) {
         Vector3i anchor = WatcherStatueAnchorUtil.resolveWatcherAnchor(world, blockPos);
 
-        BlockType blockType = world.getBlockType(anchor.x, anchor.y, anchor.z);
+        BlockType blockType = ChunkSectionBlockUtil.blockType(world, anchor.x, anchor.y, anchor.z);
         if (blockType == null || !isWatcherStatue(blockType)) {
             return;
         }
@@ -122,7 +123,7 @@ public final class WatcherStatueBurstService {
         }
 
         StatueFillerRepairService.repairWatcherAt(world, anchor);
-        BlockType blockType = world.getBlockType(anchor.x, anchor.y, anchor.z);
+        BlockType blockType = ChunkSectionBlockUtil.blockType(world, anchor.x, anchor.y, anchor.z);
         if (blockType == null) {
             return;
         }

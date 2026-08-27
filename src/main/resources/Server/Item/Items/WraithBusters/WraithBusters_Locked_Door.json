@@ -42,9 +42,6 @@
       }
     },
     "HitboxType": "Door",
-    "Flags": {
-      "IsUsable": false
-    },
     "Material": "Solid",
     "Opacity": "Transparent",
     "State": {

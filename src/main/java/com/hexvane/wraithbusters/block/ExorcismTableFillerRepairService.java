@@ -5,12 +5,11 @@ import com.hexvane.wraithbusters.WraithBustersPlugin;
 import com.hexvane.wraithbusters.arena.ArenaLayout;
 import com.hexvane.wraithbusters.arena.ArenaLayoutStore;
 import com.hexvane.wraithbusters.util.BlockSectionQueries;
+import com.hexvane.wraithbusters.util.ChunkSectionBlockUtil;
 import com.hexvane.wraithbusters.util.FurnitureAnchorUtil;
 import com.hypixel.hytale.logger.HytaleLogger;
-import com.hypixel.hytale.math.util.ChunkUtil;
 import com.hypixel.hytale.server.core.asset.type.blocktype.config.BlockType;
 import com.hypixel.hytale.server.core.universe.world.World;
-import com.hypixel.hytale.server.core.universe.world.chunk.WorldChunk;
 import javax.annotation.Nonnull;
 import org.joml.Vector3i;
 
@@ -40,11 +39,10 @@ public final class ExorcismTableFillerRepairService {
             return;
         }
         Vector3i anchor = resolveAnchor(world, blockPos);
-        WorldChunk chunk = world.getChunkIfInMemory(ChunkUtil.indexChunkFromBlock(anchor.x, anchor.z));
-        if (chunk == null) {
+        if (!ChunkSectionBlockUtil.isChunkInMemory(world, anchor.x, anchor.z)) {
             return;
         }
-        BlockType blockType = chunk.getBlockType(anchor);
+        BlockType blockType = ChunkSectionBlockUtil.blockType(world, anchor);
         if (blockType == null || !WraithBustersConstants.EXORCISM_TABLE_BLOCK_ID.equals(blockType.getId())) {
             return;
         }
@@ -53,7 +51,7 @@ public final class ExorcismTableFillerRepairService {
             return;
         }
         int rotation = BlockSectionQueries.getRotationIndex(world, anchor.x, anchor.y, anchor.z);
-        chunk.setBlock(anchor.x, anchor.y, anchor.z, blockId, blockType, rotation, 0, REFRESH_FILLERS_SETTINGS);
+        ChunkSectionBlockUtil.setBlock(world, anchor.x, anchor.y, anchor.z, blockId, blockType, rotation, 0, REFRESH_FILLERS_SETTINGS);
         LOGGER.atFine().log("Refreshed exorcism table filler blocks at [%d, %d, %d]", anchor.x, anchor.y, anchor.z);
     }
 

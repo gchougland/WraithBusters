@@ -40,9 +40,6 @@
       }
     },
     "HitboxType": "Door_Large",
-    "Flags": {
-      "IsUsable": false
-    },
     "Material": "Solid",
     "State": {
       "Definitions": {

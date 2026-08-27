@@ -13,7 +13,7 @@ import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.npc.asset.builder.BuilderSupport;
 import com.hypixel.hytale.server.npc.corecomponents.ActionBase;
-import com.hypixel.hytale.server.npc.role.Role;
+import com.hypixel.hytale.server.npc.instructions.ExecutionSupport;
 import com.hypixel.hytale.server.npc.sensorinfo.InfoProvider;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -29,26 +29,26 @@ public final class ActionWraithBustersOpenLockedDoor extends ActionBase {
     @Override
     public boolean canExecute(
         @Nonnull Ref<com.hypixel.hytale.server.core.universe.world.storage.EntityStore> ref,
-        @Nonnull Role role,
+        @Nonnull ExecutionSupport executionSupport,
         InfoProvider sensorInfo,
         double dt,
         @Nonnull Store<com.hypixel.hytale.server.core.universe.world.storage.EntityStore> store
     ) {
-        return super.canExecute(ref, role, sensorInfo, dt, store)
-            && role.getStateSupport().getInteractionIterationTarget() != null;
+        return super.canExecute(ref, executionSupport, sensorInfo, dt, store)
+            && executionSupport.getStateSupport().getInteractionIterationTarget() != null;
     }
 
     @Override
     public boolean execute(
         @Nonnull Ref<com.hypixel.hytale.server.core.universe.world.storage.EntityStore> ref,
-        @Nonnull Role role,
+        @Nonnull ExecutionSupport executionSupport,
         InfoProvider sensorInfo,
         double dt,
         @Nonnull Store<com.hypixel.hytale.server.core.universe.world.storage.EntityStore> store
     ) {
-        super.execute(ref, role, sensorInfo, dt, store);
+        super.execute(ref, executionSupport, sensorInfo, dt, store);
         Ref<com.hypixel.hytale.server.core.universe.world.storage.EntityStore> playerRef =
-            role.getStateSupport().getInteractionIterationTarget();
+            executionSupport.getStateSupport().getInteractionIterationTarget();
         if (playerRef == null) {
             return false;
         }

@@ -6,6 +6,7 @@ import com.hexvane.wraithbusters.config.WraithBustersPluginConfig;
 import com.hexvane.wraithbusters.game.GameSession;
 import com.hexvane.wraithbusters.player.PlayerRole;
 import com.hexvane.wraithbusters.player.PlayerSessionState;
+import com.hexvane.wraithbusters.npc.NpcSupportUtil;
 import com.hexvane.wraithbusters.puzzle.CheeseChaseService;
 import com.hexvane.wraithbusters.util.DeferredWorldTasks;
 import com.hypixel.hytale.component.Ref;
@@ -22,8 +23,8 @@ import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.hypixel.hytale.server.npc.NPCPlugin;
 import com.hypixel.hytale.server.npc.entities.NPCEntity;
-import com.hypixel.hytale.server.npc.role.Role;
 import com.hypixel.hytale.server.npc.role.support.MarkedEntitySupport;
+import com.hypixel.hytale.server.npc.role.support.WorldSupport;
 import it.unimi.dsi.fastutil.objects.ReferenceOpenHashSet;
 import java.util.ArrayList;
 import java.util.List;
@@ -125,7 +126,7 @@ public final class PossessableSnapdragonService {
                 toRemove.add(spawn);
                 continue;
             }
-            applyIgnoreAttitudes(session, store, npcEntity.getRole(), ignoreDuration);
+            applyIgnoreAttitudes(session, store, ref, ignoreDuration);
             retargetIfNeeded(session, world, store, npcEntity, ref);
         }
         for (SnapdragonSpawn spawn : toRemove) {
@@ -155,25 +156,29 @@ public final class PossessableSnapdragonService {
         @Nullable Ref<EntityStore> preferredHuman,
         double ignoreDuration
     ) {
-        Role role = npcEntity.getRole();
         Ref<EntityStore> target = isAliveHuman(session, store, preferredHuman)
             ? preferredHuman
             : findNearestHuman(session, worldFromStore(store), entityRef);
         if (target != null) {
-            role.setMarkedTarget(MarkedEntitySupport.DEFAULT_TARGET_SLOT, target);
-            role.getStateSupport().setState(entityRef, "Combat", null, store);
+            NpcSupportUtil.markedEntitySupport(entityRef, store)
+                .setMarkedEntity(MarkedEntitySupport.DEFAULT_TARGET_SLOT, target);
+            NpcSupportUtil.setState(entityRef, "Combat", null, store);
         }
-        applyIgnoreAttitudes(session, store, role, ignoreDuration);
+        applyIgnoreAttitudes(session, store, entityRef, ignoreDuration);
     }
 
     private static void applyIgnoreAttitudes(
         @Nonnull GameSession session,
         @Nonnull Store<EntityStore> store,
-        @Nonnull Role role,
+        @Nonnull Ref<EntityStore> npcRef,
         double durationSec
     ) {
-        forEachGhostRef(session, ref -> role.getWorldSupport().overrideAttitude(ref, Attitude.IGNORE, durationSec));
-        CheeseChaseService.forEachActiveNpc(session, ref -> role.getWorldSupport().overrideAttitude(ref, Attitude.IGNORE, durationSec));
+        WorldSupport worldSupport = NpcSupportUtil.worldSupport(npcRef, store);
+        if (worldSupport == null) {
+            return;
+        }
+        forEachGhostRef(session, ref -> worldSupport.overrideAttitude(ref, Attitude.IGNORE, durationSec));
+        CheeseChaseService.forEachActiveNpc(session, ref -> worldSupport.overrideAttitude(ref, Attitude.IGNORE, durationSec));
     }
 
     private static void retargetIfNeeded(
@@ -183,15 +188,16 @@ public final class PossessableSnapdragonService {
         @Nonnull NPCEntity npcEntity,
         @Nonnull Ref<EntityStore> snapdragonRef
     ) {
-        Role role = npcEntity.getRole();
-        Ref<EntityStore> current = role.getMarkedEntitySupport().getMarkedEntityRef(MarkedEntitySupport.DEFAULT_TARGET_SLOT);
+        Ref<EntityStore> current = NpcSupportUtil.markedEntitySupport(snapdragonRef, store)
+            .getMarkedEntityRef(MarkedEntitySupport.DEFAULT_TARGET_SLOT);
         if (isAliveHuman(session, store, current)) {
             return;
         }
         Ref<EntityStore> replacement = findNearestHuman(session, world, snapdragonRef);
         if (replacement != null) {
-            role.setMarkedTarget(MarkedEntitySupport.DEFAULT_TARGET_SLOT, replacement);
-            role.getStateSupport().setState(snapdragonRef, "Combat", null, store);
+            NpcSupportUtil.markedEntitySupport(snapdragonRef, store)
+                .setMarkedEntity(MarkedEntitySupport.DEFAULT_TARGET_SLOT, replacement);
+            NpcSupportUtil.setState(snapdragonRef, "Combat", null, store);
         }
     }
 

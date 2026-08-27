@@ -40,9 +40,6 @@
       }
     },
     "HitboxType": "Door_Medium",
-    "Flags": {
-      "IsUsable": false
-    },
     "Material": "Solid",
     "State": {
       "Definitions": {

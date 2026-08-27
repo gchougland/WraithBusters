@@ -41,9 +41,6 @@
       }
     },
     "HitboxType": "Door",
-    "Flags": {
-      "IsUsable": false
-    },
     "ParticleColor": "#332d21",
     "State": {
       "Definitions": {

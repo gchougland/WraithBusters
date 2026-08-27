@@ -47,6 +47,7 @@ import javax.annotation.Nullable;
 public final class WraithBustersCommand extends AbstractCommandCollection {
     public WraithBustersCommand() {
         super("wraithbusters", WraithBustersMessages.commandDescription("commands.root"));
+        requireNoPermission();
         registerSubCommands(this);
     }
 
@@ -69,6 +70,7 @@ public final class WraithBustersCommand extends AbstractCommandCollection {
     private static final class StartCommand extends AbstractPlayerCommand {
         StartCommand() {
             super("start", WraithBustersMessages.commandDescription("commands.start"));
+            requireNoPermission();
             addUsageVariant(new StartWithArenaCommand());
         }
 
@@ -90,6 +92,7 @@ public final class WraithBustersCommand extends AbstractCommandCollection {
 
         StartWithArenaCommand() {
             super(WraithBustersMessages.commandDescription("commands.start"));
+            requireNoPermission();
         }
 
         @Override
@@ -135,6 +138,7 @@ public final class WraithBustersCommand extends AbstractCommandCollection {
     private static final class JoinCommand extends AbstractPlayerCommand {
         JoinCommand() {
             super("join", WraithBustersMessages.commandDescription("commands.join"));
+            requireNoPermission();
         }
 
         @Override
@@ -170,6 +174,7 @@ public final class WraithBustersCommand extends AbstractCommandCollection {
     private static final class LeaveCommand extends AbstractPlayerCommand {
         LeaveCommand() {
             super("leave", WraithBustersMessages.commandDescription("commands.leave"));
+            requireNoPermission();
         }
 
         @Override
@@ -201,6 +206,7 @@ public final class WraithBustersCommand extends AbstractCommandCollection {
     private static final class ReadyCommand extends AbstractPlayerCommand {
         ReadyCommand() {
             super("ready", WraithBustersMessages.commandDescription("commands.ready"));
+            requireNoPermission();
         }
 
         @Override
@@ -228,6 +234,7 @@ public final class WraithBustersCommand extends AbstractCommandCollection {
     private static final class ForceStartCommand extends AbstractPlayerCommand {
         ForceStartCommand() {
             super("forcestart", WraithBustersMessages.commandDescription("commands.forcestart"));
+            requireNoPermission();
         }
 
         @Override
@@ -255,6 +262,7 @@ public final class WraithBustersCommand extends AbstractCommandCollection {
     private static final class StopCommand extends AbstractPlayerCommand {
         StopCommand() {
             super("stop", WraithBustersMessages.commandDescription("commands.stop"));
+            requireNoPermission();
         }
 
         @Override
@@ -283,6 +291,7 @@ public final class WraithBustersCommand extends AbstractCommandCollection {
     private static final class StatusCommand extends AbstractPlayerCommand {
         StatusCommand() {
             super("status", WraithBustersMessages.commandDescription("commands.status"));
+            requireNoPermission();
         }
 
         @Override
@@ -326,6 +335,7 @@ public final class WraithBustersCommand extends AbstractCommandCollection {
     private static final class ReloadCommand extends AbstractPlayerCommand {
         ReloadCommand() {
             super("reload", WraithBustersMessages.commandDescription("commands.reload"));
+            requireNoPermission();
         }
 
         @Override
@@ -350,6 +360,7 @@ public final class WraithBustersCommand extends AbstractCommandCollection {
 
         TestGhostCommand() {
             super("testghost", WraithBustersMessages.commandDescription("commands.testghost"));
+            requireNoPermission();
         }
 
         @Override
@@ -391,6 +402,7 @@ public final class WraithBustersCommand extends AbstractCommandCollection {
     private static final class RefillManaCommand extends AbstractPlayerCommand {
         RefillManaCommand() {
             super("refillmana", WraithBustersMessages.commandDescription("commands.refillmana"));
+            requireNoPermission();
         }
 
         @Override
@@ -436,6 +448,7 @@ public final class WraithBustersCommand extends AbstractCommandCollection {
     private static final class CompleteRoomCommand extends AbstractPlayerCommand {
         CompleteRoomCommand() {
             super("completeroom", WraithBustersMessages.commandDescription("commands.completeroom"));
+            requireNoPermission();
         }
 
         @Override
@@ -469,6 +482,7 @@ public final class WraithBustersCommand extends AbstractCommandCollection {
     private static final class ResetPhaseDoorsCommand extends AbstractPlayerCommand {
         ResetPhaseDoorsCommand() {
             super("resetphasedoors", WraithBustersMessages.commandDescription("commands.resetphasedoors"));
+            requireNoPermission();
             addUsageVariant(new ResetPhaseDoorsWithArenaCommand());
         }
 
@@ -494,6 +508,7 @@ public final class WraithBustersCommand extends AbstractCommandCollection {
 
         ResetPhaseDoorsWithArenaCommand() {
             super(WraithBustersMessages.commandDescription("commands.resetphasedoors"));
+            requireNoPermission();
         }
 
         @Override
@@ -547,6 +562,7 @@ public final class WraithBustersCommand extends AbstractCommandCollection {
     private static final class SetupCommand extends AbstractCommandCollection {
         SetupCommand() {
             super("setup", WraithBustersMessages.commandDescription("commands.setup"));
+            requireNoPermission();
             addSubCommand(new SetupEnterCommand());
             addSubCommand(new SetupExitCommand());
             addSubCommand(new SetupHelpCommand());
@@ -558,6 +574,7 @@ public final class WraithBustersCommand extends AbstractCommandCollection {
     private static final class SetupEnterCommand extends AbstractPlayerCommand {
         SetupEnterCommand() {
             super("enter", WraithBustersMessages.commandDescription("commands.setup.enter"));
+            requireNoPermission();
             addUsageVariant(new SetupEnterWithArenaCommand());
         }
 
@@ -579,6 +596,7 @@ public final class WraithBustersCommand extends AbstractCommandCollection {
 
         SetupEnterWithArenaCommand() {
             super(WraithBustersMessages.commandDescription("commands.setup.enter"));
+            requireNoPermission();
         }
 
         @Override
@@ -619,6 +637,7 @@ public final class WraithBustersCommand extends AbstractCommandCollection {
     private static final class SetupExitCommand extends AbstractPlayerCommand {
         SetupExitCommand() {
             super("exit", WraithBustersMessages.commandDescription("commands.setup.exit"));
+            requireNoPermission();
         }
 
         @Override
@@ -657,6 +676,7 @@ public final class WraithBustersCommand extends AbstractCommandCollection {
 
         SetupHelpCommand() {
             super("help", WraithBustersMessages.commandDescription("commands.setup.help"));
+            requireNoPermission();
         }
 
         @Override
@@ -724,6 +744,7 @@ public final class WraithBustersCommand extends AbstractCommandCollection {
     private static final class SetupMarkCommand extends AbstractPlayerCommand {
         SetupMarkCommand() {
             super("mark", WraithBustersMessages.commandDescription("commands.setup.mark"));
+            requireNoPermission();
             addUsageVariant(new SetupMarkWithExtraCommand());
         }
 
@@ -760,6 +781,7 @@ public final class WraithBustersCommand extends AbstractCommandCollection {
 
         SetupMarkWithExtraCommand() {
             super(WraithBustersMessages.commandDescription("commands.setup.mark"));
+            requireNoPermission();
         }
 
         @Override
@@ -777,6 +799,7 @@ public final class WraithBustersCommand extends AbstractCommandCollection {
     private static final class SetupSaveCommand extends AbstractPlayerCommand {
         SetupSaveCommand() {
             super("save", WraithBustersMessages.commandDescription("commands.setup.save"));
+            requireNoPermission();
         }
 
         private final RequiredArg<String> arenaArg =

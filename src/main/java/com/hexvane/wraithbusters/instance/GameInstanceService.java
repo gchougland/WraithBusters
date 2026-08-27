@@ -71,7 +71,7 @@ public final class GameInstanceService {
         @Nonnull Transform returnTransform
     ) {
         InstanceEntityConfig config = accessor.ensureAndGetComponent(entityRef, InstanceEntityConfig.getComponentType());
-        config.setReturnPoint(new WorldReturnPoint(returnWorldUuid, new Transform(returnTransform), false));
+        config.setReturnPoint(new WorldReturnPoint(returnWorldUuid, new Transform(returnTransform), false, null, null));
         config.setReturnPointOverride(null);
     }
 

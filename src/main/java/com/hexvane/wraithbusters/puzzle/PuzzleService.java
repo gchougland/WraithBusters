@@ -12,10 +12,10 @@ import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.asset.type.blocktype.config.BlockType;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
+import com.hexvane.wraithbusters.util.ChunkSectionBlockUtil;
 import com.hexvane.wraithbusters.util.DeferredWorldTasks;
 import com.hexvane.wraithbusters.util.WraithBustersSoundUtil;
 import com.hypixel.hytale.server.core.universe.world.World;
-import com.hypixel.hytale.server.core.universe.world.accessor.BlockAccessor;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import java.util.ArrayList;
 import java.util.List;
@@ -104,20 +104,20 @@ public final class PuzzleService {
     }
 
     public static boolean toggleCandle(@Nonnull World world, @Nonnull Vector3i blockPos) {
-        BlockType blockType = world.getBlockType(blockPos.x, blockPos.y, blockPos.z);
+        BlockType blockType = ChunkSectionBlockUtil.blockType(world, blockPos.x, blockPos.y, blockPos.z);
         if (blockType == null) {
             return false;
         }
         if (isCandleLit(world, blockPos)) {
             if (blockType.getBlockForState(CANDLE_OFF_STATE) != null) {
-                world.setBlockInteractionState(blockPos, blockType, CANDLE_OFF_STATE);
+                ChunkSectionBlockUtil.setBlockInteractionState(world, blockPos, blockType, CANDLE_OFF_STATE);
                 WraithBustersSoundUtil.playBlockStateSound(world, blockPos, blockType, CANDLE_OFF_STATE);
             }
             return false;
         }
         String onState = litStateFor(blockType);
         if (onState != null) {
-            world.setBlockInteractionState(blockPos, blockType, onState);
+            ChunkSectionBlockUtil.setBlockInteractionState(world, blockPos, blockType, onState);
             WraithBustersSoundUtil.playBlockStateSound(world, blockPos, blockType, onState);
             return true;
         }
@@ -237,9 +237,9 @@ public final class PuzzleService {
     ) {
         for (CandleMarker candle : candlesForPuzzle(session, puzzleId)) {
             Vector3i pos = candle.getBlockPos();
-            BlockType blockType = world.getBlockType(pos.x, pos.y, pos.z);
+            BlockType blockType = ChunkSectionBlockUtil.blockType(world, pos.x, pos.y, pos.z);
             if (blockType != null && blockType.getBlockForState(CANDLE_OFF_STATE) != null) {
-                world.setBlockInteractionState(pos, blockType, CANDLE_OFF_STATE);
+                ChunkSectionBlockUtil.setBlockInteractionState(world, pos, blockType, CANDLE_OFF_STATE);
             }
         }
     }
@@ -247,22 +247,22 @@ public final class PuzzleService {
     private static void resetCandlesNow(@Nonnull GameSession session, @Nonnull World world) {
         for (CandleMarker candle : session.getArenaLayout().getCandles()) {
             Vector3i pos = candle.getBlockPos();
-            BlockType blockType = world.getBlockType(pos.x, pos.y, pos.z);
+            BlockType blockType = ChunkSectionBlockUtil.blockType(world, pos.x, pos.y, pos.z);
             if (blockType == null) {
                 continue;
             }
             if (blockType.getBlockForState(CANDLE_OFF_STATE) != null) {
-                world.setBlockInteractionState(pos, blockType, CANDLE_OFF_STATE);
+                ChunkSectionBlockUtil.setBlockInteractionState(world, pos, blockType, CANDLE_OFF_STATE);
             }
         }
     }
 
     public static boolean isCandleLit(@Nonnull World world, @Nonnull Vector3i blockPos) {
-        BlockType blockType = world.getBlockType(blockPos.x, blockPos.y, blockPos.z);
+        BlockType blockType = ChunkSectionBlockUtil.blockType(world, blockPos.x, blockPos.y, blockPos.z);
         if (blockType == null) {
             return false;
         }
-        String state = BlockAccessor.getCurrentInteractionState(blockType);
+        String state = blockType.getCurrentInteractionState();
         if (CANDLE_OFF_STATE.equals(state)) {
             return false;
         }

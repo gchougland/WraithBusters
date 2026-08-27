@@ -5,6 +5,7 @@ import com.hexvane.wraithbusters.config.WraithBustersPluginConfig;
 import com.hexvane.wraithbusters.game.GameSession;
 import com.hexvane.wraithbusters.player.PlayerRole;
 import com.hexvane.wraithbusters.player.PlayerSessionState;
+import com.hexvane.wraithbusters.npc.NpcSupportUtil;
 import com.hexvane.wraithbusters.util.DeferredWorldTasks;
 import com.hexvane.wraithbusters.util.WraithBustersSoundUtil;
 import com.hypixel.hytale.component.Ref;
@@ -20,7 +21,6 @@ import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.hypixel.hytale.server.npc.NPCPlugin;
 import com.hypixel.hytale.server.npc.entities.NPCEntity;
-import com.hypixel.hytale.server.npc.role.Role;
 import com.hypixel.hytale.server.npc.role.support.MarkedEntitySupport;
 import java.util.ArrayList;
 import java.util.List;
@@ -161,13 +161,13 @@ public final class PossessableFoodTornadoService {
         @Nonnull NPCEntity npcEntity,
         @Nullable Ref<EntityStore> preferredHuman
     ) {
-        Role role = npcEntity.getRole();
         Ref<EntityStore> target = isAliveHuman(session, store, preferredHuman)
             ? preferredHuman
             : findNearestHuman(session, worldFromStore(store), entityRef);
         if (target != null) {
-            role.setMarkedTarget(MarkedEntitySupport.DEFAULT_TARGET_SLOT, target);
-            role.getStateSupport().setState(entityRef, "Combat", null, store);
+            NpcSupportUtil.markedEntitySupport(entityRef, store)
+                .setMarkedEntity(MarkedEntitySupport.DEFAULT_TARGET_SLOT, target);
+            NpcSupportUtil.setState(entityRef, "Combat", null, store);
         }
     }
 
@@ -178,15 +178,16 @@ public final class PossessableFoodTornadoService {
         @Nonnull NPCEntity npcEntity,
         @Nonnull Ref<EntityStore> tornadoRef
     ) {
-        Role role = npcEntity.getRole();
-        Ref<EntityStore> current = role.getMarkedEntitySupport().getMarkedEntityRef(MarkedEntitySupport.DEFAULT_TARGET_SLOT);
+        Ref<EntityStore> current = NpcSupportUtil.markedEntitySupport(tornadoRef, store)
+            .getMarkedEntityRef(MarkedEntitySupport.DEFAULT_TARGET_SLOT);
         if (isAliveHuman(session, store, current)) {
             return;
         }
         Ref<EntityStore> replacement = findNearestHuman(session, world, tornadoRef);
         if (replacement != null) {
-            role.setMarkedTarget(MarkedEntitySupport.DEFAULT_TARGET_SLOT, replacement);
-            role.getStateSupport().setState(tornadoRef, "Combat", null, store);
+            NpcSupportUtil.markedEntitySupport(tornadoRef, store)
+                .setMarkedEntity(MarkedEntitySupport.DEFAULT_TARGET_SLOT, replacement);
+            NpcSupportUtil.setState(tornadoRef, "Combat", null, store);
         }
     }
 

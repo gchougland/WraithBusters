@@ -12,6 +12,7 @@ import com.hexvane.wraithbusters.arena.PossessableMarker;
 import com.hexvane.wraithbusters.arena.RoomDefinition;
 import com.hexvane.wraithbusters.ghost.PhasePortalMarkerService;
 import com.hexvane.wraithbusters.puzzle.BookColor;
+import com.hexvane.wraithbusters.util.ChunkSectionBlockUtil;
 import com.hexvane.wraithbusters.util.StatueAnchorUtil;
 import com.hexvane.wraithbusters.util.WatcherStatueAnchorUtil;
 import com.hexvane.wraithbusters.util.StatueRotationUtil;
@@ -372,7 +373,7 @@ public final class SetupModeService {
         marker.setBlockPos(block);
         marker.setTypeId(typeId);
         if ("statue".equalsIgnoreCase(typeId) || "watcher".equalsIgnoreCase(typeId)) {
-            BlockType blockType = world.getBlockType(block.x, block.y, block.z);
+            BlockType blockType = ChunkSectionBlockUtil.blockType(world, block.x, block.y, block.z);
             if (blockType != null) {
                 marker.setRotationIndex(StatueRotationUtil.resolve(world, lookBlock, block, blockType).index());
             }

@@ -9,12 +9,12 @@ import com.hexvane.wraithbusters.player.PlayerRole;
 import com.hexvane.wraithbusters.player.PlayerSessionState;
 import com.hexvane.wraithbusters.ui.GhostManaHudSupport;
 import com.hexvane.wraithbusters.util.BlockSectionQueries;
+import com.hexvane.wraithbusters.util.ChunkSectionBlockUtil;
 import com.hexvane.wraithbusters.util.FurnitureAnchorUtil;
 import com.hexvane.wraithbusters.util.StatueAnchorUtil;
 import com.hexvane.wraithbusters.util.WatcherStatueAnchorUtil;
 import com.hexvane.wraithbusters.util.WraithBustersSoundUtil;
 import com.hypixel.hytale.assetstore.map.IndexedLookupTableAssetMap;
-import com.hypixel.hytale.math.util.ChunkUtil;
 import com.hypixel.hytale.component.CommandBuffer;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
@@ -609,7 +609,7 @@ public final class PossessableService {
     @Nullable
     public static Vector3i resolveMarkerAnchor(@Nonnull World world, @Nonnull PossessableMarker marker) {
         Vector3i markerPos = marker.getBlockPos();
-        if (world.getChunkIfInMemory(ChunkUtil.indexChunkFromBlock(markerPos.x, markerPos.z)) == null) {
+        if (!ChunkSectionBlockUtil.isChunkInMemory(world, markerPos.x, markerPos.z)) {
             return null;
         }
         String typeId = marker.getTypeId();
@@ -693,7 +693,7 @@ public final class PossessableService {
     }
 
     private static boolean isPossessableBlock(@Nonnull World world, @Nonnull Vector3i blockPos) {
-        BlockType blockType = world.getBlockType(blockPos.x, blockPos.y, blockPos.z);
+        BlockType blockType = ChunkSectionBlockUtil.blockType(world, blockPos.x, blockPos.y, blockPos.z);
         if (blockType == null) {
             return false;
         }

@@ -1,12 +1,10 @@
 package com.hexvane.wraithbusters.util;
 
-import com.hypixel.hytale.math.util.ChunkUtil;
 import com.hypixel.hytale.server.core.asset.type.blockhitbox.BlockBoundingBoxes;
 import com.hypixel.hytale.server.core.asset.type.blocktype.config.BlockType;
 import com.hypixel.hytale.server.core.asset.type.blocktype.config.Rotation;
 import com.hypixel.hytale.server.core.asset.type.blocktype.config.RotationTuple;
 import com.hypixel.hytale.server.core.universe.world.World;
-import com.hypixel.hytale.server.core.universe.world.chunk.WorldChunk;
 import com.hypixel.hytale.server.core.util.FillerBlockUtil;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -143,10 +141,6 @@ public final class StatueRotationUtil {
 
     @Nullable
     private static BlockType readBlockType(@Nonnull World world, @Nonnull Vector3i pos) {
-        WorldChunk chunk = world.getChunkIfInMemory(ChunkUtil.indexChunkFromBlock(pos.x, pos.z));
-        if (chunk != null) {
-            return chunk.getBlockType(pos);
-        }
         return BlockSectionQueries.getBlockTypeIfLoaded(world, pos.x, pos.y, pos.z);
     }
 
@@ -204,4 +198,4 @@ public final class StatueRotationUtil {
         }
     }
 }
-
+

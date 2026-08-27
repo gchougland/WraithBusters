@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.3.0] - 8/27/2026
+
+### Changed
+
+- **Hytale Update 6** — WraithBusters now runs on Hytale Update 6.
+
 ## [0.2.1] - 7/3/2026
 
 ### Fixed

@@ -1,7 +1,6 @@
 package com.hexvane.wraithbusters.util;
 
 import com.hypixel.hytale.logger.HytaleLogger;
-import com.hypixel.hytale.math.util.ChunkUtil;
 import com.hypixel.hytale.math.util.HashUtil;
 import com.hypixel.hytale.protocol.RandomRotation;
 import com.hypixel.hytale.server.core.asset.type.blocktype.config.BlockType;
@@ -10,7 +9,6 @@ import com.hypixel.hytale.server.core.asset.type.blocktype.config.RotationTuple;
 import com.hypixel.hytale.server.core.asset.type.blockhitbox.BlockBoundingBoxes;
 import com.hypixel.hytale.server.core.universe.world.SetBlockSettings;
 import com.hypixel.hytale.server.core.universe.world.World;
-import com.hypixel.hytale.server.core.universe.world.chunk.WorldChunk;
 import com.hypixel.hytale.server.core.util.FillerBlockUtil;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -40,14 +38,22 @@ public final class BlockPlacementUtil {
         if (assetIndex == Integer.MIN_VALUE) {
             return false;
         }
-        WorldChunk chunk = world.getChunkIfInMemory(ChunkUtil.indexChunkFromBlock(blockPos.x, blockPos.z));
-        if (chunk == null) {
+        if (!ChunkSectionBlockUtil.isChunkInMemory(world, blockPos.x, blockPos.z)) {
             LOGGER.atWarning().log("Chunk not loaded for block placement at [%d, %d, %d]", blockPos.x, blockPos.y, blockPos.z);
             return false;
         }
         int rotation = resolvePlacementRotation(blockType, blockPos);
-        chunk.setBlock(blockPos.x, blockPos.y, blockPos.z, assetIndex, blockType, rotation, 0, PLACE_SETTINGS);
-        return true;
+        return ChunkSectionBlockUtil.setBlock(
+            world,
+            blockPos.x,
+            blockPos.y,
+            blockPos.z,
+            assetIndex,
+            blockType,
+            rotation,
+            0,
+            PLACE_SETTINGS
+        );
     }
 
     /**
@@ -68,11 +74,10 @@ public final class BlockPlacementUtil {
             world.execute(() -> removeBlock(world, blockPos));
             return;
         }
-        WorldChunk chunk = world.getChunkIfInMemory(ChunkUtil.indexChunkFromBlock(blockPos.x, blockPos.z));
-        if (chunk == null) {
+        if (!ChunkSectionBlockUtil.isChunkInMemory(world, blockPos.x, blockPos.z)) {
             return;
         }
-        chunk.breakBlock(blockPos.x, blockPos.y, blockPos.z, PLACE_SETTINGS);
+        ChunkSectionBlockUtil.breakBlock(world, blockPos.x, blockPos.y, blockPos.z, PLACE_SETTINGS);
     }
 
     public static boolean setBlockState(
@@ -85,12 +90,11 @@ public final class BlockPlacementUtil {
             return true;
         }
         Vector3i anchor = FurnitureAnchorUtil.resolveAnchor(world, blockPos);
-        BlockType current = world.getBlockType(anchor.x, anchor.y, anchor.z);
+        BlockType current = ChunkSectionBlockUtil.blockType(world, anchor);
         if (current == null) {
             return false;
         }
-        WorldChunk chunk = world.getChunkIfInMemory(ChunkUtil.indexChunkFromBlock(anchor.x, anchor.z));
-        if (chunk == null) {
+        if (!ChunkSectionBlockUtil.isChunkInMemory(world, anchor.x, anchor.z)) {
             LOGGER.atWarning().log(
                 "Chunk not loaded for block state at [%d, %d, %d]",
                 anchor.x,
@@ -111,7 +115,20 @@ public final class BlockPlacementUtil {
         }
 
         int rotation = BlockSectionQueries.getRotationIndex(world, anchor.x, anchor.y, anchor.z);
-        chunk.setBlock(anchor.x, anchor.y, anchor.z, targetId, targetType, rotation, 0, STATE_CHANGE_SETTINGS);
+        boolean changed = ChunkSectionBlockUtil.setBlock(
+            world,
+            anchor.x,
+            anchor.y,
+            anchor.z,
+            targetId,
+            targetType,
+            rotation,
+            0,
+            STATE_CHANGE_SETTINGS
+        );
+        if (!changed) {
+            return false;
+        }
         refreshBlockHitbox(world, anchor, targetType, rotation);
         return true;
     }
@@ -124,18 +141,18 @@ public final class BlockPlacementUtil {
     ) {
         BlockBoundingBoxes hitbox = BlockBoundingBoxes.getAssetMap().getAsset(blockType.getHitboxTypeIndex());
         if (hitbox == null) {
-            world.performBlockUpdate(anchor.x, anchor.y, anchor.z, false);
+            ChunkSectionBlockUtil.performBlockUpdate(world, anchor.x, anchor.y, anchor.z, false);
             return;
         }
         FillerBlockUtil.forEachFillerBlock(
             hitbox.get(rotationIndex),
-            (x, y, z) -> world.performBlockUpdate(anchor.x + x, anchor.y + y, anchor.z + z, false)
+            (x, y, z) -> ChunkSectionBlockUtil.performBlockUpdate(world, anchor.x + x, anchor.y + y, anchor.z + z, false)
         );
     }
 
     @Nullable
     public static String blockIdAt(@Nonnull World world, @Nonnull Vector3i blockPos) {
-        BlockType blockType = world.getBlockType(blockPos.x, blockPos.y, blockPos.z);
+        BlockType blockType = ChunkSectionBlockUtil.blockType(world, blockPos);
         return blockType == null ? null : blockType.getId();
     }
 }

@@ -3,6 +3,7 @@ package com.hexvane.wraithbusters.setup;
 import com.hexvane.wraithbusters.arena.GhostPhaseDoorMarker;
 import com.hexvane.wraithbusters.arena.PhaseDoorSize;
 import com.hexvane.wraithbusters.door.DoorStateHelper;
+import com.hexvane.wraithbusters.util.ChunkSectionBlockUtil;
 import com.hypixel.hytale.math.util.MathUtil;
 import com.hypixel.hytale.math.vector.Transform;
 import com.hypixel.hytale.server.core.asset.type.blocktype.config.BlockType;
@@ -88,7 +89,7 @@ public final class PhaseDoorAnalyzer {
      */
     @Nullable
     public static Vector3i resolveSeedBlock(@Nonnull World world, @Nonnull Vector3i hint) {
-        if (isLockedDoor(world.getBlockType(hint.x, hint.y, hint.z))) {
+        if (isLockedDoor(ChunkSectionBlockUtil.blockType(world, hint.x, hint.y, hint.z))) {
             return new Vector3i(hint);
         }
         Vector3i best = null;
@@ -100,7 +101,7 @@ public final class PhaseDoorAnalyzer {
                         continue;
                     }
                     Vector3i candidate = new Vector3i(hint.x + dx, hint.y + dy, hint.z + dz);
-                    if (!isLockedDoor(world.getBlockType(candidate.x, candidate.y, candidate.z))) {
+                    if (!isLockedDoor(ChunkSectionBlockUtil.blockType(world, candidate.x, candidate.y, candidate.z))) {
                         continue;
                     }
                     double distSq = dx * (double) dx + dy * (double) dy + dz * (double) dz;
@@ -124,7 +125,7 @@ public final class PhaseDoorAnalyzer {
         if (seed == null) {
             return null;
         }
-        BlockType seedType = world.getBlockType(seed.x, seed.y, seed.z);
+        BlockType seedType = ChunkSectionBlockUtil.blockType(world, seed.x, seed.y, seed.z);
         if (seedType == null) {
             return null;
         }
@@ -138,7 +139,7 @@ public final class PhaseDoorAnalyzer {
         if (seed == null) {
             return null;
         }
-        BlockType seedType = world.getBlockType(seed.x, seed.y, seed.z);
+        BlockType seedType = ChunkSectionBlockUtil.blockType(world, seed.x, seed.y, seed.z);
         if (seedType == null) {
             return null;
         }
@@ -180,7 +181,7 @@ public final class PhaseDoorAnalyzer {
         if (tier == null) {
             for (Vector3i block : sorted) {
                 Vector3i anchor = DoorStateHelper.resolveDoorAnchor(world, block);
-                BlockType type = world.getBlockType(anchor.x, anchor.y, anchor.z);
+                BlockType type = ChunkSectionBlockUtil.blockType(world, anchor.x, anchor.y, anchor.z);
                 if (isLockedDoor(type)) {
                     tier = tierFor(type);
                     break;
@@ -228,7 +229,7 @@ public final class PhaseDoorAnalyzer {
     }
 
     public static boolean isLockedDoorAt(@Nonnull World world, @Nonnull Vector3i blockPos) {
-        return isLockedDoor(world.getBlockType(blockPos.x, blockPos.y, blockPos.z));
+        return isLockedDoor(ChunkSectionBlockUtil.blockType(world, blockPos.x, blockPos.y, blockPos.z));
     }
 
     /**
@@ -305,7 +306,7 @@ public final class PhaseDoorAnalyzer {
                 if (visited.contains(neighbor)) {
                     continue;
                 }
-                BlockType type = world.getBlockType(neighbor.x, neighbor.y, neighbor.z);
+                BlockType type = ChunkSectionBlockUtil.blockType(world, neighbor.x, neighbor.y, neighbor.z);
                 if (!isLockedDoor(type) || !sameTier(type, tier)) {
                     continue;
                 }
@@ -327,7 +328,7 @@ public final class PhaseDoorAnalyzer {
                 if (visited.contains(neighbor)) {
                     continue;
                 }
-                BlockType type = world.getBlockType(neighbor.x, neighbor.y, neighbor.z);
+                BlockType type = ChunkSectionBlockUtil.blockType(world, neighbor.x, neighbor.y, neighbor.z);
                 if (!isLockedDoor(type) || !sameTier(type, tier)) {
                     continue;
                 }
@@ -367,7 +368,7 @@ public final class PhaseDoorAnalyzer {
                 if (blocks.contains(pos)) {
                     continue;
                 }
-                BlockType type = world.getBlockType(pos.x, pos.y, pos.z);
+                BlockType type = ChunkSectionBlockUtil.blockType(world, pos.x, pos.y, pos.z);
                 if (isLockedDoor(type) && sameTier(type, tier)) {
                     blocks.add(pos);
                 }
@@ -411,7 +412,8 @@ public final class PhaseDoorAnalyzer {
     }
 
     private static float blockFacingYaw(@Nonnull World world, @Nonnull Vector3i rotationBlock) {
-        int rotationIndex = world.getBlockRotationIndex(
+        int rotationIndex = ChunkSectionBlockUtil.rotationIndex(
+            world,
             rotationBlock.x,
             rotationBlock.y,
             rotationBlock.z

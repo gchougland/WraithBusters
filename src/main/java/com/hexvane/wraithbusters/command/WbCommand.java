@@ -6,6 +6,7 @@ import com.hypixel.hytale.server.core.command.system.basecommands.AbstractComman
 public final class WbCommand extends AbstractCommandCollection {
     public WbCommand() {
         super("wb", WraithBustersMessages.commandDescription("commands.root"));
+        requireNoPermission();
         WraithBustersCommand.registerSubCommands(this);
     }
 }

@@ -8,13 +8,14 @@ import com.hexvane.wraithbusters.game.GameRegistry;
 import com.hexvane.wraithbusters.game.GameSession;
 import com.hexvane.wraithbusters.player.PlayerRole;
 import com.hexvane.wraithbusters.player.PlayerSessionState;
+import com.hexvane.wraithbusters.util.ChunkSectionBlockUtil;
 import com.hexvane.wraithbusters.util.DeferredWorldTasks;
 import com.hexvane.wraithbusters.util.StatueAnchorUtil;
 import com.hexvane.wraithbusters.util.StatueFacingUtil;
 import com.hexvane.wraithbusters.util.StatueRotationUtil;
 import com.hexvane.wraithbusters.util.WraithBustersSoundUtil;
 import com.hypixel.hytale.assetstore.map.IndexedLookupTableAssetMap;
-import com.hypixel.hytale.math.util.ChunkUtil;
+import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.server.core.HytaleServer;
 import com.hypixel.hytale.server.core.asset.type.blocktype.config.BlockType;
 import com.hypixel.hytale.server.core.asset.type.blocktype.config.RotationTuple;
@@ -24,9 +25,7 @@ import com.hypixel.hytale.server.core.modules.entity.damage.DamageSystems;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.ParticleUtil;
 import com.hypixel.hytale.server.core.universe.world.World;
-import com.hypixel.hytale.server.core.universe.world.chunk.WorldChunk;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
-import com.hypixel.hytale.component.Store;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
@@ -78,7 +77,7 @@ public final class SwordStatueSwingService {
     ) {
         Vector3i anchor = StatueAnchorUtil.resolveStatueAnchor(world, blockPos);
 
-        BlockType blockType = world.getBlockType(anchor.x, anchor.y, anchor.z);
+        BlockType blockType = ChunkSectionBlockUtil.blockType(world, anchor.x, anchor.y, anchor.z);
         if (blockType == null || !WraithBustersConstants.POSSESSABLE_STATUE_BLOCK_ID.equals(blockType.getId())) {
             return;
         }
@@ -95,7 +94,7 @@ public final class SwordStatueSwingService {
             }
             StatueFillerRepairService.repairAt(world, anchor);
             applyInteractionState(world, anchor, WraithBustersConstants.STATUE_SWING_STATE);
-            BlockType current = world.getBlockType(anchor.x, anchor.y, anchor.z);
+            BlockType current = ChunkSectionBlockUtil.blockType(world, anchor.x, anchor.y, anchor.z);
             WraithBustersSoundUtil.playBlockStateSound(world, anchor, current, WraithBustersConstants.STATUE_SWING_STATE);
             WraithBustersSoundUtil.play3dAtPosition(
                 world,
@@ -133,15 +132,19 @@ public final class SwordStatueSwingService {
     }
 
     private static void applyInteractionState(@Nonnull World world, @Nonnull Vector3i anchor, @Nonnull String state) {
-        WorldChunk chunk = world.getChunk(ChunkUtil.indexChunkFromBlock(anchor.x, anchor.z));
-        if (chunk == null) {
-            return;
-        }
-        BlockType blockType = world.getBlockType(anchor.x, anchor.y, anchor.z);
+        BlockType blockType = ChunkSectionBlockUtil.blockType(world, anchor.x, anchor.y, anchor.z);
         if (blockType == null) {
             return;
         }
-        chunk.setBlockInteractionState(anchor.x, anchor.y, anchor.z, blockType, state, true);
+        ChunkSectionBlockUtil.setBlockInteractionState(
+            world,
+            anchor.x,
+            anchor.y,
+            anchor.z,
+            blockType,
+            state,
+            true
+        );
     }
 
     private static void damageHumansInFront(
@@ -162,7 +165,7 @@ public final class SwordStatueSwingService {
             return;
         }
 
-        BlockType blockType = world.getBlockType(anchor.x, anchor.y, anchor.z);
+        BlockType blockType = ChunkSectionBlockUtil.blockType(world, anchor.x, anchor.y, anchor.z);
         if (blockType == null) {
             return;
         }

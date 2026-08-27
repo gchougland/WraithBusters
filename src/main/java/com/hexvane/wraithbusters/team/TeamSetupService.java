@@ -10,6 +10,7 @@ import com.hexvane.wraithbusters.player.PlayerModelService;
 import com.hexvane.wraithbusters.setup.SetupModeService;
 import com.hypixel.hytale.component.ComponentAccessor;
 import com.hypixel.hytale.component.Ref;
+import com.hypixel.hytale.protocol.FlyMode;
 import com.hypixel.hytale.protocol.GameMode;
 import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.entity.entities.player.movement.MovementManager;
@@ -35,7 +36,7 @@ public final class TeamSetupService {
     ) {
         accessor.tryRemoveComponent(playerRef, Intangible.getComponentType());
         accessor.ensureAndGetComponent(playerRef, Invulnerable.getComponentType());
-        // Model change triggers PlayerUpdateMovementManager, which resets canFly — apply model first.
+        // Model change triggers PlayerUpdateMovementManager, which resets fly — apply model first.
         PlayerModelService.applyGhostModel(playerRef, accessor);
         applyGhostMovement(playerRef, accessor);
     }
@@ -46,7 +47,7 @@ public final class TeamSetupService {
     ) {
         MovementManager movement = accessor.getComponent(playerRef, MovementManager.getComponentType());
         if (movement != null) {
-            movement.getSettings().canFly = true;
+            applyFlyMode(movement, FlyMode.Forced);
             movement.getSettings().collisionExpulsionForce = 0.02f;
             sendMovementUpdate(accessor, playerRef, movement);
         }
@@ -78,7 +79,7 @@ public final class TeamSetupService {
         revealPlayerGlobally(humanUuid);
         MovementManager movement = accessor.getComponent(playerRef, MovementManager.getComponentType());
         if (movement != null) {
-            movement.getSettings().canFly = false;
+            applyFlyMode(movement, FlyMode.Disabled);
             movement.getSettings().collisionExpulsionForce = 0.04f;
             sendMovementUpdate(accessor, playerRef, movement);
         }
@@ -99,7 +100,7 @@ public final class TeamSetupService {
     ) {
         MovementManager movement = accessor.getComponent(playerRef, MovementManager.getComponentType());
         if (movement != null) {
-            movement.getSettings().canFly = true;
+            applyFlyMode(movement, FlyMode.Forced);
             movement.getSettings().collisionExpulsionForce = 0f;
             sendMovementUpdate(accessor, playerRef, movement);
         }
@@ -235,6 +236,11 @@ public final class TeamSetupService {
             return targetRole != PlayerRole.GHOST && targetRole != PlayerRole.SPECTATOR;
         }
         return targetRole != PlayerRole.SPECTATOR;
+    }
+
+    private static void applyFlyMode(@Nonnull MovementManager movement, @Nonnull FlyMode flyMode) {
+        movement.getDefaultSettings().fly = flyMode;
+        movement.getSettings().fly = flyMode;
     }
 
     private static void sendMovementUpdate(

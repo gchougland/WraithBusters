@@ -1,18 +1,16 @@
 package com.hexvane.wraithbusters.door;
 
 import com.hexvane.wraithbusters.util.BlockSectionQueries;
+import com.hexvane.wraithbusters.util.ChunkSectionBlockUtil;
 import com.hexvane.wraithbusters.util.WraithBustersSoundUtil;
-import com.hypixel.hytale.math.util.ChunkUtil;
 import com.hypixel.hytale.server.core.asset.type.blocktype.config.BlockType;
 import com.hypixel.hytale.server.core.universe.world.World;
-import com.hypixel.hytale.server.core.universe.world.chunk.WorldChunk;
 import com.hypixel.hytale.server.core.util.FillerBlockUtil;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Set;
 import javax.annotation.Nonnull;
 import org.joml.Vector3i;
 
@@ -38,11 +36,11 @@ public final class DoorStateHelper {
 
     public static void blockDoor(@Nonnull World world, @Nonnull Vector3i blockPos) {
         Vector3i anchor = resolveDoorAnchor(world, blockPos);
-        BlockType blockType = world.getBlockType(anchor.x, anchor.y, anchor.z);
+        BlockType blockType = ChunkSectionBlockUtil.blockType(world, anchor);
         if (blockType == null || blockType.getBlockForState(DOOR_BLOCKED) == null) {
             return;
         }
-        world.setBlockInteractionState(anchor, blockType, DOOR_BLOCKED);
+        ChunkSectionBlockUtil.setBlockInteractionState(world, anchor, blockType, DOOR_BLOCKED);
     }
 
     public static void tryOpen(@Nonnull World world, @Nonnull Vector3i blockPos) {
@@ -93,19 +91,18 @@ public final class DoorStateHelper {
             }
             state = alternate;
         }
-        BlockType blockType = world.getBlockType(anchor.x, anchor.y, anchor.z);
+        BlockType blockType = ChunkSectionBlockUtil.blockType(world, anchor);
         if (blockType != null) {
-            world.setBlockInteractionState(anchor, blockType, state);
+            ChunkSectionBlockUtil.setBlockInteractionState(world, anchor, blockType, state);
             WraithBustersSoundUtil.playBlockStateSound(world, anchor, blockType, state);
         }
     }
 
     private static boolean canOpenDoor(@Nonnull World world, @Nonnull Vector3i blockPosition, @Nonnull String state) {
-        WorldChunk chunk = world.getChunk(ChunkUtil.indexChunkFromBlock(blockPosition.x, blockPosition.z));
-        if (chunk == null) {
+        if (!ChunkSectionBlockUtil.isChunkInMemory(world, blockPosition.x, blockPosition.z)) {
             return false;
         }
-        int blockId = chunk.getBlock(blockPosition.x, blockPosition.y, blockPosition.z);
+        int blockId = ChunkSectionBlockUtil.blockId(world, blockPosition.x, blockPosition.y, blockPosition.z);
         BlockType originalBlockType = BlockType.getAssetMap().getAsset(blockId);
         if (originalBlockType == null) {
             return false;
@@ -115,7 +112,8 @@ public final class DoorStateHelper {
             return false;
         }
         int rotation = BlockSectionQueries.getRotationIndex(world, blockPosition.x, blockPosition.y, blockPosition.z);
-        return world.testPlaceBlock(
+        return ChunkSectionBlockUtil.testPlaceBlock(
+            world,
             blockPosition.x,
             blockPosition.y,
             blockPosition.z,

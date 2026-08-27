@@ -5,14 +5,13 @@ import com.hexvane.wraithbusters.WraithBustersPlugin;
 import com.hexvane.wraithbusters.arena.ArenaLayout;
 import com.hexvane.wraithbusters.arena.ArenaLayoutStore;
 import com.hexvane.wraithbusters.arena.PossessableMarker;
+import com.hexvane.wraithbusters.util.ChunkSectionBlockUtil;
 import com.hexvane.wraithbusters.util.DeferredWorldTasks;
 import com.hexvane.wraithbusters.util.StatueAnchorUtil;
 import com.hexvane.wraithbusters.util.StatueRotationUtil;
 import com.hypixel.hytale.logger.HytaleLogger;
-import com.hypixel.hytale.math.util.ChunkUtil;
 import com.hypixel.hytale.server.core.asset.type.blocktype.config.BlockType;
 import com.hypixel.hytale.server.core.universe.world.World;
-import com.hypixel.hytale.server.core.universe.world.chunk.WorldChunk;
 import java.util.HashSet;
 import java.util.Set;
 import javax.annotation.Nonnull;
@@ -67,7 +66,7 @@ public final class StatueFillerRepairService {
                 if (!repaired.add(key)) {
                     continue;
                 }
-                BlockType blockType = world.getBlockType(anchor.x, anchor.y, anchor.z);
+                BlockType blockType = ChunkSectionBlockUtil.blockType(world, anchor);
                 if (blockType != null) {
                     marker.setRotationIndex(
                         StatueRotationUtil.resolve(world, marker.getBlockPos(), anchor, blockType).index()
@@ -84,11 +83,10 @@ public final class StatueFillerRepairService {
             return;
         }
         Vector3i anchor = StatueAnchorUtil.resolveStatueAnchor(world, blockPos);
-        WorldChunk chunk = world.getChunkIfInMemory(ChunkUtil.indexChunkFromBlock(anchor.x, anchor.z));
-        if (chunk == null) {
+        if (!ChunkSectionBlockUtil.isChunkInMemory(world, anchor.x, anchor.z)) {
             return;
         }
-        BlockType blockType = chunk.getBlockType(anchor);
+        BlockType blockType = ChunkSectionBlockUtil.blockType(world, anchor);
         if (blockType == null || !WraithBustersConstants.POSSESSABLE_STATUE_BLOCK_ID.equals(blockType.getId())) {
             LOGGER.atWarning().log(
                 "Sword statue filler repair skipped: no %s anchor near [%d, %d, %d] (marker [%d, %d, %d])",
@@ -107,7 +105,7 @@ public final class StatueFillerRepairService {
             return;
         }
         int rotation = StatueRotationUtil.resolve(world, blockPos, anchor, blockType).index();
-        chunk.setBlock(anchor.x, anchor.y, anchor.z, blockId, blockType, rotation, 0, REFRESH_FILLERS_SETTINGS);
+        ChunkSectionBlockUtil.setBlock(world, anchor.x, anchor.y, anchor.z, blockId, blockType, rotation, 0, REFRESH_FILLERS_SETTINGS);
         LOGGER.atFine().log("Refreshed sword-statue filler blocks at [%d, %d, %d]", anchor.x, anchor.y, anchor.z);
     }
 
@@ -117,11 +115,10 @@ public final class StatueFillerRepairService {
             return;
         }
         Vector3i anchor = com.hexvane.wraithbusters.util.WatcherStatueAnchorUtil.resolveWatcherAnchor(world, blockPos);
-        WorldChunk chunk = world.getChunkIfInMemory(ChunkUtil.indexChunkFromBlock(anchor.x, anchor.z));
-        if (chunk == null) {
+        if (!ChunkSectionBlockUtil.isChunkInMemory(world, anchor.x, anchor.z)) {
             return;
         }
-        BlockType blockType = chunk.getBlockType(anchor);
+        BlockType blockType = ChunkSectionBlockUtil.blockType(world, anchor);
         if (blockType == null || !isWatcherStatue(blockType)) {
             return;
         }
@@ -130,7 +127,7 @@ public final class StatueFillerRepairService {
             return;
         }
         int rotation = StatueRotationUtil.readRotationIndex(world, anchor);
-        chunk.setBlock(anchor.x, anchor.y, anchor.z, blockId, blockType, rotation, 0, REFRESH_FILLERS_SETTINGS);
+        ChunkSectionBlockUtil.setBlock(world, anchor.x, anchor.y, anchor.z, blockId, blockType, rotation, 0, REFRESH_FILLERS_SETTINGS);
     }
 
     private static boolean isWatcherStatue(@Nonnull BlockType blockType) {
