@@ -8,6 +8,7 @@ import com.hexvane.wraithbusters.game.GamePhase;
 import com.hexvane.wraithbusters.game.GameSession;
 import com.hexvane.wraithbusters.player.PlayerRole;
 import com.hexvane.wraithbusters.player.PlayerSessionState;
+import com.hexvane.wraithbusters.util.DeferredWorldTasks;
 import com.hexvane.wraithbusters.util.StatueFacingUtil;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.RemoveReason;
@@ -74,6 +75,14 @@ public final class PossessableMarkerIconService {
         @Nonnull World world,
         @Nonnull WraithBustersPluginConfig config
     ) {
+        DeferredWorldTasks.run(world, () -> startRoundNow(session, world, config));
+    }
+
+    private static void startRoundNow(
+        @Nonnull GameSession session,
+        @Nonnull World world,
+        @Nonnull WraithBustersPluginConfig config
+    ) {
         clearSession(session.getSessionId(), world);
         SessionIcons icons = new SessionIcons();
         for (PossessableMarker marker : session.getArenaLayout().getPossessables()) {
@@ -90,11 +99,11 @@ public final class PossessableMarkerIconService {
     }
 
     public static void endRound(@Nonnull GameSession session, @Nonnull World world) {
-        clearSession(session.getSessionId(), world);
+        DeferredWorldTasks.run(world, () -> clearSession(session.getSessionId(), world));
     }
 
     public static void clearForLobby(@Nonnull GameSession session, @Nonnull World world) {
-        clearSession(session.getSessionId(), world);
+        DeferredWorldTasks.run(world, () -> clearSession(session.getSessionId(), world));
     }
 
     public static void clear() {

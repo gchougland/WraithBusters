@@ -77,7 +77,6 @@ public final class SwordStatueSwingService {
         @Nonnull WraithBustersPluginConfig config
     ) {
         Vector3i anchor = StatueAnchorUtil.resolveStatueAnchor(world, blockPos);
-        StatueFillerRepairService.repairAt(world, anchor);
 
         BlockType blockType = world.getBlockType(anchor.x, anchor.y, anchor.z);
         if (blockType == null || !WraithBustersConstants.POSSESSABLE_STATUE_BLOCK_ID.equals(blockType.getId())) {
@@ -94,6 +93,7 @@ public final class SwordStatueSwingService {
             if (!DeferredWorldTasks.isStoreOpen(world)) {
                 return;
             }
+            StatueFillerRepairService.repairAt(world, anchor);
             applyInteractionState(world, anchor, WraithBustersConstants.STATUE_SWING_STATE);
             BlockType current = world.getBlockType(anchor.x, anchor.y, anchor.z);
             WraithBustersSoundUtil.playBlockStateSound(world, anchor, current, WraithBustersConstants.STATUE_SWING_STATE);

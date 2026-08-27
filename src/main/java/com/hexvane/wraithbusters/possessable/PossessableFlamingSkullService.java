@@ -5,6 +5,7 @@ import com.hexvane.wraithbusters.config.WraithBustersPluginConfig;
 import com.hexvane.wraithbusters.game.GameSession;
 import com.hexvane.wraithbusters.player.PlayerRole;
 import com.hexvane.wraithbusters.player.PlayerSessionState;
+import com.hexvane.wraithbusters.util.DeferredWorldTasks;
 import com.hexvane.wraithbusters.util.WraithBustersSoundUtil;
 import com.hypixel.hytale.assetstore.map.IndexedLookupTableAssetMap;
 import com.hypixel.hytale.math.shape.Box;
@@ -45,6 +46,16 @@ public final class PossessableFlamingSkullService {
     private PossessableFlamingSkullService() {}
 
     public static void spawn(
+        @Nonnull GameSession session,
+        @Nonnull World world,
+        @Nonnull Vector3d origin,
+        @Nullable Ref<EntityStore> preferredHuman,
+        @Nonnull WraithBustersPluginConfig config
+    ) {
+        DeferredWorldTasks.run(world, () -> spawnNow(session, world, origin, preferredHuman, config));
+    }
+
+    private static void spawnNow(
         @Nonnull GameSession session,
         @Nonnull World world,
         @Nonnull Vector3d origin,
@@ -169,11 +180,11 @@ public final class PossessableFlamingSkullService {
     }
 
     public static void endRound(@Nonnull GameSession session, @Nonnull World world) {
-        clearSession(session.getSessionId(), world);
+        DeferredWorldTasks.run(world, () -> clearSession(session.getSessionId(), world));
     }
 
     public static void clearForLobby(@Nonnull GameSession session, @Nonnull World world) {
-        clearSession(session.getSessionId(), world);
+        DeferredWorldTasks.run(world, () -> clearSession(session.getSessionId(), world));
     }
 
     @Nullable

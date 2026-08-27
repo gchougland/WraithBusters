@@ -7,12 +7,14 @@ import com.hypixel.hytale.server.core.event.events.player.PlayerDisconnectEvent;
 import com.hypixel.hytale.server.core.event.events.player.PlayerReadyEvent;
 import com.hypixel.hytale.server.core.event.events.player.RemovedPlayerFromWorldEvent;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
+import com.hypixel.hytale.server.core.universe.Universe;
 import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.hexvane.wraithbusters.WraithBustersPlugin;
 import com.hexvane.wraithbusters.util.DeferredWorldTasks;
 import java.util.UUID;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public final class PlayerSessionListener {
     private PlayerSessionListener() {}
@@ -69,8 +71,25 @@ public final class PlayerSessionListener {
                 }
             });
         } else {
-            plugin.getGameService().departPlayer(session, playerUuid, null, null, false, true);
+            World world = resolveDepartureWorld(session, playerRef);
+            if (world != null) {
+                DeferredWorldTasks.run(
+                    world,
+                    () -> plugin.getGameService().departPlayer(session, playerUuid, null, null, false, true)
+                );
+            } else {
+                plugin.getGameService().departPlayer(session, playerUuid, null, null, false, true);
+            }
         }
+    }
+
+    @Nullable
+    private static World resolveDepartureWorld(@Nonnull GameSession session, @Nonnull PlayerRef playerRef) {
+        UUID worldUuid = playerRef.getWorldUuid();
+        if (worldUuid == null) {
+            worldUuid = session.getWorldUuid();
+        }
+        return worldUuid != null ? Universe.get().getWorld(worldUuid) : null;
     }
 
     private static void onRemovedFromWorld(@Nonnull WraithBustersPlugin plugin, @Nonnull RemovedPlayerFromWorldEvent event) {

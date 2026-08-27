@@ -5,6 +5,7 @@ import com.hexvane.wraithbusters.config.WraithBustersPluginConfig;
 import com.hexvane.wraithbusters.game.GameSession;
 import com.hexvane.wraithbusters.player.PlayerRole;
 import com.hexvane.wraithbusters.player.PlayerSessionState;
+import com.hexvane.wraithbusters.util.DeferredWorldTasks;
 import com.hypixel.hytale.assetstore.map.IndexedLookupTableAssetMap;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.RemoveReason;
@@ -41,6 +42,16 @@ public final class PossessableHiveSwarmService {
     private PossessableHiveSwarmService() {}
 
     public static void spawn(
+        @Nonnull GameSession session,
+        @Nonnull World world,
+        @Nonnull Vector3d hiveOrigin,
+        @Nullable Ref<EntityStore> preferredHuman,
+        @Nonnull WraithBustersPluginConfig config
+    ) {
+        DeferredWorldTasks.run(world, () -> spawnNow(session, world, hiveOrigin, preferredHuman, config));
+    }
+
+    private static void spawnNow(
         @Nonnull GameSession session,
         @Nonnull World world,
         @Nonnull Vector3d hiveOrigin,
@@ -162,11 +173,11 @@ public final class PossessableHiveSwarmService {
     }
 
     public static void endRound(@Nonnull GameSession session, @Nonnull World world) {
-        clearSession(session.getSessionId(), world);
+        DeferredWorldTasks.run(world, () -> clearSession(session.getSessionId(), world));
     }
 
     public static void clearForLobby(@Nonnull GameSession session, @Nonnull World world) {
-        clearSession(session.getSessionId(), world);
+        DeferredWorldTasks.run(world, () -> clearSession(session.getSessionId(), world));
     }
 
     @Nullable

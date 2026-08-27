@@ -7,6 +7,7 @@ import com.hexvane.wraithbusters.game.GameSession;
 import com.hexvane.wraithbusters.player.PlayerRole;
 import com.hexvane.wraithbusters.player.PlayerSessionState;
 import com.hexvane.wraithbusters.puzzle.CheeseChaseService;
+import com.hexvane.wraithbusters.util.DeferredWorldTasks;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.RemoveReason;
 import com.hypixel.hytale.component.Store;
@@ -42,6 +43,15 @@ public final class PossessableSnapdragonService {
     private PossessableSnapdragonService() {}
 
     public static void spawn(
+        @Nonnull GameSession session,
+        @Nonnull World world,
+        @Nonnull Vector3d spawnPos,
+        @Nullable Ref<EntityStore> preferredHuman
+    ) {
+        DeferredWorldTasks.run(world, () -> spawnNow(session, world, spawnPos, preferredHuman));
+    }
+
+    private static void spawnNow(
         @Nonnull GameSession session,
         @Nonnull World world,
         @Nonnull Vector3d spawnPos,
@@ -130,11 +140,11 @@ public final class PossessableSnapdragonService {
     }
 
     public static void endRound(@Nonnull GameSession session, @Nonnull World world) {
-        clearSession(session.getSessionId(), world, true);
+        DeferredWorldTasks.run(world, () -> clearSession(session.getSessionId(), world, true));
     }
 
     public static void clearForLobby(@Nonnull GameSession session, @Nonnull World world) {
-        clearSession(session.getSessionId(), world, true);
+        DeferredWorldTasks.run(world, () -> clearSession(session.getSessionId(), world, true));
     }
 
     private static void configureSnapdragon(

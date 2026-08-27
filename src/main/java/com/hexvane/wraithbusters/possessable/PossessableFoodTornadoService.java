@@ -5,6 +5,7 @@ import com.hexvane.wraithbusters.config.WraithBustersPluginConfig;
 import com.hexvane.wraithbusters.game.GameSession;
 import com.hexvane.wraithbusters.player.PlayerRole;
 import com.hexvane.wraithbusters.player.PlayerSessionState;
+import com.hexvane.wraithbusters.util.DeferredWorldTasks;
 import com.hexvane.wraithbusters.util.WraithBustersSoundUtil;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.RemoveReason;
@@ -37,6 +38,17 @@ public final class PossessableFoodTornadoService {
     private PossessableFoodTornadoService() {}
 
     public static void spawn(
+        @Nonnull GameSession session,
+        @Nonnull World world,
+        @Nonnull Vector3d origin,
+        @Nonnull Ref<EntityStore> ghostRef,
+        @Nullable Ref<EntityStore> preferredHuman,
+        @Nonnull WraithBustersPluginConfig config
+    ) {
+        DeferredWorldTasks.run(world, () -> spawnNow(session, world, origin, ghostRef, preferredHuman, config));
+    }
+
+    private static void spawnNow(
         @Nonnull GameSession session,
         @Nonnull World world,
         @Nonnull Vector3d origin,
@@ -135,11 +147,11 @@ public final class PossessableFoodTornadoService {
     }
 
     public static void endRound(@Nonnull GameSession session, @Nonnull World world) {
-        clearSession(session.getSessionId(), world, true);
+        DeferredWorldTasks.run(world, () -> clearSession(session.getSessionId(), world, true));
     }
 
     public static void clearForLobby(@Nonnull GameSession session, @Nonnull World world) {
-        clearSession(session.getSessionId(), world, true);
+        DeferredWorldTasks.run(world, () -> clearSession(session.getSessionId(), world, true));
     }
 
     private static void configureFoodTornado(

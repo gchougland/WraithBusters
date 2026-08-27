@@ -78,7 +78,6 @@ public final class WatcherStatueBurstService {
         @Nonnull WraithBustersPluginConfig config
     ) {
         Vector3i anchor = WatcherStatueAnchorUtil.resolveWatcherAnchor(world, blockPos);
-        StatueFillerRepairService.repairWatcherAt(world, anchor);
 
         BlockType blockType = world.getBlockType(anchor.x, anchor.y, anchor.z);
         if (blockType == null || !isWatcherStatue(blockType)) {
@@ -122,6 +121,7 @@ public final class WatcherStatueBurstService {
             return;
         }
 
+        StatueFillerRepairService.repairWatcherAt(world, anchor);
         BlockType blockType = world.getBlockType(anchor.x, anchor.y, anchor.z);
         if (blockType == null) {
             return;

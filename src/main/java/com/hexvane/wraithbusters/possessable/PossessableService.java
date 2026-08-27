@@ -9,7 +9,6 @@ import com.hexvane.wraithbusters.player.PlayerRole;
 import com.hexvane.wraithbusters.player.PlayerSessionState;
 import com.hexvane.wraithbusters.ui.GhostManaHudSupport;
 import com.hexvane.wraithbusters.util.BlockSectionQueries;
-import com.hexvane.wraithbusters.util.DeferredWorldTasks;
 import com.hexvane.wraithbusters.util.FurnitureAnchorUtil;
 import com.hexvane.wraithbusters.util.StatueAnchorUtil;
 import com.hexvane.wraithbusters.util.WatcherStatueAnchorUtil;
@@ -122,7 +121,7 @@ public final class PossessableService {
             return activatePlate(session, world, ghostRef, store, commandBuffer, state, marker, config, pr);
         }
         if ("candle".equals(typeId)) {
-            return activateCandle(session, world, ghostRef, store, state, marker, config, pr);
+            return activateCandle(session, world, ghostRef, store, commandBuffer, state, marker, config, pr);
         }
         if ("statue".equals(typeId)) {
             return activateStatue(session, world, store, state, marker, config, pr, targetBlock);
@@ -134,7 +133,7 @@ public final class PossessableService {
             return activateHive(session, world, ghostRef, store, state, marker, config, pr);
         }
         if ("cocoon".equals(typeId)) {
-            return activateCocoon(session, world, ghostRef, store, state, marker, config, pr);
+            return activateCocoon(session, world, ghostRef, store, commandBuffer, state, marker, config, pr);
         }
         if ("skull".equals(typeId)) {
             return activateSkull(session, world, ghostRef, store, state, marker, config, pr);
@@ -206,6 +205,7 @@ public final class PossessableService {
         @Nonnull World world,
         @Nonnull Ref<EntityStore> ghostRef,
         @Nonnull Store<EntityStore> store,
+        @Nonnull CommandBuffer<EntityStore> commandBuffer,
         @Nonnull PlayerSessionState state,
         @Nonnull PossessableMarker marker,
         @Nonnull WraithBustersPluginConfig config,
@@ -231,7 +231,7 @@ public final class PossessableService {
             0.0f,
             1.0f,
             WraithBustersConstants.CANDLE_FIRE_RING_DURATION_SEC,
-            store
+            commandBuffer
         );
         WraithBustersSoundUtil.play3dAtPosition(
             world,
@@ -240,7 +240,7 @@ public final class PossessableService {
             origin.z,
             WraithBustersConstants.CANDLE_ACTIVATE_SOUND_EVENT
         );
-        applyBurnToHumansInRadius(session, world, store, origin, config.getCandleFireRadius());
+        applyBurnToHumansInRadius(session, world, commandBuffer, origin, config.getCandleFireRadius());
         ghostPlayer.sendMessage(Message.translation("server.wraithbusters.possess.candle"));
         return ActivateResult.SUCCESS;
     }
@@ -251,6 +251,7 @@ public final class PossessableService {
         @Nonnull World world,
         @Nonnull Ref<EntityStore> ghostRef,
         @Nonnull Store<EntityStore> store,
+        @Nonnull CommandBuffer<EntityStore> commandBuffer,
         @Nonnull PlayerSessionState state,
         @Nonnull PossessableMarker marker,
         @Nonnull WraithBustersPluginConfig config,
@@ -276,7 +277,7 @@ public final class PossessableService {
             0.0f,
             1.0f,
             WraithBustersConstants.COCOON_BURST_DURATION_SEC,
-            store
+            commandBuffer
         );
         WraithBustersSoundUtil.play3dAtPosition(
             world,
@@ -285,7 +286,7 @@ public final class PossessableService {
             origin.z,
             WraithBustersConstants.COCOON_ACTIVATE_SOUND_EVENT
         );
-        applyCocoonBurstToHumansInRadius(session, world, store, origin, config);
+        applyCocoonBurstToHumansInRadius(session, world, commandBuffer, origin, config);
         ghostPlayer.sendMessage(Message.translation("server.wraithbusters.possess.cocoon"));
         return ActivateResult.SUCCESS;
     }
@@ -389,10 +390,7 @@ public final class PossessableService {
             origin.z,
             WraithBustersConstants.BARREL_ACTIVATE_SOUND_EVENT
         );
-        DeferredWorldTasks.run(
-            world,
-            () -> PossessableFoodTornadoService.spawn(session, world, origin, ghostRef, preferredHuman, config)
-        );
+        PossessableFoodTornadoService.spawn(session, world, origin, ghostRef, preferredHuman, config);
         ghostPlayer.sendMessage(Message.translation("server.wraithbusters.possess.barrel"));
         return ActivateResult.SUCCESS;
     }
@@ -427,7 +425,7 @@ public final class PossessableService {
             origin.z,
             WraithBustersConstants.BUSH_ACTIVATE_SOUND_EVENT
         );
-        DeferredWorldTasks.run(world, () -> PossessableSnapdragonService.spawn(session, world, origin, preferredHuman));
+        PossessableSnapdragonService.spawn(session, world, origin, preferredHuman);
         ghostPlayer.sendMessage(Message.translation("server.wraithbusters.possess.bush"));
         return ActivateResult.SUCCESS;
     }
@@ -466,10 +464,7 @@ public final class PossessableService {
             origin.z,
             WraithBustersConstants.HIVE_ACTIVATE_SOUND_EVENT
         );
-        DeferredWorldTasks.run(
-            world,
-            () -> PossessableHiveSwarmService.spawn(session, world, origin, preferredHuman, config)
-        );
+        PossessableHiveSwarmService.spawn(session, world, origin, preferredHuman, config);
         ghostPlayer.sendMessage(Message.translation("server.wraithbusters.possess.hive"));
         return ActivateResult.SUCCESS;
     }
@@ -501,10 +496,7 @@ public final class PossessableService {
         }
         Vector3i pos = marker.getBlockPos();
         Vector3d origin = new Vector3d(pos.x + 0.5, pos.y - 0.35, pos.z + 0.5);
-        DeferredWorldTasks.run(
-            world,
-            () -> PossessableFlamingSkullService.spawn(session, world, origin, preferredHuman, config)
-        );
+        PossessableFlamingSkullService.spawn(session, world, origin, preferredHuman, config);
         ghostPlayer.sendMessage(Message.translation("server.wraithbusters.possess.skull"));
         return ActivateResult.SUCCESS;
     }
@@ -512,7 +504,7 @@ public final class PossessableService {
     private static void applyBurnToHumansInRadius(
         @Nonnull GameSession session,
         @Nonnull World world,
-        @Nonnull Store<EntityStore> store,
+        @Nonnull CommandBuffer<EntityStore> commandBuffer,
         @Nonnull Vector3d origin,
         float radius
     ) {
@@ -522,9 +514,12 @@ public final class PossessableService {
         }
         double radiusSq = radius * radius;
         for (Ref<EntityStore> humanRef : findHumansInRadius(session, world, origin, radiusSq)) {
-            EffectControllerComponent effectController = store.getComponent(humanRef, EffectControllerComponent.getComponentType());
+            EffectControllerComponent effectController = commandBuffer.getComponent(
+                humanRef,
+                EffectControllerComponent.getComponentType()
+            );
             if (effectController != null) {
-                effectController.addEffect(humanRef, burnEffect, store);
+                effectController.addEffect(humanRef, burnEffect, commandBuffer);
             }
         }
     }
@@ -532,7 +527,7 @@ public final class PossessableService {
     private static void applyCocoonBurstToHumansInRadius(
         @Nonnull GameSession session,
         @Nonnull World world,
-        @Nonnull Store<EntityStore> store,
+        @Nonnull CommandBuffer<EntityStore> commandBuffer,
         @Nonnull Vector3d origin,
         @Nonnull WraithBustersPluginConfig config
     ) {
@@ -543,12 +538,12 @@ public final class PossessableService {
             if (cause != null) {
                 DamageSystems.executeDamage(
                     humanRef,
-                    store,
+                    commandBuffer,
                     new Damage(Damage.NULL_SOURCE, cause, config.getCocoonDamage())
                 );
             }
             if (slowEffect != null) {
-                EffectControllerComponent effectController = store.getComponent(
+                EffectControllerComponent effectController = commandBuffer.getComponent(
                     humanRef,
                     EffectControllerComponent.getComponentType()
                 );
@@ -558,7 +553,7 @@ public final class PossessableService {
                         slowEffect,
                         config.getCocoonSlowDurationSeconds(),
                         OverlapBehavior.OVERWRITE,
-                        store
+                        commandBuffer
                     );
                 }
             }
